@@ -1,37 +1,38 @@
-function renderDataPoint(service, dataPointId) {
-        self.port.emit("renderDataPoint", dataPointId);
-        self.port.on("tosdrpoint", function (dataPoint){
-        var badge, icon, sign;
-            if (dataPoint.tosdr.point == 'good') {
-                badge = 'badge-success';
-                icon = 'plus';
-                sign = '+';
-            } else if (dataPoint.tosdr.point == 'mediocre') {
-                badge = 'badge-warning';
-                icon = 'minus';
-                sign = '-';
-            } else if (dataPoint.tosdr.point == 'alert') {
-                badge = 'badge-important';
-                icon = 'remove';
-                sign = '×';
-            } else if (dataPoint.tosdr.point == 'not bad') {
-                badge = 'badge-neutral';
-                icon = 'arrow-right';
-                sign = '→';
-            } else {
-                badge = '';
-                icon = 'question-sign';
-                sign = '?';
-            }
-            document.getElementById('popup-point-' + dataPoint.service + '-' + dataPoint.id).innerHTML =
-                '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
-                    + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> <a target="_blank" href="' + dataPoint.discussion + '">' + dataPoint.name + '</a></h5><p>'
-                    + dataPoint.tosdr.tldr + '</p></div></li>';
-            $('#popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
-                '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
-                    + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint.name + ' <a href="' + dataPoint.discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint.source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
-                    + dataPoint.tosdr.tldr + '</p></div></li>');
-        });            
+self.port.on("tosdrpoint", function (dataPoint){
+var badge, icon, sign;
+    if (dataPoint.tosdr.point == 'good') {
+        badge = 'badge-success';
+        icon = 'plus';
+        sign = '+';
+    } else if (dataPoint.tosdr.point == 'mediocre') {
+        badge = 'badge-warning';
+        icon = 'minus';
+        sign = '-';
+    } else if (dataPoint.tosdr.point == 'alert') {
+        badge = 'badge-important';
+        icon = 'remove';
+        sign = '×';
+    } else if (dataPoint.tosdr.point == 'not bad') {
+        badge = 'badge-neutral';
+        icon = 'arrow-right';
+        sign = '→';
+    } else {
+        badge = '';
+        icon = 'question-sign';
+        sign = '?';
+    }
+    document.getElementById('popup-point-' + dataPoint.service + '-' + dataPoint.id).innerHTML =
+        '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
+            + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> <a target="_blank" href="' + dataPoint.discussion + '">' + dataPoint.name + '</a></h5><p>'
+            + dataPoint.tosdr.tldr + '</p></div></li>';
+    $('#popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
+        '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
+            + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint.name + ' <a href="' + dataPoint.discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint.source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
+            + dataPoint.tosdr.tldr + '</p></div></li>');
+}); 
+        
+	function renderDataPoint(service, dataPointId) {
+        self.port.emit("renderDataPoint", dataPointId);           
     }
 
     var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";

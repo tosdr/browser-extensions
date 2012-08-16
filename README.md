@@ -6,7 +6,20 @@ Firefox Addon which rates the **Terms of Service and Privacy Policy** of website
 
 Screenshot
 =======
+OS X
+
 ![screenshot](https://dl.dropbox.com/u/18317770/tos.png)
+
+
+Windows
+
+![screenshot](https://dl.dropbox.com/u/18317770/tos-win.png)
+
+
+Linux
+
+![screenshot](https://dl.dropbox.com/u/18317770/tos-linux.png)
+
 
 -----------
 

@@ -1,18 +1,18 @@
 self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;
-    if (dataPoint.tosdr.point == 'good') {
+    if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
         icon = 'plus';
         sign = '+';
-    } else if (dataPoint.tosdr.point == 'mediocre') {
+    } else if (dataPoint[1].tosdr.point == 'mediocre') {
         badge = 'badge-warning';
         icon = 'minus';
         sign = '-';
-    } else if (dataPoint.tosdr.point == 'alert') {
+    } else if (dataPoint[1].tosdr.point == 'alert') {
         badge = 'badge-important';
         icon = 'remove';
         sign = '×';
-    } else if (dataPoint.tosdr.point == 'not bad') {
+    } else if (dataPoint[1].tosdr.point == 'not bad') {
         badge = 'badge-neutral';
         icon = 'arrow-right';
         sign = '→';
@@ -21,18 +21,17 @@ var badge, icon, sign;
         icon = 'question-sign';
         sign = '?';
     }
-    $('popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
-        '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
-            + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> <a target="_blank" href="' + dataPoint.discussion + '">' + dataPoint.name + '</a></h5><p>'
-            + dataPoint.tosdr.tldr + '</p></div></li>');
-    $('#popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
-        '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
-            + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint.name + ' <a href="' + dataPoint.discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint.source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
-            + dataPoint.tosdr.tldr + '</p></div></li>');
+    $('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).html(
+        '<div class="' + dataPoint[1].tosdr.point + '"><h5><span class="badge ' + badge
+            + '" title="' + dataPoint[1].tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint[1].name + ' <a href="' + dataPoint[1].discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint[1].source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
+            + dataPoint[1].tosdr.tldr + '</p></div></li>');
 }); 
         
-	function renderDataPoint(service, dataPointId) {
-        self.port.emit("renderDataPoint", dataPointId);           
+    function renderDataPoint(service, dataPointId) {
+        var renderdata = [];
+        renderdata[0] = service;
+        renderdata[1] = dataPointId;
+        self.port.emit("renderDataPoint", renderdata);           
     }
 
     var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";
@@ -62,8 +61,8 @@ var badge, icon, sign;
 
     function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links) {
         var headerHtml = '<div class="modal-header">'
-            + '<img src="http://tos-dr.info/logo/' + name + '.png" alt="" class="pull-left" height="36" >'
-            + '<h3>' + longName + ' <small class="service-url"><i class="icon icon-globe"></i> <a href="http://tos-dr.info/#' + name + '" target="_blank">Rating from Terms of Service; Didn’t Read</a></small>'
+            + '<h3><a href="http://tos-dr.info/#' + name + '" target="_blank"><img src="img/tosdr-logo-32.png" alt="" class="pull-left" />'
+            + 'service rating</a></small>'
             + '<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button></h3></div>';
         var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">'
             + (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';
@@ -72,10 +71,10 @@ var badge, icon, sign;
             pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
         }
         var bodyHtml = '<div class="modal-body">' + classHtml + '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
-
+        console.log(pointsHtml);
         // Add Links
         if (isEmpty(links)) {
-            bodyHtml += '<section><a href="/get-involved.html" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';
+            bodyHtml += '<section><a href="#" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';
         } else {
             bodyHtml += '<section><h4>Read the Terms</h4><ul class="tosback2">';
             for (var i in links) {
@@ -91,6 +90,7 @@ var badge, icon, sign;
             renderDataPoint(name, points[i]);
         }
     }
+    
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
     $.each(addonMessage,function(key , value){

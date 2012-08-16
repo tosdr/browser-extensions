@@ -13,7 +13,7 @@ Screenshot
 Usgae Instructions
 ======
 
-- install the addon directly https://github.com/AbdullahDiaa/tos-checker/blob/master/tos-dr.xpi?raw=true
+- install the addon directly https://dl.dropbox.com/u/18317770/tos-dr.xpi
 - Addon builder example => https://builder.addons.mozilla.org/package/148559/latest/
 
 -----------

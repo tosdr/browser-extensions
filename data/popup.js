@@ -2,11 +2,11 @@ self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;
     if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
-        icon = 'plus';
+        icon = 'thumbs-up';
         sign = '+';
     } else if (dataPoint[1].tosdr.point == 'mediocre') {
         badge = 'badge-warning';
-        icon = 'minus';
+        icon = 'thumbs-down';
         sign = '-';
     } else if (dataPoint[1].tosdr.point == 'alert') {
         badge = 'badge-important';
@@ -62,7 +62,7 @@ var badge, icon, sign;
     function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links) {
         var headerHtml = '<div class="modal-header">'
             + '<h3><a href="http://tos-dr.info/#' + name + '" target="_blank"><img src="img/tosdr-logo-32.png" alt="" class="pull-left" />'
-            + 'service rating</a></small>'
+            + '</a></small>'
             + '<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button></h3></div>';
         var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">'
             + (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';

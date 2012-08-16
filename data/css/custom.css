@@ -70,3 +70,10 @@ p.tldr a.discuss-this{display:block;}
 .hero-unit{padding:60px 0 20px;}
 .hero-unit section{margin-bottom:1em;padding:0 30px;}
 .hero-unit h2{padding:1em 0;font-weight:600;}
+.modal-header h3 a {
+    height: 30px;
+	display: block;
+}
+.modal-header .close {
+margin-top: -25px;
+}

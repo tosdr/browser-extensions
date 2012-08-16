@@ -1,3 +1,5 @@
+//self.port.emit('resize', {width: document.documentElement.clientWidth,height: document.documentElement.clientHeight});
+
 self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;
     if (dataPoint[1].tosdr.point == 'good') {

@@ -21,10 +21,10 @@ var badge, icon, sign;
         icon = 'question-sign';
         sign = '?';
     }
-    document.getElementById('popup-point-' + dataPoint.service + '-' + dataPoint.id).innerHTML =
+    $('popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
         '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
             + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> <a target="_blank" href="' + dataPoint.discussion + '">' + dataPoint.name + '</a></h5><p>'
-            + dataPoint.tosdr.tldr + '</p></div></li>';
+            + dataPoint.tosdr.tldr + '</p></div></li>');
     $('#popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
         '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
             + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint.name + ' <a href="' + dataPoint.discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint.source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'

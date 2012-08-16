@@ -1,6 +1,7 @@
 function renderDataPoint(service, dataPointId) {
-        jQuery.ajax('http://tos-dr.info/points/' + dataPointId + '.json', {success:function (dataPoint) {
-            var badge, icon, sign;
+        self.port.emit("renderDataPoint", dataPointId);
+        self.port.on("tosdrpoint", function (dataPoint){
+        var badge, icon, sign;
             if (dataPoint.tosdr.point == 'good') {
                 badge = 'badge-success';
                 icon = 'plus';
@@ -22,15 +23,15 @@ function renderDataPoint(service, dataPointId) {
                 icon = 'question-sign';
                 sign = '?';
             }
-            document.getElementById('popup-point-' + service + '-' + dataPointId).innerHTML =
+            document.getElementById('popup-point-' + dataPoint.service + '-' + dataPoint.id).innerHTML =
                 '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
                     + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> <a target="_blank" href="' + dataPoint.discussion + '">' + dataPoint.name + '</a></h5><p>'
                     + dataPoint.tosdr.tldr + '</p></div></li>';
-            $('#popup-point-' + service + '-' + dataPointId).html(
+            $('#popup-point-' + dataPoint.service + '-' + dataPoint.id).html(
                 '<div class="' + dataPoint.tosdr.point + '"><h5><span class="badge ' + badge
                     + '" title="' + dataPoint.tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint.name + ' <a href="' + dataPoint.discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint.source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
                     + dataPoint.tosdr.tldr + '</p></div></li>');
-        }});
+        });            
     }
 
     var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";
@@ -89,7 +90,6 @@ function renderDataPoint(service, dataPointId) {
             renderDataPoint(name, points[i]);
         }
     }
-    
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
     $.each(addonMessage,function(key , value){

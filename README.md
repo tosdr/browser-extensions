@@ -26,7 +26,7 @@ Linux
 Usgae Instructions
 ======
 
-- install the addon directly http://bit.ly/tos-dr
+- install the addon https://addons.mozilla.org/en-US/firefox/addon/tos-dr/
 - Addon builder example => https://builder.addons.mozilla.org/package/148559/latest/
 
 -----------

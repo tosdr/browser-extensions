@@ -73,7 +73,6 @@ var badge, icon, sign;
             pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
         }
         var bodyHtml = '<div class="modal-body">' + classHtml + '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
-        console.log(pointsHtml);
         // Add Links
         if (isEmpty(links)) {
             bodyHtml += '<section><a href="http://tos-dr.info/get-involved.html" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';

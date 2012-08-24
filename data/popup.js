@@ -1,6 +1,6 @@
 //self.port.emit('resize', {width: document.documentElement.clientWidth,height: document.documentElement.clientHeight});
-
 self.port.on("tosdrpoint", function (dataPoint){
+
 var badge, icon, sign;
     if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
@@ -23,10 +23,18 @@ var badge, icon, sign;
         icon = 'question-sign';
         sign = '?';
     }
-    $('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).html(
-        '<div class="' + dataPoint[1].tosdr.point + '"><h5><span class="badge ' + badge
-            + '" title="' + dataPoint[1].tosdr.point + '"><i class="icon-' + icon + ' icon-white">' + sign + '</i></span> ' + dataPoint[1].name + ' <a href="' + dataPoint[1].discussion + '" target="_blank" class="label context">Discussion</a> <!--a href="' + dataPoint[1].source.terms + '" class="label context" target="_blank">Terms</a--></h5><p>'
-            + dataPoint[1].tosdr.tldr + '</p></div></li>');
+
+ $('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append(
+    $("<div>", { class: dataPoint[1].tosdr.point })
+    .append($("<h5>")
+		.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
+			.append($("<i>", { class: 'icon-' + icon + ' icon-white' }).text(sign))
+		)
+		.append(' ' + dataPoint[1].name + ' ')
+		.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
+	)
+	.append($("<p>").text(dataPoint[1].tosdr.tldr))
+	);
 }); 
         
     function renderDataPoint(service, dataPointId) {
@@ -62,34 +70,53 @@ var badge, icon, sign;
     }
 
     function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links) {
-        var headerHtml = '<div class="modal-header">'
-            + '<h3><a href="http://tos-dr.info/#' + name + '" target="_blank"><img src="img/tosdr-logo-32.png" alt="" class="pull-left" />'
-            + '</a></small>'
-            + '<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button></h3></div>';
-        var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">'
-            + (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';
-        var pointsHtml = '';
-        for (var i = 0; i < points.length; i++) {
-            pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
-        }
-        var bodyHtml = '<div class="modal-body">' + classHtml + '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
-        // Add Links
-        if (isEmpty(links)) {
-            bodyHtml += '<section><a href="http://tos-dr.info/get-involved.html" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';
-        } else {
-            bodyHtml += '<section><h4>Read the Terms</h4><ul class="tosback2">';
-            for (var i in links) {
-                bodyHtml += '<li><a target="_blank" href="' + links[i].url + '">' + (links[i].name ? links[i].name : i) + '</a></li>';
-            }
-            bodyHtml += '</ul></section>';
-        }
-
-        bodyHtml += '</div>';
-
-        $('#page').html(headerHtml + bodyHtml);
-        for (var i = 0; i < points.length; i++) {
-            renderDataPoint(name, points[i]);
-        }
+		$('#page').empty();
+	    // append modal-header
+		$('#page').append(
+		    $("<div>", { class: 'modal-header' })
+		    .append($("<h3>")
+				.append($("<small>")
+					.append($("<a>", { href: 'http://tos-dr.info/#' + name , target: '_blank' })
+						.append($("<img>", { src: 'img/tosdr-logo-32.png', class : 'pull-left' }))
+					)
+				)
+				.append($("<button>", { id: 'closeButton' , class : 'close pull-right' , type: 'button', text: '×'}))
+			)
+			);
+			//append modal-body
+		$('#page').append($("<div>", {class : 'modal-body'})
+				.append($("<div>", {class : 'tosdr-rating' })
+					.append($("<label>", { class : 'label ' + verdict , text : (verdict ? 'Class ' + verdict : 'No Class Yet')}))
+				)
+				.append($("<section>", {class : 'specificissues'})
+					.append($("<ul>", {class : 'tosdr-points'}))
+				)
+			);
+			// append points
+			for (var i = 0; i < points.length; i++) {
+	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));
+	        }
+	
+	        if (isEmpty(links)) {
+		        $('.modal-body').append($("<section>")
+					.append($("<a>", { href:'http://tos-dr.info/get-involved.html' , target: '_blank' , class: 'btn'})
+						.append($("<i>", {class: 'icon  icon-list-alt' , text:' Get Involved'}))
+					)
+				);
+	        } else {
+		        $('.modal-body').append($("<section>")
+					.append($("<h4>", { text : 'Read the Terms'}))
+					.append($("<ul>", {class: 'tosback2'}))
+				);
+	            for (var i in links) {
+			        $('.tosback2').append($("<li>")
+						.append($("<a>", { href:links[i].url , target: '_blank' , text :(links[i].name ? links[i].name : i)}))
+					);
+	            }
+	        }
+	        for (var i = 0; i < points.length; i++) {
+            	renderDataPoint(name, points[i]);
+        	}
     }
     
 // get Service Data

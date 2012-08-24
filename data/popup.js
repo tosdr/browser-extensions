@@ -1,6 +1,6 @@
 //self.port.emit('resize', {width: document.documentElement.clientWidth,height: document.documentElement.clientHeight});
+function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot", "<": "&lt;", ">": "&gt;" })[m]);
 self.port.on("tosdrpoint", function (dataPoint){
-
 var badge, icon, sign;
     if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
@@ -28,9 +28,9 @@ var badge, icon, sign;
     $("<div>", { class: dataPoint[1].tosdr.point })
     .append($("<h5>")
 		.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
-			.append($("<i>", { class: 'icon-' + icon + ' icon-white' }).text(sign))
+			.append($("<i>", { class: 'icon-' + icon + ' icon-white' , text : sign}))
 		)
-		.append(' ' + dataPoint[1].name + ' ')
+		.append(escapeHTML(' ' + dataPoint[1].name + ' '))
 		.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
 	)
 	.append($("<p>").text(dataPoint[1].tosdr.tldr))
@@ -68,7 +68,7 @@ var badge, icon, sign;
         }
         return true;
     }
-
+	
     function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links) {
 		$('#page').empty();
 	    // append modal-header
@@ -100,7 +100,8 @@ var badge, icon, sign;
 	        if (isEmpty(links)) {
 		        $('.modal-body').append($("<section>")
 					.append($("<a>", { href:'http://tos-dr.info/get-involved.html' , target: '_blank' , class: 'btn'})
-						.append($("<i>", {class: 'icon  icon-list-alt' , text:' Get Involved'}))
+						.append($("<i>", {class: 'icon  icon-list-alt'}))
+						.append(escapeHTML(' Get Involved'))
 					)
 				);
 	        } else {
@@ -122,9 +123,7 @@ var badge, icon, sign;
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
     $.each(addonMessage,function(key , value){
-        var serviceName = window.location.hash.substr(1);
-        renderPopup(key,value);
-        
+        renderPopup(key,value);        
         // send close message to hide the panel
         $('#closeButton,.close').click(function () {
             self.postMessage("close");

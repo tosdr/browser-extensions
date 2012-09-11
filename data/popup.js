@@ -87,20 +87,14 @@ var badge, icon, sign;
 		$('#page').append($("<div>", {class : 'modal-body'})
 				.append($("<div>", {class : 'tosdr-rating' })
 					.append($("<label>", { class : 'label ' + verdict , text : (verdict ? 'Class ' + verdict : 'No Class Yet')}))
-<<<<<<< HEAD
-=======
 					.append($("<p>",{ text : ratingText , class : 'lbldesc'}))
->>>>>>> 501b91fccf183f647251b0339a531b1576128948
 				)
 				.append($("<section>", {class : 'specificissues'})
 					.append($("<ul>", {class : 'tosdr-points'}))
 				)
 			);
-<<<<<<< HEAD
-=======
 			if(!verdict)
 				$('.lbldesc').append($('<a>', {href : 'mailto:tosdr@googlegroups.com' , text : 'tosdr@googlegroups.com' , target :'_blank'}));
->>>>>>> 501b91fccf183f647251b0339a531b1576128948
 			// append points
 			for (var i = 0; i < points.length; i++) {
 	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));

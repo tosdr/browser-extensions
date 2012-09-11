@@ -94,7 +94,7 @@ var badge, icon, sign;
 				)
 			);
 			if(!verdict)
-				$('.lbldesc').append($('<a>', {href : 'tosdr@googlegroups.com' , text : 'tosdr@googlegroups.com' , target :'_blank'}));
+				$('.lbldesc').append($('<a>', {href : 'mailto:tosdr@googlegroups.com' , text : 'tosdr@googlegroups.com' , target :'_blank'}));
 			// append points
 			for (var i = 0; i < points.length; i++) {
 	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));

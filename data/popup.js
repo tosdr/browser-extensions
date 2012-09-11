@@ -44,7 +44,7 @@ var badge, icon, sign;
         self.port.emit("renderDataPoint", renderdata);           
     }
 
-    var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";
+    var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: ";
     var RATING_TEXT = {
         0:NOT_RATED_TEXT,
         "false":NOT_RATED_TEXT,
@@ -87,11 +87,20 @@ var badge, icon, sign;
 		$('#page').append($("<div>", {class : 'modal-body'})
 				.append($("<div>", {class : 'tosdr-rating' })
 					.append($("<label>", { class : 'label ' + verdict , text : (verdict ? 'Class ' + verdict : 'No Class Yet')}))
+<<<<<<< HEAD
+=======
+					.append($("<p>",{ text : ratingText , class : 'lbldesc'}))
+>>>>>>> 501b91fccf183f647251b0339a531b1576128948
 				)
 				.append($("<section>", {class : 'specificissues'})
 					.append($("<ul>", {class : 'tosdr-points'}))
 				)
 			);
+<<<<<<< HEAD
+=======
+			if(!verdict)
+				$('.lbldesc').append($('<a>', {href : 'mailto:tosdr@googlegroups.com' , text : 'tosdr@googlegroups.com' , target :'_blank'}));
+>>>>>>> 501b91fccf183f647251b0339a531b1576128948
 			// append points
 			for (var i = 0; i < points.length; i++) {
 	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));

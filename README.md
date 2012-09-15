@@ -35,3 +35,5 @@ License
 ======
 
 This app is free software, licensed under: GNU Affero General Public License (AGPL-3.0). http://www.gnu.org/licenses/agpl-3.0.en.html
+
+You can get the source code at http://firefox.didnotread.org

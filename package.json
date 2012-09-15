@@ -1,11 +1,11 @@
 {
-    "name": "tos-checker", 
-    "license": "GPL 2.0", 
+    "name": "didnotread-firefox", 
+    "license": "AGPL 3.0", 
     "author": "AbdullahDiaa", 
     "version": "0.2", 
     "fullName": "Terms of Service; Didn’t Read", 
     "id": "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack", 
-    "description": "Rates the Terms of Service and Privacy Policy of websites and services from a user rights perspective (http://tos-dr.info).",
+    "description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summary from the “Terms of Service; Didn't Read” project (www.didnotread.org).",
 	"icon": "data/icons/icon-32.png",
 	"icon64": "data/icons/icon-64.png"
 }

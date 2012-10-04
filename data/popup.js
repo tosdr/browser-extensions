@@ -2,6 +2,7 @@
 function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot", "<": "&lt;", ">": "&gt;" })[m]);
 self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;
+if(dataPoint[1]){
     if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
         icon = 'thumbs-up';
@@ -24,6 +25,7 @@ var badge, icon, sign;
         sign = '?';
     }
 
+
  $('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append(
     $("<div>", { class: dataPoint[1].tosdr.point })
     .append($("<h5>")
@@ -35,8 +37,8 @@ var badge, icon, sign;
 	)
 	.append($("<p>").text(dataPoint[1].tosdr.tldr))
 	);
-}); 
-        
+}
+});       
     function renderDataPoint(service, dataPointId) {
         var renderdata = [];
         renderdata[0] = service;

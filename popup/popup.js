@@ -68,7 +68,7 @@
     return true;
   }
 
-  function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links) {
+  function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links, score) {
     var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/#' + name +
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" />' +
       '</a>' +

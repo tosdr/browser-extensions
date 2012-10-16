@@ -6,7 +6,7 @@
   function renderDataPoint(service, dataPointId) {
     $.ajax('http://tos-dr.info/points/' + dataPointId + '.json', {
       success: function (dataPoint) {
-        var badge, icon, sign;
+        var badge, icon, sign, score;
         if (dataPoint.tosdr.point == 'good') {
           badge = 'badge-success';
           icon = 'thumbs-up';

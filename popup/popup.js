@@ -84,15 +84,15 @@
       return (Math.abs(b.score) - Math.abs(a.score));
     });
     var pointsHtml = '';
-//    for (var i = 0; i < points.length; i++) {
-//      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
-//    }
-    for(var i=0; i<renderables.length; i++) {
-      pointsHtml += '<li id="popup-point-'+name+'-'+renderables[i].id+'" class="point">'
-        //+renderables[i].score+' '
-        +renderables[i].text
-        +'</li>\n';
+    for (var i = 0; i < points.length; i++) {
+      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
     }
+//    for(var i=0; i<renderables.length; i++) {
+//      pointsHtml += '<li id="popup-point-'+name+'-'+renderables[i].id+'" class="point">'
+//        //+renderables[i].score+' '
+//        +renderables[i].text
+//        +'</li>\n';
+//    }
     var bodyHtml = '<div class="modal-body">' + classHtml +
       '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
 

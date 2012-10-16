@@ -68,7 +68,7 @@
     return true;
   }
 
-  function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links, score) {
+  function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links, score, id) {
     var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/#' + name +
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" />' +
       '</a>' +
@@ -84,15 +84,15 @@
       return (Math.abs(b.score) - Math.abs(a.score));
     });
     var pointsHtml = '';
-    for (var i = 0; i < points.length; i++) {
-      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
-    }
-//    for(var i=0; i<renderables.length; i++) {
-//      pointsHtml += '<li id="popup-point-'+name+'-'+renderables[i].id+'" class="point">'
-//        //+renderables[i].score+' '
-//        +renderables[i].text
-//        +'</li>\n';
+//    for (var i = 0; i < points.length; i++) {
+//      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
 //    }
+    for(var i=0; i<renderables.length; i++) {
+      pointsHtml += '<li id="popup-point-'+name+'-'+renderables[i].id+'" class="point">'
+        //+renderables[i].score+' '
+        +renderables[i].text
+        +'</li>\n';
+    }
     var bodyHtml = '<div class="modal-body">' + classHtml +
       '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
 

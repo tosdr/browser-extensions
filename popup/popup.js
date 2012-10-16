@@ -70,7 +70,7 @@
 
   function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links, score) {
     var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/#' + name +
-      '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" />' +
+      '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" id="tosdr-logo" />' +
       '</a>' +
       ' for ' +
       '<!--img src="http://tos-dr.info/logo/'+name+'.png" alt="" height="32" -->'+longName+'</h3></div>';

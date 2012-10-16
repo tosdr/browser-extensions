@@ -72,7 +72,7 @@
     var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/#' + name +
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" />' +
       '</a></h3>' +
-      'for <img src="logo/'+name+'.png" alt="" class="pull-left favlogo" height="36" >' +
+      'for <img src="http://tos-dr.info/logo/'+name+'.png" alt="" class="pull-left favlogo" height="36" >' +
       '<h3>'+longName+'</h3></div>';
     var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">' +
       (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';

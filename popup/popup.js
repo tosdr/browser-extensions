@@ -76,9 +76,22 @@
       '<!--img src="http://tos-dr.info/logo/'+name+'.png" alt="" height="32" -->'+longName+'</h3></div>';
     var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">' +
       (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';
+    var renderables=[];
+    for(var i in points) {
+      renderables.push(renderDataPoint(name, points[i], true));
+    }
+    renderables.sort(function(a, b) {
+      return (Math.abs(b.score) - Math.abs(a.score));
+    });
     var pointsHtml = '';
-    for (var i = 0; i < points.length; i++) {
-      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
+//    for (var i = 0; i < points.length; i++) {
+//      pointsHtml += '<li id="popup-point-' + name + '-' + points[i] + '" class="point"></li>';
+//    }
+    for(var i=0; i<renderables.length; i++) {
+      pointsHtml += '<li id="popup-point-'+name+'-'+renderables[i].id+'" class="point">'
+        //+renderables[i].score+' '
+        +renderables[i].text
+        +'</li>\n';
     }
     var bodyHtml = '<div class="modal-body">' + classHtml +
       '<section class="specificissues"> <ul class="tosdr-points">' + pointsHtml + '</ul></section>';
@@ -110,7 +123,7 @@
       '<p><strong>Not rated, yet.</strong><p>' +
       '<p>Write an email to <a href="mailto:tosdr@googlegroups.com">tosdr@googlegroups.com</a> with a link to the terms,' +
       ' a small quote from the terms about the point you‘re making and let us know if you think it‘s a good or a bad point.' +
-      ' It‘s better to do one email thread by topic, rather than one email per service. For more details, read on!</p>' +
+      ' It‘s better to do one email thread by topic, rather than one email per service. For more details, <a href="http://tos-dr.info/get-involved.html">read on</a>!</p>' +
       '</div>';
     document.getElementById('page').innerHTML = headerHtml + bodyHtml;
   }

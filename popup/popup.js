@@ -73,7 +73,7 @@
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" id="tosdr-logo" />' +
       '</a>' +
       ' for ' +
-      '<!--img src="http://tos-dr.info/logo/'+name+'.png" alt="" height="32" -->'+longName+'</h3></div>';
+      '<img src="http://tos-dr.info/logo/'+name+'.png" alt="" height="32">'+longName+'</h3></div>';
     var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">' +
       (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';
     var renderables=[];

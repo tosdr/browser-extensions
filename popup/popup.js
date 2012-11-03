@@ -129,8 +129,19 @@
   }
 
   $(function () {
+    function parseQueryString(queryString) {
+      queryString = queryString.replace('?', '');
+      var result = {};
+      var params = queryString.split('&');
+      params.forEach(function(param){
+        param = param.split('=');
+        result[param[0]] = param[1];
+      });
+      return result;
+    }
     Tosdr.init(function () {
-      var url = location.hash.substr(1);
+      var search = parseQueryString(location.search);
+      var url = search.url && decodeURIComponent(search.url) || "";
       var service = Tosdr.getService(url);
       if (service) {
         renderPopup(service);

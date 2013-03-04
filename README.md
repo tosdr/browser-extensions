@@ -1,6 +1,6 @@
 “Terms of Service; Didn't Read” Firefox extension
 =======
-This Firefox addon displays instantly while you browse the ratings of websites' **Terms of Service and Privacy Policy** with a focus on users' rights. The rating will display in the address bar as: class A to class E (good to bad). When you click on it, it displays the summary built from the www.tos-dr.info community.
+This Firefox addon displays instantly while you browse the ratings of websites' **Terms of Service and Privacy Policy** with a focus on users' rights. The rating will display in the address bar as: class A to class E (good to bad). When you click on it, it displays the summary built from the www.tosdr.org community.
 
 -----------
 
@@ -26,8 +26,8 @@ GNU/Linux
 Usage Instructions
 ======
 
-- Install the addon https://addons.mozilla.org/en-US/firefox/addon/didnotread/
-- Addon builder example => https://builder.addons.mozilla.org/package/148559/latest/
+- Install the addon https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/?src=github
+- Addons builder example => https://builder.addons.mozilla.org/package/148559/latest/
 
 -----------
 

@@ -2,7 +2,6 @@
 function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot", "<": "&lt;", ">": "&gt;" })[m]);
 self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;
-if(dataPoint[1]){
     if (dataPoint[1].tosdr.point == 'good') {
         badge = 'badge-success';
         icon = 'thumbs-up';
@@ -25,7 +24,6 @@ if(dataPoint[1]){
         sign = '?';
     }
 
-
  $('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append(
     $("<div>", { class: dataPoint[1].tosdr.point })
     .append($("<h5>")
@@ -37,8 +35,8 @@ if(dataPoint[1]){
 	)
 	.append($("<p>").text(dataPoint[1].tosdr.tldr))
 	);
-}
-});       
+}); 
+        
     function renderDataPoint(service, dataPointId) {
         var renderdata = [];
         renderdata[0] = service;
@@ -78,7 +76,7 @@ if(dataPoint[1]){
 		    $("<div>", { class: 'modal-header' })
 		    .append($("<h3>")
 				.append($("<small>")
-					.append($("<a>", { href: 'http://tos-dr.info/#' + name , target: '_blank' })
+					.append($("<a>", { href: 'http://tosdr.org/#' + name , target: '_blank' })
 						.append($("<img>", { src: 'img/tosdr-logo-32.png', class : 'pull-left' }))
 					)
 				)
@@ -104,7 +102,7 @@ if(dataPoint[1]){
 	
 	        if (isEmpty(links)) {
 		        $('.modal-body').append($("<section>")
-					.append($("<a>", { href:'http://tos-dr.info/get-involved.html' , target: '_blank' , class: 'btn'})
+					.append($("<a>", { href:'http://tosdr.org/get-involved.html' , target: '_blank' , class: 'btn'})
 						.append($("<i>", {class: 'icon  icon-list-alt'}))
 						.append(escapeHTML(' Get Involved'))
 					)

@@ -1,4 +1,3 @@
-//self.port.emit('resize', {width: document.documentElement.clientWidth,height: document.documentElement.clientHeight});
 function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot", "<": "&lt;", ">": "&gt;" })[m]);
 self.port.on("tosdrpoint", function (dataPoint){
 var badge, icon, sign;

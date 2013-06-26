@@ -1,10 +1,23 @@
-“Terms of Service; Didn't Read” Firefox extension
-=======
-This Firefox addon displays instantly while you browse the ratings of websites' **Terms of Service and Privacy Policy** with a focus on users' rights. The rating will display in the address bar as: class A to class E (good to bad). When you click on it, it displays the summary built from the www.tosdr.org community.
+# Firefox add-on for [Terms of Service; Didn't Read][tosdr]
 
------------
+“I have read and agree to the Terms” is the biggest lie on the web.
+We aim to fix that. “Terms of Service; Didn't Read” is a user
+rights initiative to rate and label website terms & privacy
+policies, from very good (class A) to very bad (class E).
 
-Screenshot
+This extension informs you instantly of your rights online by
+showing an unintrusive icon in the toolbar. You can click on this
+icon to get summaries from the [Terms of Service; Didn't
+Read][tosdr] initiative.
+
+Get the extension
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/)
+
+
+[tosdr]: http://tosdr.org
+
+
+Screenshots
 =======
 OS X
 
@@ -31,9 +44,9 @@ Usage Instructions
 
 -----------
 
-License
-======
+The extension is Free Software, licensed under the GNU Affero
+General Public License (AGPL-3.0). You can report bugs and
+contribute features at <https://github.com/tosdr/tosdr-firefox>.
+If you like it, please consider
+[contributing](http://tosdr.org/contribute.html) to the project.
 
-This app is free software, licensed under: GNU Affero General Public License (AGPL-3.0). http://www.gnu.org/licenses/agpl-3.0.en.html
-
-You can get the source code at http://github.com/didnotread/didnotread-firefox

@@ -2,7 +2,7 @@
     "name": "tosdr", 
     "license": "AGPL 3.0", 
     "author": "AbdullahDiaa", 
-    "version": "0.3", 
+    "version": "0.3.2", 
     "fullName": "Terms of Service; Didn’t Read", 
     "id": "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack", 
     "description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summaries from the “Terms of Service; Didn't Read” project (www.tosdr.org).",

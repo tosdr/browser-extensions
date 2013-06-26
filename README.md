@@ -9,6 +9,8 @@ This bookmarklet informs you of your rights online. You can click
 on it to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
+[tosdr]: http://tosdr.org
+
 Right now we have:
 
  - a popup, e.g. Google

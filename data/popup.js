@@ -33,7 +33,7 @@ if(dataPoint[1]){
 		.append(escapeHTML(' ' + dataPoint[1].name + ' '))
 		.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
 	)
-	.append($("<p>").text(dataPoint[1].tosdr.tldr))
+	.append($("<p>").html(dataPoint[1].tosdr.tldr))
 	);
 }});
  

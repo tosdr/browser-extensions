@@ -1,7 +1,8 @@
 {
     "name": "tosdr", 
     "license": "AGPL 3.0", 
-    "author": "AbdullahDiaa", 
+    "author": "AbdullahDiaa",
+    "contributors": ["freaktechnik"],
     "version": "0.3.2", 
     "fullName": "Terms of Service; Didn’t Read", 
     "id": "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack", 

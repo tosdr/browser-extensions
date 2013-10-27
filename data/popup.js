@@ -30,7 +30,7 @@ if(dataPoint[1]){
 		.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
 			.append($("<i>", { class: 'icon-' + icon + ' icon-white' , text : sign}))
 		)
-		.append(escapeHTML(' ' + dataPoint[1].name + ' '))
+		.append(escapeHTML(' ' + dataPoint[1].title + ' '))
 		.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
 	)
 	.append($("<p>").html(dataPoint[1].tosdr.tldr))
@@ -98,7 +98,7 @@ if(dataPoint[1]){
 				$('.lbldesc').append($('<a>', {href : 'mailto:tosdr@googlegroups.com' , text : 'tosdr@googlegroups.com' , target :'_blank'}));
 			// append points
 			for (var i = 0; i < points.length; i++) {
-	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));
+	            $('.tosdr-points').append($("<li>", {id : 'popup-point-' + title + '-' + points[i] , class:'point'}));
 	        }
 	
 	        if (isEmpty(links)) {
@@ -120,7 +120,7 @@ if(dataPoint[1]){
 	            }
 	        }
 	        for (var i = 0; i < points.length; i++) {
-            	renderDataPoint(name, points[i]);
+            	renderDataPoint(title, points[i]);
         	}
     }
     

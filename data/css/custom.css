@@ -134,3 +134,7 @@ li.point span.badge {
     color: #0088cc;
     text-shadow: none;
 }
+
+.pointshref{
+	cursor:pointer;
+}

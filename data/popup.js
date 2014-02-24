@@ -22,16 +22,43 @@ self.port.on("tosdrpoint", function (dataPoint){
 			icon = 'question-sign';
 			sign = '?';
 		}
+		var pointText = dataPoint[1].tosdr.tldr;
 		
-		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append(
-			$("<div>", { class: dataPoint[1].tosdr.point })
+		//Extract links from text
+		var taggedText = pointText.split(/(<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>)/gim);
+
+		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id)
+			.append($("<div>", { class: dataPoint[1].tosdr.point })
 			.append($("<h5>")
-			.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
-			.append($("<span>", { class: 'glyphicon glyphicon-' + icon})))
-			.append($("<span>").text(" " + dataPoint[1].title + " "))
-			.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'})))
-			.append($("<p>").text(dataPoint[1].tosdr.tldr))
-		);
+				.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
+					.append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
+				)
+				.append($("<span>").text(" " + dataPoint[1].title + " "))
+				.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
+			));
+		
+		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append($("<p>"));
+		if(taggedText.length > 1){
+			for(i =0; i< taggedText.length; i++){
+				var hrefRegex = /<a href="(.*?)">/g;
+				var emRegex = /<em>/g;
+				var hrefResults = hrefRegex.exec(taggedText[i]);
+				var emResults = emRegex.exec(taggedText[i]);
+				
+				if(hrefResults){
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : hrefResults[1], text: taggedText[i+1], class : "pointshref" , target : "_blank"}));
+					i+= 2;
+				}else if(emResults){
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<em>", {text : taggedText[i+1]}));
+					i+= 2;
+				}else{
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append(taggedText[i]);
+				}
+			}
+		}else{
+			$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').text(pointText);	
+		}			
+		
 	}
 });
  
@@ -131,7 +158,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
 	$.each(addonMessage,function(key , value){
-		renderPopup(key,value);        
+		renderPopup(key,value);   
 		// send close message to hide the panel
 		$('#closeButton,.close').click(function () {
 			self.postMessage("close");

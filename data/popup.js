@@ -42,16 +42,17 @@ self.port.on("tosdrpoint", function (dataPoint){
 		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append($("<p>"));
 		if(taggedText.length > 1){
 			for(i =0; i< taggedText.length; i++){
-				var hrefRegex = /<a href="(.*?)">/g;
-				var emRegex = /<em>/g;
+				var hrefRegex = /href=("|')(.*?)("|')/g;
+				var tagsRegex = /<(em|strong)>/g;
 				var hrefResults = hrefRegex.exec(taggedText[i]);
-				var emResults = emRegex.exec(taggedText[i]);
+				var tagsResults = tagsRegex.exec(taggedText[i]);
 				
 				if(hrefResults){
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : escapeHTML(hrefResults[1]), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : escapeHTML(hrefResults[2]), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
 					i+= 2;
-				}else if(emResults){
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<em>", {text : escapeHTML(taggedText[i+1]) }));
+				}else if(tagsResults){
+					var tag = tagsResults[1];
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<" + escapeHTML(tag) + ">", {text : escapeHTML(taggedText[i+1]) }));
 					i+= 2;
 				}else{
 					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append(escapeHTML(taggedText[i]));

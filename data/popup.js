@@ -1,3 +1,5 @@
+function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[m]);
+
 self.port.on("tosdrpoint", function (dataPoint){
 	var badge, icon, sign;
 	if(dataPoint[1]){
@@ -30,11 +32,11 @@ self.port.on("tosdrpoint", function (dataPoint){
 		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id)
 			.append($("<div>", { class: dataPoint[1].tosdr.point })
 			.append($("<h5>")
-				.append($("<span>", { class: 'badge ' + badge , title: dataPoint[1].tosdr.point })
+				.append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint[1].tosdr.point) })
 					.append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
 				)
 				.append($("<span>").text(" " + dataPoint[1].title + " "))
-				.append($("<a>", { href: dataPoint[1].discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
+				.append($("<a>", { href: escapeHTML(dataPoint[1].discussion) , target: '_blank', class : 'label context' , text: 'Discussion'}))
 			));
 		
 		$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id).append($("<p>"));
@@ -46,17 +48,17 @@ self.port.on("tosdrpoint", function (dataPoint){
 				var emResults = emRegex.exec(taggedText[i]);
 				
 				if(hrefResults){
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : hrefResults[1], text: taggedText[i+1], class : "pointshref" , target : "_blank"}));
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : escapeHTML(hrefResults[1]), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
 					i+= 2;
 				}else if(emResults){
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<em>", {text : taggedText[i+1]}));
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<em>", {text : escapeHTML(taggedText[i+1]) }));
 					i+= 2;
 				}else{
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append(taggedText[i]);
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append(escapeHTML(taggedText[i]));
 				}
 			}
 		}else{
-			$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').text(pointText);	
+			$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').text(escapeHTML(pointText));	
 		}			
 		
 	}
@@ -102,7 +104,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 		$("<div>", { class: 'modal-header' })
 		.append($("<button>", { id: 'closeButton' , class : 'close' , type: 'button', text: 'x'}))
 		.append($("<h4>", {class : 'modal-title'})
-			.append($("<a>", { href: 'http://tosdr.org/#' + name , target: '_blank' })
+			.append($("<a>", { href: 'http://tosdr.org/#' + escapeHTML(name) , target: '_blank' })
 				.append($("<img>", { src: 'img/tosdr-logo-32.png'}))
 			)
 		)

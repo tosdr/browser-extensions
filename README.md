@@ -16,9 +16,20 @@ Get the extension
 
 [tosdr]: http://tosdr.org
 
+-----------
 
-Screenshots
-=======
+### Build & Run
+
+* Install Firefox Addon SDK as detailed [here](https://addons.mozilla.org/en-US/developers/docs/sdk/latest/dev-guide/tutorials/installation.html)
+
+* Clone this repository: `git clone git@github.com:tosdr/tosdr-firefox.git`
+
+* Enter the folder and execute: `cfx run`
+
+-----------
+
+### Screenshots
+
 OS X
 
 ![screenshot](https://dl.dropbox.com/u/18317770/tos.png)
@@ -32,15 +43,6 @@ Windows
 GNU/Linux
 
 ![screenshot](https://dl.dropbox.com/u/18317770/tos-linux.png)
-
-
------------
-
-Usage Instructions
-======
-
-- Install the addon https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/?src=github
-- Addons builder example => https://builder.addons.mozilla.org/package/148559/latest/
 
 -----------
 

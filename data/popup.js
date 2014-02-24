@@ -130,9 +130,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 	for (var i = 0; i < points.length; i++) {
 		$('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + points[i] , class:'point'}));
 	}
-	
-	//$("#hh").text($("#page").html());
-		
+			
 	if (isEmpty(links)) {
 		$('.modal-body').append($("<section>")
 			.append($("<a>", { href:'http://tosdr.org/get-involved.html' , target: '_blank' , class: 'btn'})
@@ -159,7 +157,9 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
     
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
+	console.log("tosdr: Panel popup received matched service data.")
 	$.each(addonMessage,function(key , value){
+		console.log("tosdr: Rendering service data in popup");
 		renderPopup(key,value);   
 		// send close message to hide the panel
 		$('#closeButton,.close').click(function () {

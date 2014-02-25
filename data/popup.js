@@ -85,7 +85,7 @@ var RATING_TEXT = {
 };
 
 function renderPopup(name, service) {
-	renderPopupHtml(name, service.name, service.url, service.tosdr.rated, RATING_TEXT[service.tosdr.rated], service.points, service.links);
+	renderPopupHtml(name, service.name, service.url, service.tosdr.rated, RATING_TEXT[service.tosdr.rated], service.points.reverse(), service.links);
 }
 
 function isEmpty(map) {

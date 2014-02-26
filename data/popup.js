@@ -48,7 +48,8 @@ self.port.on("tosdrpoint", function (dataPoint){
 				var tagsResults = tagsRegex.exec(taggedText[i]);
 				
 				if(hrefResults){
-					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : escapeHTML(hrefResults[2]), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
+					var url = (hrefResults[2].match(/^index\.html/)) ? "http://tosdr.org/" + hrefResults[2] : hrefResults[2];
+					$('#popup-point-' + dataPoint[0] + '-' + dataPoint[1].id + ' p').append($("<a>", {href : escapeHTML(url), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
 					i+= 2;
 				}else if(tagsResults){
 					var tag = tagsResults[1];

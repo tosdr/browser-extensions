@@ -159,13 +159,40 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
     
 // get Service Data
 self.on('message', function onMessage(addonMessage) {
-	console.log("tosdr: Panel popup received matched service data.")
-	$.each(addonMessage,function(key , value){
-		console.log("tosdr: Rendering service data in popup");
-		renderPopup(key,value);   
+	if(addonMessage){
+		console.log("tosdr: Panel popup received matched service data.")
+		$.each(addonMessage,function(key , value){
+			console.log("tosdr: Rendering service data in popup");
+			renderPopup(key,value);   
+			// send close message to hide the panel
+			$('#closeButton,.close').click(function () {
+				self.postMessage("close");
+			});
+		});
+	}else{
+		$('#page').empty();
+	
+		//Modal-header
+		$('#page').append(
+			$("<div>", { class: 'modal-header' })
+			.append($("<button>", { id: 'closeButton' , class : 'close' , type: 'button', text: 'x'}))
+			.append($("<h4>", {class : 'modal-title'})
+				.append($("<a>", { href: 'http://tosdr.org', target: '_blank' })
+					.append($("<img>", { src: 'img/tosdr-logo-32.png'}))
+				)
+			)
+		);
+		
+		//Modal-body
+		$('#page').append($("<div>", {class : 'modal-body'})
+			.append($("<div>", {class : 'tosdr-rating' })
+			.append($("<h4>", { text : 'Not rated, yet.'}))
+			.append($("<p>",{ text : 'Write an email to tosdr@googlegroups.com with a link to the terms, a small quote from the terms about the point you‘re making and let us know if you think it‘s a good or a bad point. It‘s better to do one email thread by topic, rather than one email per service. For more details, read on!' , class : 'lbldesc'})))
+		);
+		
 		// send close message to hide the panel
 		$('#closeButton,.close').click(function () {
 			self.postMessage("close");
 		});
-	});
+	}
 });

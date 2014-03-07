@@ -11,7 +11,7 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/)
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/) **[0.3.1]** *[0.4 submitted for review]*
 
 
 [tosdr]: http://tosdr.org
@@ -23,6 +23,8 @@ Get the extension
 * Install Firefox Addon SDK as detailed [here](https://addons.mozilla.org/en-US/developers/docs/sdk/latest/dev-guide/tutorials/installation.html)
 
 * Clone this repository: `git clone git@github.com:tosdr/tosdr-firefox.git`
+
+* To generate xpi `cfx xpi`
 
 * Enter the folder and execute: `cfx run`
 
@@ -47,8 +49,7 @@ GNU/Linux
 -----------
 
 The extension is Free Software, licensed under the GNU Affero
-General Public License (AGPL-3.0). You can report bugs and
-contribute features at <https://github.com/tosdr/tosdr-firefox>.
-If you like it, please consider
+General Public License (AGPL-3.0).  
+Please consider
 [contributing](http://tosdr.org/contribute.html) to the project.
 

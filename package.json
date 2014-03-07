@@ -8,34 +8,5 @@
     "id": "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack", 
     "description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summaries from the “Terms of Service; Didn't Read” project (www.tosdr.org).",
 	"icon": "data/icons/icon-32.png",
-	"icon64": "data/icons/icon-64.png",
-	"preferences": [
-		{
-		    "name": "notificationRatingClass",
-		    "type": "menulist",
-		    "title": "Notify me when rating class is :",
-		    "options": [
-		           {
-		               "value": "0",
-		               "label": "No notifications"
-		           },
-		           {
-		               "value": "4",
-		               "label": "E"
-		           },
-		           {
-		               "value": "3",
-		               "label": "D"
-		           },
-		           {
-		               "value": "2",
-		               "label": "C"
-		           },
-		           {
-		               "value": "1",
-		               "label": "B"
-		           }
-		       ]
-		}
-	]
+	"icon64": "data/icons/icon-64.png"
 }

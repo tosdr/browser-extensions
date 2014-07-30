@@ -8,5 +8,14 @@
     "id": "jid0-3GUEt1r69sQNSrca5p8kx9Ezc3U@jetpack", 
     "description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summaries from the “Terms of Service; Didn't Read” project (www.tosdr.org).",
 	"icon": "data/icons/icon-32.png",
-	"icon64": "data/icons/icon-64.png"
+	"icon64": "data/icons/icon-64.png",
+	"preferences":[
+		{
+		    "description": "Enable Notifications?",
+		    "type": "bool",
+		    "name": "notificationsEnabled",
+		    "value": true,
+		    "title": "Notifications"
+		}
+	]
 }

@@ -11,8 +11,7 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/) **[0.3.1]** *[0.4 submitted for review]*
-
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/) **[0.4]**
 
 [tosdr]: http://tosdr.org
 
@@ -36,11 +35,9 @@ OS X
 
 ![screenshot](https://dl.dropbox.com/u/18317770/tos.png)
 
-
 Windows
 
 ![screenshot](https://dl.dropbox.com/u/18317770/tos-win.png)
-
 
 GNU/Linux
 
@@ -49,7 +46,6 @@ GNU/Linux
 -----------
 
 The extension is Free Software, licensed under the GNU Affero
-General Public License (AGPL-3.0).  
+General Public License (AGPL-3.0).
 Please consider
 [contributing](http://tosdr.org/contribute.html) to the project.
-

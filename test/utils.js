@@ -8,7 +8,7 @@ const port = exports.port = 8099;
 const { prefs } = require("sdk/simple-prefs");
 prefs.BASE_URL = 'http://localhost:' + port;
 
-const { SERVICES_PATH, servicePath, pointPath } = require('utils/service');
+const { SERVICES_PATH, servicePath, serviceAPIPath } = require('utils/service');
 
 const { readURISync } = require("sdk/net/url");
 const fixtures = require('./fixtures');
@@ -19,7 +19,7 @@ let server = null;
 
 exports.startServer = function () {
   let SERVICES_DATA = JSON.parse(readURISync(fixtures.url("services-index.json")));
-  let POINT_DATA = JSON.parse(readURISync(fixtures.url("point-" + POINT_ID + ".json")));
+  let POINT_DATA = JSON.parse(readURISync(fixtures.url("pointsData-github.json")));
   let TEST_SERVICES = {
     '500px' : JSON.parse(readURISync(fixtures.url("service-500px.json"))),
     'amazon' : JSON.parse(readURISync(fixtures.url("service-amazon.json"))),
@@ -46,7 +46,7 @@ exports.startServer = function () {
     response.write(JSON.stringify(SERVICE_500PX_DATA));
   });
 
-  server.registerPathHandler(pointPath(POINT_ID), function (request, response) {
+  server.registerPathHandler(serviceAPIPath('github'), function (request, response) {
     response.setHeader("Content-Type", "application/json", false);
     response.write(JSON.stringify(POINT_DATA));
   });

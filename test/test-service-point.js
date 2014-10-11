@@ -8,13 +8,13 @@ const fixtures = require('./fixtures');
 const httpd = require('sdk/test/httpd');
 
 const { port } = require('./utils');
-const POINT_ID = '3uiIrLyj8Hw';
+const SERVICE_NAME = 'github';
 
-const { pointPath } = require('utils/service');
+const { serviceAPIPath } = require('utils/service');
 const point = require('service/point');
 
 exports["test point get"] = function (assert, done) {
-  let DATA = JSON.parse(readURISync(fixtures.url("point-" + POINT_ID + ".json")));
+  let DATA = JSON.parse(readURISync(fixtures.url("pointsData-github.json")));
 
   let server = httpd.startServerAsync(port);
 
@@ -22,14 +22,14 @@ exports["test point get"] = function (assert, done) {
     assert.fail("should not reject promise " + JSON.stringify(reason));
     server.stop(done);
   }
-
-  server.registerPathHandler(pointPath(POINT_ID), function (request, response) {
+  console.error("serviceAPIPath(SERVICE_NAME)", serviceAPIPath(SERVICE_NAME));
+  server.registerPathHandler(serviceAPIPath(SERVICE_NAME), function (request, response) {
     response.setHeader("Content-Type", "application/json");
     response.write(JSON.stringify(DATA));
   }, fail);
 
-  point.get("3uiIrLyj8Hw").then(function (point) {
-    assert.pass("made call for point-" + POINT_ID + ".json");
+  point.get(SERVICE_NAME).then(function (point) {
+    assert.pass("made call for pointsData-" + SERVICE_NAME + ".json");
     assert.deepEqual(Object.keys(point), Object.keys(DATA), "point data returned matches data delivered");
     // TODO: this test should pass but keeps giving me problems so we're using the above test for now
     // assert.deepEqual(point, DATA, "point data returned matches data delivered");

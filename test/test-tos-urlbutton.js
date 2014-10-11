@@ -18,8 +18,8 @@ exports["test urlbutton"] = function (assert, done) {
     if (tab.url == URL_GITHUB) {
       assert.equal(URL_GITHUB, tab.url, "opened the " + URL_GITHUB + " site");
       assert.ok(button.getVisibility(tab.url), "tab urlbutton should be visible for " + URL_GITHUB);
-      console.log("button.getImage(tab.url)", button.getImage(tab.url));
-      assert.ok(button.getImage(tab.url), iconURL('none'), "icon should be none for " + URL_GITHUB);
+      // console.log("button.getImage(tab.url)", button.getImage(tab.url));
+      // assert.ok(button.getImage(tab.url), iconURL('none'), "icon should be none for " + URL_GITHUB);
       tab.close();
       done();
     }

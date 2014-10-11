@@ -17,15 +17,48 @@ Get the extension
 
 -----------
 
-### Build & Run
+Installation instructions
+-------------------------
 
-* Install Firefox Addon SDK as detailed [here](https://addons.mozilla.org/en-US/developers/docs/sdk/latest/dev-guide/tutorials/installation.html)
+- Download the xpi [from github][Github Download Link].
 
-* Clone this repository: `git clone git@github.com:tosdr/tosdr-firefox.git`
+- Drag & drop the xpi to firefox.
 
-* To generate xpi `cfx xpi`
+[Github Download Link]: https://github.com/tosdr/tosdr-firefox/blob/master/tosdr.xpi?raw=true
 
-* Enter the folder and execute: `cfx run`
+-----------
+
+Building instructions
+---------------------
+
+Want to contribute or build XPI ?
+
+- First, make sure you have an updated checkout of the repository and its git
+  submodules:
+
+ ```shell
+$ git clone --recursive git@github.com:tosdr/tosdr-firefox.git
+$ cd tosdr-firefox
+ ```
+ 
+- If you haven't done that already, download and install the [Add-on SDK][].
+
+- Once inside the SDK environnement (having activated it using `source
+  bin/activate`), go to the add-on directory, and run `cfx run` to quickly test
+  that everything is OK, and `cfx xpi` to generate the addon file.
+
+- Drag & drop the resulting xpi to firefox.
+
+[Add-on SDK]: https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation
+
+- Installation on OS X using Homebrew
+If you're a Mac user, you can instead choose to use Homebrew to install the SDK, using the following command:
+
+ ```shell
+brew install mozilla-addon-sdk
+ ```
+ 
+Once this has completed successfully, you can use the cfx program at your command line at any time: you don't need to run bin/activate.
 
 -----------
 

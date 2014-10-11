@@ -158,7 +158,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 
     
 // get Service Data
-self.on('message', function onMessage(addonMessage) {
+self.port.on('service', function onMessage(addonMessage) {
 	if(addonMessage){
 		console.log("tosdr: Panel popup received matched service data.")
 		$.each(addonMessage,function(key , value){

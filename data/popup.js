@@ -108,7 +108,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
       )
     )
   );
-  
+
   //Modal-body
   $('#page').append($("<div>", {class : 'modal-body'})
     .append($("<div>", {class : 'tosdr-rating' })
@@ -128,7 +128,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
   for (point in sortedPoints){
       $('.tosdr-points').append($("<li>", {id : 'popup-point-' + name + '-' + sortedPoints[point].id , class:'point'}));
   }
-  
+
   if (isEmpty(links)) {
     $('.modal-body').append($("<section>")
       .append($("<a>", { href:'http://tosdr.org/get-involved.html' , target: '_blank' , class: 'btn'})
@@ -145,25 +145,22 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
       .append($("<a>", { href:links[i].url , target: '_blank' , text :(links[i].name ? links[i].name : i)})));
     }
   }
-  
+
   for (point in sortedPoints){
       tosdrPoint(name, sortedPoints[point]);
   }
-  
+
 }
 
 // get Service Data
-self.on('message', function onMessage(addonMessage) {
-  if(addonMessage){
-    console.log("tosdr: Panel popup received matched service data.")
-    $.each(addonMessage,function(key , value){
+self.port.on('service', function onMessage(serviceData) {
+  if(serviceData){
       console.log("tosdr: Rendering service data in popup");
-      renderPopup(key,value);
+      renderPopup(serviceData.name, serviceData);
       // send close message to hide the panel
       $('#closeButton,.close').click(function () {
         self.postMessage("close");
       });
-    });
   }else{
     $('#page').empty();
 

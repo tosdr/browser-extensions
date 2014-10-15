@@ -1,0 +1,52 @@
+{
+  "alexa": 2,
+  "freesoftware": false,
+  "fulltos": {},
+  "id": "google",
+  "keywords": [
+    "search",
+    "groups"
+  ],
+  "meta": {
+    "spec-version": "1.1"
+  },
+  "name": "Google",
+  "other-urls": [
+    "google.de",
+    "google.fr",
+    "https://en.wikipedia.org/wiki/List_of_Google_domains"
+  ],
+  "related": [
+    "yahoo",
+    "duckduckgo"
+  ],
+  "tosback2": {
+    "definitions": {
+      "name": "Key terms",
+      "url": "https://www.google.fr/intl/en/policies/privacy/key-terms/"
+    },
+    "faq": {
+      "name": "FAQ",
+      "url": "https://www.google.fr/intl/en/policies/faq/"
+    },
+    "privacy": {
+      "name": "Privacy Policy",
+      "url": "https://www.google.com/intl/en/policies/privacy/"
+    },
+    "sitename": "google.com",
+    "terms": {
+      "name": "Terms of Service",
+      "url": "https://www.google.com/intl/en/policies/terms/"
+    }
+  },
+  "tosdr": {
+    "keywords": [],
+    "rated": "C",
+    "related": []
+  },
+  "type": "service",
+  "url": "google.com",
+  "urls": [
+    "google.com"
+  ]
+}

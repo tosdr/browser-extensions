@@ -1,0 +1,133 @@
+{
+  "500px": {
+    "alexa": 1496,
+    "class": "D",
+    "links": {
+      "privacy": {
+        "name": "Privacy Policy",
+        "url": "http://www.500px.com/privacy"
+      },
+      "terms": {
+        "name": "Terms of Service",
+        "url": "http://500px.com/terms"
+      }
+    },
+    "points": [
+      "3uiIrLyj8Hw",
+      "X99SUnV7RUs",
+      "any-time-with-notice",
+      "ozS1etNH7ZA",
+      "pseudos-allowed",
+      "wYFqcvOn7XY",
+      "wYFqcvOn7XY2",
+      "wYFqcvOn7XY3",
+      "y7polYRKTN0"
+    ],
+    "twitter": "@500px"
+  },
+  "amazon": {
+    "alexa": 10,
+    "class": false,
+    "links": {
+      "privacy": {
+        "name": "Privacy Notice",
+        "url": "http://www.amazon.com/gp/help/customer/display.html/ref=footer_privacy?ie=UTF8&nodeId=468496"
+      },
+      "security": {
+        "name": "Security, Privacy & Accessibility",
+        "url": "http://www.amazon.com/gp/help/customer/display.html/?nodeId=551434"
+      },
+      "terms": {
+        "name": "Conditions of Use",
+        "url": "http://www.amazon.com/gp/help/customer/display.html/?ie=UTF8&nodeId=508088"
+      }
+    },
+    "points": [
+      "1zhceRPv3nM",
+      "E58aPtzP3jk",
+      "OegfPmV8ugo",
+      "any-time-without-notice",
+      "eff-back-tell-user-no",
+      "eff-back-transparency-data-no"
+    ]
+  },
+  "github": {
+    "alexa": 304,
+    "class": "B",
+    "links": {
+      "privacy": {
+        "last-archive": {
+          "time": "",
+          "uri": ""
+        },
+        "name": "Privacy Policy",
+        "url": "https://help.github.com/privacy-policy"
+      },
+      "security": {
+        "last-archive": {
+          "time": "",
+          "uri": ""
+        },
+        "name": "Security",
+        "url": "https://help.github.com/security/"
+      },
+      "terms": {
+        "last-archive": {
+          "time": "",
+          "uri": ""
+        },
+        "name": "Terms of Service",
+        "url": "https://github.com/site/terms"
+      }
+    },
+    "points": [
+      "2vIh4l7sTnk",
+      "8LDE2ZPXRW4",
+      "9epXl7ZDb7c",
+      "EpPNnYXBW_w",
+      "gyMiAkV5ZG0",
+      "hI5Too_uDVk",
+      "lOG7XeUi-3E",
+      "lXPKuQU0mPI",
+      "legal-name-registration",
+      "ymh8uR_j51A"
+    ]
+  },
+  "google": {
+    "alexa": 2,
+    "class": "C",
+    "links": {
+      "definitions": {
+        "name": "Key terms",
+        "url": "https://www.google.fr/intl/en/policies/privacy/key-terms/"
+      },
+      "faq": {
+        "name": "FAQ",
+        "url": "https://www.google.fr/intl/en/policies/faq/"
+      },
+      "privacy": {
+        "name": "Privacy Policy",
+        "url": "https://www.google.com/intl/en/policies/privacy/"
+      },
+      "terms": {
+        "name": "Terms of Service",
+        "url": "https://www.google.com/intl/en/policies/terms/"
+      }
+    },
+    "points": [
+      "2xvjZf1mgd0",
+      "E58aPtzP3jk",
+      "HUL_4wIbNGY",
+      "JcGg9TPZ7V0",
+      "PD5ZWzgv2RI",
+      "QZgR8faRWDU",
+      "Vn7He54dnVI",
+      "damOWTFaho0-1",
+      "eff-back-tell-user-no",
+      "eff-back-transparency-data",
+      "ji7uAaXXTN4",
+      "lU-QhFXMOcU",
+      "yCSzdR_gOW4"
+    ]
+  }
+}

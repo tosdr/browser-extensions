@@ -47,7 +47,7 @@ function tosdrPoint(serviceName ,dataPoint){
         var tagsResults = tagsRegex.exec(taggedText[i]);
 
         if(hrefResults){
-          var url = (hrefResults[2].match(/^index\.html/)) ? "http://tosdr.org/" + hrefResults[2] : hrefResults[2];
+          var url = (hrefResults[2].match(/^index\.html/)) ? "https://tosdr.org/" + hrefResults[2] : hrefResults[2];
           $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<a>", {href : escapeHTML(url), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
           i+= 2;
         }else if(tagsResults){
@@ -103,7 +103,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
     $("<div>", { class: 'modal-header' })
     .append($("<button>", { id: 'closeButton' , class : 'close' , type: 'button', text: 'x'}))
     .append($("<h4>", {class : 'modal-title'})
-      .append($("<a>", { href: 'http://tosdr.org/#' + escapeHTML(name) , target: '_blank' })
+      .append($("<a>", { href: 'https://tosdr.org/#' + escapeHTML(name) , target: '_blank' })
         .append($("<img>", { src: 'img/tosdr-logo-32.png'}))
       )
     )
@@ -131,7 +131,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 
   if (isEmpty(links)) {
     $('.modal-body').append($("<section>")
-      .append($("<a>", { href:'http://tosdr.org/get-involved.html' , target: '_blank' , class: 'btn'})
+      .append($("<a>", { href:'https://tosdr.org/get-involved.html' , target: '_blank' , class: 'btn'})
       .append($("<i>", {class: 'icon  icon-list-alt'}))
       .append("Get Involved"))
     );
@@ -156,7 +156,7 @@ function renderPopupHtml(name, longName, domain, verdict, ratingText, points, li
 self.port.on('service', function onMessage(serviceData) {
   if(serviceData){
       console.log("tosdr: Rendering service data in popup");
-      renderPopup(serviceData.name, serviceData);
+      renderPopup(serviceData.id, serviceData);
       // send close message to hide the panel
       $('#closeButton,.close').click(function () {
         self.postMessage("close");
@@ -169,7 +169,7 @@ self.port.on('service', function onMessage(serviceData) {
       $("<div>", { class: 'modal-header' })
       .append($("<button>", { id: 'closeButton' , class : 'close' , type: 'button', text: 'x'}))
       .append($("<h4>", {class : 'modal-title'})
-        .append($("<a>", { href: 'http://tosdr.org', target: '_blank' })
+        .append($("<a>", { href: 'https://tosdr.org', target: '_blank' })
           .append($("<img>", { src: 'img/tosdr-logo-32.png'}))
         )
       )

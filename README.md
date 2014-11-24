@@ -80,5 +80,10 @@ GNU/Linux
 
 The extension is Free Software, licensed under the GNU Affero
 General Public License (AGPL-3.0).
+
+Bootstrap Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
+jQuery | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license
+
 Please consider
 [contributing](http://tosdr.org/contribute.html) to the project.

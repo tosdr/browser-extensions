@@ -76,14 +76,11 @@ GNU/Linux
 
 ![screenshot](https://dl.dropbox.com/u/18317770/tos-linux.png)
 
------------
 
-The extension is Free Software, licensed under the GNU Affero
-General Public License (AGPL-3.0).
 
-Bootstrap Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+License
+======
 
-jQuery | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license
+AGPL-3.0+ (GNU Affero General Public License, version 3 or later)
 
-Please consider
-[contributing](http://tosdr.org/contribute.html) to the project.
+See <https://tosdr.org/legal.html> for more details on the legal aspects of the project.

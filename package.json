@@ -1,11 +1,13 @@
 {
   "name": "tosdr",
-  "license": "AGPL 3.0",
+  "license": "AGPL 3.0+",
   "author": "AbdullahDiaa",
   "contributors": [
 	  "clarkbw",
 	  "cimm",
-	  "freaktechnik"
+	  "freaktechnik",
+	  "michielbdejong",
+	  "hugoroy"
   ],
   "version": "0.4.1",
   "fullName": "Terms of Service; Didn’t Read",

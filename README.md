@@ -45,7 +45,7 @@ $ cd tosdr-firefox
 
 - Once inside the SDK environnement (having activated it using `source
   bin/activate`), go to the add-on directory, and run `cfx run` to quickly test
-  that everything is OK, and `cfx xpi` to generate the addon file.
+  that everything is OK, and `cfx --strip-sdk xpi` to generate the addon file.
 
 - Drag & drop the resulting xpi to firefox.
 

@@ -41,25 +41,18 @@ $ git clone --recursive git@github.com:tosdr/tosdr-firefox.git
 $ cd tosdr-firefox
  ```
  
-- If you haven't done that already, download and install the [Add-on SDK][].
-
-- Once inside the SDK environnement (having activated it using `source
-  bin/activate`), go to the add-on directory, and run `cfx run` to quickly test
-  that everything is OK, and `cfx --strip-sdk xpi` to generate the addon file.
+- If you haven't done that already, download and install the [JPM][].
 
 - Drag & drop the resulting xpi to firefox.
 
-[Add-on SDK]: https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation
+[JPM]: https://github.com/mozilla-jetpack/jpm#install
 
-- Installation on OS X using Homebrew
-If you're a Mac user, you can instead choose to use Homebrew to install the SDK, using the following command:
+- Installation
 
  ```shell
-brew install mozilla-addon-sdk
+npm install jpm -g
  ```
  
-Once this has completed successfully, you can use the cfx program at your command line at any time: you don't need to run bin/activate.
-
 -----------
 
 ### Screenshots

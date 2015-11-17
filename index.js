@@ -6,11 +6,11 @@
 
 "use strict";
 		
-require('./service/setup');
-require('./tos-panel');
-require('./tos-urlbutton');
-require('./tos-notifications');
-const { log } = require('./utils/log');
+require('./lib/service/setup');
+require('./lib/tos-panel');
+require('./lib/tos-urlbutton');
+require('./lib/tos-notifications');
+const { log } = require('./lib/utils/log');
 
 exports.main = function(options, callbacks) {
 

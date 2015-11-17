@@ -11,7 +11,7 @@ const array = require('sdk/util/array');
 
 const { port } = require('./utils');
 
-const { SERVICES_PATH, servicePath } = require('utils/service');
+const { SERVICES_PATH, servicePath } = require('./utils/service');
 
 const service = require('service/service');
 

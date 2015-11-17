@@ -8,7 +8,7 @@ const port = exports.port = 8099;
 const { prefs } = require("sdk/simple-prefs");
 prefs.BASE_URL = 'http://localhost:' + port;
 
-const { SERVICES_PATH, servicePath, serviceAPIPath } = require('utils/service');
+const { SERVICES_PATH, servicePath, serviceAPIPath } = require('./utils/service');
 
 const { readURISync } = require("sdk/net/url");
 const fixtures = require('./fixtures');

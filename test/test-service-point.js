@@ -10,8 +10,8 @@ const httpd = require('sdk/test/httpd');
 const { port } = require('./utils');
 const SERVICE_NAME = 'github';
 
-const { serviceAPIPath } = require('utils/service');
-const point = require('service/point');
+const { serviceAPIPath } = require('./utils/service');
+const point = require('./service/point');
 
 exports["test point get"] = function (assert, done) {
   let DATA = JSON.parse(readURISync(fixtures.url("pointsData-github.json")));

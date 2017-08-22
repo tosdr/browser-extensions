@@ -1,0 +1,24 @@
+{
+	"manifest_version": 2,
+	"name": "Terms of Service; Didn’t Read",
+	"version": "0.6",
+	"description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summaries from the www.tosdr.org.",
+	"homepage_url" : "https://tosdr.org",
+	"page_action" :
+	{
+		"default_icon": {
+			"19": "button/icon-19.png",
+			"38": "button/icon-38.png"
+		},
+		"default_title" : "Terms of Service; Didn’t Read"
+	},
+	"permissions" : [
+		"*://tosdr.org/*",
+		"tabs",
+		"notifications"
+	],
+	"icons": {
+		"48": "icons/icon.png",
+		"96": "icons/icon@2x.png"
+	}
+}

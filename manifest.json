@@ -4,6 +4,7 @@
 	"version": "0.6",
 	"description": "Get information instantly about websites' terms of service and privacy policies, with ratings and summaries from the www.tosdr.org.",
 	"homepage_url" : "https://tosdr.org",
+	"background": { "scripts": ["popup/js/jquery-3.2.1.min.js", "background.js"] },
 	"page_action" :
 	{
 		"default_icon": {

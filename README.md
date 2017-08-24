@@ -11,7 +11,7 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/) **[0.4.1]**
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/) **[0.6 dev.]**
 
 [tosdr]: https://tosdr.org
 
@@ -20,55 +20,14 @@ Get the extension
 Installation instructions
 -------------------------
 
-- Download the xpi [from github][Github Download Link].
-
-- Drag & drop the xpi to firefox.
-
-[Github Download Link]: https://github.com/tosdr/tosdr-firefox/blob/master/tosdr.xpi?raw=true
 
 -----------
 
 Building instructions
 ---------------------
 
-Want to contribute or build XPI ?
-
-- First, make sure you have an updated checkout of the repository and its git
-  submodules:
-
- ```shell
-$ git clone --recursive git@github.com:tosdr/tosdr-firefox.git
-$ cd tosdr-firefox
- ```
- 
-- If you haven't done that already, download and install the [JPM][].
-
-- Drag & drop the resulting xpi to firefox.
-
-[JPM]: https://github.com/mozilla-jetpack/jpm#install
-
-- Installation
-
- ```shell
-npm install jpm -g
- ```
  
 -----------
-
-### Screenshots
-
-OS X
-
-![screenshot](https://dl.dropbox.com/u/18317770/tos.png)
-
-Windows
-
-![screenshot](https://dl.dropbox.com/u/18317770/tos-win.png)
-
-GNU/Linux
-
-![screenshot](https://dl.dropbox.com/u/18317770/tos-linux.png)
-
 
 
 License

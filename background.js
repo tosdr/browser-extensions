@@ -65,7 +65,7 @@ function getServices() {
 getServices().then((servicesIndex)=>{
 	let promiseChain = [];
 	
-	for (var serviceName in servicesIndex) {
+	for (let serviceName in servicesIndex) {
 		promiseChain.push(loadService(serviceName, servicesIndex[serviceName]));
 	}
 	
@@ -73,19 +73,19 @@ getServices().then((servicesIndex)=>{
 	.then((servicesResponse)=>{
 		var setchain = [];
 		
-		for (var i = 0; i < servicesResponse.length; i++) {
-			if (!servicesResponse[i].url) {
+		for (let s of servicesResponse) {
+			if (!s.url) {
 				continue;
 			}
-			servicesResponse[i].urlRegExp = createRegExpForServiceUrl(servicesResponse[i].url);
-			servicesResponse[i].points = servicesResponse[i].points;
-			servicesResponse[i].class = servicesResponse[i].class;
-			servicesResponse[i].links = servicesResponse[i].links;
-			if (!servicesResponse[i].tosdr) {
-				servicesResponse[i].tosdr = { rated: false };
+			s.urlRegExp = createRegExpForServiceUrl(s.url);
+			s.points = s.points;
+			s.class = s.class;
+			s.links = s.links;
+			if (!s.tosdr) {
+				s.tosdr = { rated: false };
 			}
 			var service = {};
-			service[servicesResponse[i].id]= servicesResponse[i];
+			service[s.id]= s;
 
 			setchain.push(browser.storage.local.set(service));
 		}

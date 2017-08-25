@@ -39,11 +39,11 @@ jQuery(function () {
 
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id).append($("<p>"));
 	    if(taggedText.length > 1){
-	      for(i =0; i< taggedText.length; i++){
+	      for (let t of taggedText) {
 	        var hrefRegex = /href=("|')(.*?)("|')/g;
 	        var tagsRegex = /<(em|strong)>/g;
-	        var hrefResults = hrefRegex.exec(taggedText[i]);
-	        var tagsResults = tagsRegex.exec(taggedText[i]);
+	        var hrefResults = hrefRegex.exec(t);
+	        var tagsResults = tagsRegex.exec(t);
 
 	        if(hrefResults){
 	          var url = (hrefResults[2].match(/^index\.html/)) ? "https://tosdr.org/" + hrefResults[2] : hrefResults[2];
@@ -54,7 +54,7 @@ jQuery(function () {
 	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<" + tag + ">", {text : taggedText[i+1] }));
 	          i+= 2;
 	        }else{
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(taggedText[i]);
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(t);
 	        }
 	      }
 	    }else{
@@ -102,7 +102,7 @@ jQuery(function () {
 				
 				//Points
 				var sortedPoints = [];
-				for (var point in service.pointsData) {
+				for (let point in service.pointsData) {
 					sortedPoints.push(service.pointsData[point]);
 				}
 				sortedPoints.sort(function(x,y){return y.tosdr.score - x.tosdr.score});
@@ -121,7 +121,7 @@ jQuery(function () {
 					.append($("<h4>", { text : 'Read the Terms'}))
 					.append($("<ul>", {class: 'tosback2'}));
 
-					for (var i in service.links) {
+					for (let i in service.links) {
 						$('.tosback2').append($("<li>")
 						.append($("<a>", { href:service.links[i].url , target: '_blank' , text :(service.links[i].name ? service.links[i].name : i)})));
 					}

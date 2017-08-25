@@ -13,27 +13,31 @@
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-12" id="page">
+			<div class="col-md-12">
 				<div class="modal-header">
 					<h3>
-						<a href="#" id="service_url" target="_blank">
-							<img src="images/tosdr-logo-32.png" alt="" class="pull-left"/>
+						<a href="#" id="service_url" target="_blank"  class="pull-left">
+							<img src="images/tosdr-logo-32.png" alt="" />
 						</a>
-						<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
 					</h3>
+					
+					<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
+					
 				</div>
 				
-				<div class="modal-body">
+				<div class="modal-body" >
+					<div id="page">
+						<div class="tosdr-rating">
+							<label id="service_class" class="label"></label>
 
-				    <div class="tosdr-rating">
-				        <label id="service_class" class="label"></label>
+							<p id="ratingText"></p>
+						</div>
+ 
+						<section id="linksList"></section>
+					</div>
 
-				        <p id="ratingText"></p>
-				    </div>
-					 
-					 <section id="linksList"></section>
-					 <a target="_blank" href="https://edit.tosdr.org">Get Involved!</a>	  
-				 </div>
+					<a target="_blank" class="btn btn-default" href="https://edit.tosdr.org">Contribute</a>	  
+				</div>
 			</div>
 		</div>
 	</div>

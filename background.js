@@ -79,12 +79,13 @@ getServices().then((servicesIndex)=>{
 			}
 			servicesResponse[i].urlRegExp = createRegExpForServiceUrl(servicesResponse[i].url);
 			servicesResponse[i].points = servicesResponse[i].points;
+			servicesResponse[i].class = servicesResponse[i].class;
 			servicesResponse[i].links = servicesResponse[i].links;
 			if (!servicesResponse[i].tosdr) {
 				servicesResponse[i].tosdr = { rated: false };
 			}
 			var service = {};
-			service[servicesResponse[i].name]= servicesResponse[i];
+			service[servicesResponse[i].id]= servicesResponse[i];
 
 			setchain.push(browser.storage.local.set(service));
 		}
@@ -187,7 +188,7 @@ Only operates on tabs whose URL's protocol is applicable.
 function initializePageAction(tab) {
 	if (protocolIsApplicable(tab.url)) {
 		return getService(tab).then((service)=>{
-			if (service) {			
+			if (service) {							
 				browser.pageAction.setIcon({
 					tabId: tab.id,
 					path: getIconForService(service)
@@ -198,6 +199,16 @@ function initializePageAction(tab) {
 				})
 				browser.pageAction.show(tab.id);
 				checkNotification(service);
+			}else{
+				browser.pageAction.setIcon({
+					tabId: tab.id,
+					path: 'icons/class/none.png'
+				});
+				browser.pageAction.setPopup({
+					tabId: tab.id,
+					popup: 'popup/popup.html#none'
+				})
+				browser.pageAction.show(tab.id);
 			}
 		});
 		

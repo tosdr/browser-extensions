@@ -1,3 +1,8 @@
+body{
+	min-width:500px;
+	width:500px;
+	
+}
 section {
     margin-bottom: 2em;
     padding-top: 2em;

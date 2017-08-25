@@ -1,5 +1,73 @@
 jQuery(function () {
 	
+	function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[m]);
+
+	function tosdrPoint(serviceName ,dataPoint){
+	  var badge, icon, sign;
+	  if(dataPoint){
+	    if (dataPoint.tosdr.point == 'good') {
+	      badge = 'badge-success';
+	      icon = 'thumbs-up';
+	      sign = '+';
+	    } else if (dataPoint.tosdr.point == 'bad') {
+	      badge = 'badge-warning';
+	      icon = 'thumbs-down';
+	      sign = '-';
+	    } else if (dataPoint.tosdr.point == 'blocker') {
+	      badge = 'badge-important';
+	      icon = 'remove';
+	      sign = '×';
+	    } else if (dataPoint.tosdr.point == 'neutral') {
+	      badge = 'badge-neutral';
+	      icon = 'asterisk';
+	      sign = '→';
+	    } else {
+	      badge = '';
+	      icon = 'question-sign';
+	      sign = '?';
+	    }
+	    var pointText = dataPoint.tosdr.tldr;
+
+	    //Extract links from text
+	    var taggedText = pointText.split(/(<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>)/gim);
+	    $('#popup-point-' + serviceName + '-' + dataPoint.id)
+	      .append($("<div>", { class: dataPoint.tosdr.point })
+	      .append($("<h5>")
+	        .append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint.tosdr.point) })
+	          .append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
+	        )
+	        .append($("<span>").text(" " + dataPoint.title + " "))
+	        .append($("<a>", { href: escapeHTML(dataPoint.discussion) , target: '_blank', class : 'label context' , text: 'Discussion'}))
+	      ));
+
+	    $('#popup-point-' + serviceName + '-' + dataPoint.id).append($("<p>"));
+	    if(taggedText.length > 1){
+	      for(i =0; i< taggedText.length; i++){
+	        var hrefRegex = /href=("|')(.*?)("|')/g;
+	        var tagsRegex = /<(em|strong)>/g;
+	        var hrefResults = hrefRegex.exec(taggedText[i]);
+	        var tagsResults = tagsRegex.exec(taggedText[i]);
+
+	        if(hrefResults){
+	          var url = (hrefResults[2].match(/^index\.html/)) ? "https://tosdr.org/" + hrefResults[2] : hrefResults[2];
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<a>", {href : escapeHTML(url), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
+	          i+= 2;
+	        }else if(tagsResults){
+	          var tag = tagsResults[1];
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<" + escapeHTML(tag) + ">", {text : escapeHTML(taggedText[i+1]) }));
+	          i+= 2;
+	        }else{
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(escapeHTML(taggedText[i]));
+	        }
+	      }
+	    }else{
+	      $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').text(escapeHTML(pointText));
+	    }
+
+	  }
+	};
+	
+	
 	var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";
 	var RATING_TEXT = {
 		0: NOT_RATED_TEXT,
@@ -13,6 +81,8 @@ jQuery(function () {
 	
 	var serviceName = window.location.hash.substr(1);
 	function updatePopup() {
+		$(".loading").show();
+		
 		getServiceData().then((service)=>{			
 			if(serviceName === "none"){
 				$("#page").empty();
@@ -31,16 +101,43 @@ jQuery(function () {
 					$("#service_class").text("No Class Yet");
 				}
 				$("#ratingText").text(RATING_TEXT[service.class]);
-		
+				
+				
+				//Points
+				var sortedPoints = [];
+				for (var point in service.pointsData) {
+					sortedPoints.push(service.pointsData[point]);
+				}
+				sortedPoints.sort(function(x,y){return y.tosdr.score - x.tosdr.score});
+				// append points
+				for (point in sortedPoints){
+					$('.tosdr-points').append($("<li>", {id : 'popup-point-' + service.name + '-' + sortedPoints[point].id , class:'point'}));
+					 tosdrPoint(service.name, sortedPoints[point]);
+				}
+			 
+				
 				// links inside of the dataPoints should open in a new window
 				$('.tosdr-points a').attr('target', '_blank');
-			}
-		
+				
+				if(Object.keys(service.links).length > 0){
+					$('#linksList')
+					.append($("<h4>", { text : 'Read the Terms'}))
+					.append($("<ul>", {class: 'tosback2'}));
 
+					for (var i in service.links) {
+						$('.tosback2').append($("<li>")
+						.append($("<a>", { href:service.links[i].url , target: '_blank' , text :(service.links[i].name ? service.links[i].name : i)})));
+					}
+				}
+				
+		  
+			}
 			// [x] Button
 			$('#closeButton,.close').click(function () {
 				window.close();
 			});
+			
+			$(".loading").hide();
 		});
 	}
 	

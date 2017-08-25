@@ -29,101 +29,155 @@ function protocolIsApplicable(url) {
 }
 
 function loadService(serviceName, serviceIndexData) {
-	jQuery.ajax('https://tosdr.org/services/' + serviceName + '.json', { 
-		success: function (service) {
-			if (!service.url) {
-				console.log(serviceName+' has no service url');
-				return;
-			}
-			service.urlRegExp = createRegExpForServiceUrl(service.url);
-			service.points = serviceIndexData.points;
-			service.links = serviceIndexData.links;
-			if (!service.tosdr) {
-				service.tosdr = { rated: false };
-			}
-			services.push(service);
-			localStorage.setItem(serviceName, JSON.stringify(service));
+	let requestURL = 'https://tosdr.org/services/' + serviceName + '.json';
+  
+	const driveRequest = new Request(requestURL, {
+		method: "GET"
+	});
+
+	return fetch(driveRequest).then((response) => {
+		if (response.status === 200) {
+			return response.json();
+		} else {
+			throw response.status;
 		}
 	});
 }
 
 
-jQuery.ajax('https://tosdr.org/index/services.json', { 
-	success: function (servicesIndex) {
-		for (var serviceName in servicesIndex) {
-			loadService(serviceName, servicesIndex[serviceName]);
-		}
+function getServices() {
+  const requestURL = "https://tosdr.org/index/services.json";
+  
+  const driveRequest = new Request(requestURL, {
+    method: "GET"
+  });
+
+  return fetch(driveRequest).then((response) => {
+    if (response.status === 200) {
+      return response.json();
+    } else {
+      throw response.status;
+    }
+  });
+
+}
+
+getServices().then((servicesIndex)=>{
+	let promiseChain = [];
+	
+	for (var serviceName in servicesIndex) {
+		promiseChain.push(loadService(serviceName, servicesIndex[serviceName]));
 	}
+	
+	return Promise.all(promiseChain)
+	.then((servicesResponse)=>{
+		var setchain = [];
+		
+		for (var i = 0; i < servicesResponse.length; i++) {
+			if (!servicesResponse[i].url) {
+				continue;
+			}
+			servicesResponse[i].urlRegExp = createRegExpForServiceUrl(servicesResponse[i].url);
+			servicesResponse[i].points = servicesResponse[i].points;
+			servicesResponse[i].links = servicesResponse[i].links;
+			if (!servicesResponse[i].tosdr) {
+				servicesResponse[i].tosdr = { rated: false };
+			}
+			var service = {};
+			service[servicesResponse[i].name]= servicesResponse[i];
+
+			setchain.push(browser.storage.local.set(service));
+		}
+		return Promise.all(setchain);
+	}).then((setchain)=>{
+		/*When first loaded, initialize the page action for all tabs.
+		*/
+		var gettingAllTabs = browser.tabs.query({});
+		return gettingAllTabs.then((tabs) => {
+			for (let tab of tabs) {
+				initializePageAction(tab);
+			}
+		});
+	});
 });
 
-
 function getService(tab) {
-	var matchingServices = services.filter(function (service) {
-		return service.urlRegExp.exec(tab.url);
+	return browser.storage.local.get().then((services)=>{
+		var matchingServices = Object.keys(services).filter(function (service) {
+			return services[service].urlRegExp.exec(tab.url);
+		});
+
+		return matchingServices.length > 0 ? services[matchingServices[0]] : null;
 	});
-	return matchingServices.length > 0 ? matchingServices[0] : null;
 }
 
 function getIconForService(service) {
-	var rated = service.tosdr.rated;
+	var rated = false;
+	if(service.tosdr !== undefined){
+		rated = service.tosdr.rated;
+	}
 	var imageName = rated ? rated.toLowerCase() : 'false';
 	return 'icons/class/' + imageName + '.png';
 }
 
 
-function checkNotification(service) {
+function checkNotification(ser) {
 
-	var last = localStorage.getItem('notification/' + service.name + '/last/update');
-	var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
-	var shouldShow = false;
+	return browser.storage.local.get(ser.name).then((service)=>{
+		var service = service[ser.name];
+		var last = localStorage.getItem('notification/' + service.name + '/last/update');
+		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
+		var shouldShow = false;
 
-	if (!service.tosdr.rated) { return; }
+		if(service.tosdr !== undefined){
+			if (!service.tosdr.rated) { return; }
+		}
 
-	var rate = service.tosdr.rated;
-	console.log(rate);
-	if (rate === 'D' || rate === 'E') {
+		var rate = service.tosdr.rated;
+		if (rate === 'D' || rate === 'E') {
 
-		if (last) {
-			var lastModified = parseInt(Date.parse(last));
-			log(lastModified);
-			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-			log(daysSinceLast);
+			if (last) {
+				var lastModified = parseInt(Date.parse(last));
+				log(lastModified);
+				var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+				log(daysSinceLast);
 
-			if (daysSinceLast > 7) {
+				if (daysSinceLast > 7) {
+					shouldShow = true;
+				}
+			} else {
 				shouldShow = true;
 			}
-		} else {
+
+		} else if (lastRate === 'D' || lastRate === 'E') {
 			shouldShow = true;
 		}
 
-	} else if (lastRate === 'D' || lastRate === 'E') {
-		shouldShow = true;
-	}
 
+		if (shouldShow) {
+			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
+			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
 
-	if (shouldShow) {
-		localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
-		localStorage.setItem('notification/' + service.name + '/last/rate', rate);
+			var opt = {
+				type: "basic",
+				title: service.id,
+				message: RATING_TEXT[rate],
+				iconUrl: './images/icon-128.png'
+			}
 
-		var opt = {
-			type: "basic",
-			title: service.id,
-			message: RATING_TEXT[rate],
-			iconUrl: './images/icon-128.png'
-		}
-
-		var notification = browser.notifications.create('tosdr-notify', opt, function(event){
-			console.log(event)
-		});
-
-		browser.notifications.onButtonClicked.addListener(function(){
-			browser.tabs.create({
-				url: 'https://tosdr.org/#' + service.id
+			var notification = browser.notifications.create('tosdr-notify', opt, function(event){
+				console.log(event)
 			});
-		});
 
-	}
+			browser.notifications.onButtonClicked.addListener(function(){
+				browser.tabs.create({
+					url: 'https://tosdr.org/#' + service.id
+				});
+			});
 
+		}
+		
+	});
 }
 
 /*
@@ -132,19 +186,21 @@ Only operates on tabs whose URL's protocol is applicable.
 */
 function initializePageAction(tab) {
 	if (protocolIsApplicable(tab.url)) {
-		var service = getService(tab);
-		if (service) {
-			browser.pageAction.setIcon({
-				tabId: tab.id,
-				path: getIconForService(service)
-			});
-			browser.pageAction.setPopup({
-				tabId: tab.id,
-				popup: 'popup/popup.html#' + service.id
-			})
-			browser.pageAction.show(tab.id);
-			checkNotification(service);
-		}
+		return getService(tab).then((service)=>{
+			if (service) {			
+				browser.pageAction.setIcon({
+					tabId: tab.id,
+					path: getIconForService(service)
+				});
+				browser.pageAction.setPopup({
+					tabId: tab.id,
+					popup: 'popup/popup.html#' + service.id
+				})
+				browser.pageAction.show(tab.id);
+				checkNotification(service);
+			}
+		});
+		
 	}
 }
 

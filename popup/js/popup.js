@@ -1,7 +1,4 @@
 jQuery(function () {
-	
-	function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[m]);
-
 	function tosdrPoint(serviceName ,dataPoint){
 	  var badge, icon, sign;
 	  if(dataPoint){
@@ -33,11 +30,11 @@ jQuery(function () {
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id)
 	      .append($("<div>", { class: dataPoint.tosdr.point })
 	      .append($("<h5>")
-	        .append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint.tosdr.point) })
+	        .append($("<span>", { class: 'badge ' + badge , title: dataPoint.tosdr.point})
 	          .append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
 	        )
 	        .append($("<span>").text(" " + dataPoint.title + " "))
-	        .append($("<a>", { href: escapeHTML(dataPoint.discussion) , target: '_blank', class : 'label context' , text: 'Discussion'}))
+	        .append($("<a>", { href: dataPoint.discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
 	      ));
 
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id).append($("<p>"));
@@ -50,18 +47,18 @@ jQuery(function () {
 
 	        if(hrefResults){
 	          var url = (hrefResults[2].match(/^index\.html/)) ? "https://tosdr.org/" + hrefResults[2] : hrefResults[2];
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<a>", {href : escapeHTML(url), text: escapeHTML(taggedText[i+1]), class : "pointshref" , target : "_blank"}));
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<a>", {href : url, text: taggedText[i+1], class : "pointshref" , target : "_blank"}));
 	          i+= 2;
 	        }else if(tagsResults){
 	          var tag = tagsResults[1];
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<" + escapeHTML(tag) + ">", {text : escapeHTML(taggedText[i+1]) }));
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<" + tag + ">", {text : taggedText[i+1] }));
 	          i+= 2;
 	        }else{
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(escapeHTML(taggedText[i]));
+	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(taggedText[i]);
 	        }
 	      }
 	    }else{
-	      $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').text(escapeHTML(pointText));
+	      $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').text(pointText);
 	    }
 
 	  }

@@ -79,10 +79,13 @@ jQuery(function () {
 				$("#service_class").addClass(service.class);
 				if(service.class){
 					$("#service_class").text("Class " + service.class);
+					$("#ratingText").html(RATING_TEXT[service.class]);
 				}else{
 					$("#service_class").text("No Class Yet");
+					$("#service_class").remove();
+					$("#ratingText").html(RATING_TEXT[service.class]);
+					
 				}
-				$("#ratingText").text(RATING_TEXT[service.class]);
 				
 				
 				//Points

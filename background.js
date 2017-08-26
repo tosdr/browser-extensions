@@ -124,7 +124,7 @@ function getIconForService(service) {
 
 function checkNotification(ser) {
 
-	return browser.storage.local.get(ser.name).then((service)=>{
+	return browser.storage.local.get(ser.id).then((service)=>{
 		var service = service[ser.name];
 		var last = localStorage.getItem('notification/' + service.name + '/last/update');
 		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');

@@ -122,10 +122,9 @@ function getIconForService(service) {
 }
 
 
-function checkNotification(ser) {
-
-	return browser.storage.local.get(ser.id).then((service)=>{
-		var service = service[ser.name];
+function checkNotification(serviceId) {
+	return browser.storage.local.get(serviceId).then((service)=>{
+		var service = service[serviceId];
 		var last = localStorage.getItem('notification/' + service.name + '/last/update');
 		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
 		var shouldShow = false;
@@ -198,7 +197,7 @@ function initializePageAction(tab) {
 					popup: 'popup/popup.html#' + service.id
 				})
 				browser.pageAction.show(tab.id);
-				checkNotification(service);
+				checkNotification(service.id);
 			}else{
 				browser.pageAction.setIcon({
 					tabId: tab.id,

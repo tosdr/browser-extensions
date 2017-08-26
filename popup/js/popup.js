@@ -40,22 +40,7 @@ jQuery(function () {
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id).append($("<p>"));
 	    if(taggedText.length > 1){
 	      for (let t of taggedText) {
-	        var hrefRegex = /href=("|')(.*?)("|')/g;
-	        var tagsRegex = /<(em|strong)>/g;
-	        var hrefResults = hrefRegex.exec(t);
-	        var tagsResults = tagsRegex.exec(t);
-
-	        if(hrefResults){
-	          var url = (hrefResults[2].match(/^index\.html/)) ? "https://tosdr.org/" + hrefResults[2] : hrefResults[2];
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<a>", {href : url, text: taggedText[i+1], class : "pointshref" , target : "_blank"}));
-	          i+= 2;
-	        }else if(tagsResults){
-	          var tag = tagsResults[1];
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append($("<" + tag + ">", {text : taggedText[i+1] }));
-	          i+= 2;
-	        }else{
-	          $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(t);
-	        }
+	        $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').append(t);
 	      }
 	    }else{
 	      $('#popup-point-' + serviceName + '-' + dataPoint.id + ' p').text(pointText);

@@ -12,7 +12,7 @@
 			"19": "button/icon-19.png",
 			"38": "button/icon-38.png"
 		},
-		"default_title" : "Terms of Service; Didn’t Read",
+		"default_title" : "__MSG_extensionName__",
 		"browser_style" : true
 	},
 	"permissions" : [

@@ -13,9 +13,9 @@ function log(message) {
 
 function createRegExpForServiceUrl(serviceUrl) {
 	if (/^http/.exec(serviceUrl)) {
-		return new RegExp(serviceUrl + '.*');
+		return serviceUrl + '.*';
 	} else {
-		return new RegExp('https?://[^:/]*\\b' + serviceUrl + '.*');
+		return 'https?://[^:/]*\\b' + serviceUrl + '.*';
 	}
 }
 
@@ -102,13 +102,36 @@ getServices().then((servicesIndex)=>{
 	});
 });
 
+function validateURL(service, url){
+	return new Promise((resolve, reject) => {
+		var re = new RegExp(service.urlRegExp);
+		var url_exists = re.test(url);
+		if(url_exists){
+			resolve(service);
+		}else{
+			resolve(null);
+		}
+	});
+}
+
 function getService(tab) {
 	return browser.storage.local.get().then((services)=>{
-		var matchingServices = Object.keys(services).filter(function (service) {
-			return services[service].urlRegExp.exec(tab.url);
+		let promiseChain = [];
+	
+		for (let serviceName in services) {
+			promiseChain.push(validateURL(services[serviceName], tab.url));
+		}
+		
+		return Promise.all(promiseChain, (service)=>{
+			return service;
+		}).then((arr)=>{
+			arr = arr.filter(function(n){ return n != null }); 
+			if(arr.length > 0 ){
+				return arr[0];
+			}else{
+				return null;
+			}
 		});
-
-		return matchingServices.length > 0 ? services[matchingServices[0]] : null;
 	});
 }
 

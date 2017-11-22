@@ -11,7 +11,7 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read/versions/beta) **[0.6.1]**
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.1]**
 
 [tosdr]: https://tosdr.org
 
@@ -20,12 +20,18 @@ Get the extension
 Installation instructions
 -------------------------
 
+Just open ```about:debugging``` and follow instructions.
 
 -----------
 
 Building instructions
 ---------------------
 
+Just zip the file using this command:
+
+```bash
+zip -r archive.xpi * -x "*.DS_Store" -x "__MACOSX" -x "*._*"
+```
  
 -----------
 

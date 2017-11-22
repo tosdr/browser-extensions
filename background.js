@@ -1,4 +1,5 @@
 const APPLICABLE_PROTOCOLS = ["http:", "https:"];
+const DEBUG = false;
 const RATING_TEXT = {
 	"D": "The terms of service are very uneven or there are some important issues that need your attention.",
 	"E": "The terms of service raise very serious concerns."
@@ -8,7 +9,8 @@ var services = [];
 
 /******************* UTILS ****************/
 function log(message) {
-	console.log(message);
+	if(DEBUG)
+		console.log(message);
 }
 
 function createRegExpForServiceUrl(serviceUrl) {
@@ -181,23 +183,19 @@ function checkNotification(serviceId) {
 			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
 			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
 
-			var opt = {
+			var notification = browser.notifications.create('tosdr-notify', {
 				type: "basic",
 				title: service.id,
 				message: RATING_TEXT[rate],
-				iconUrl: './images/icon-128.png'
-			}
-
-			var notification = browser.notifications.create('tosdr-notify', opt, function(event){
-				console.log(event)
+				iconUrl: './icons/icon@2x.png'
 			});
 
-			browser.notifications.onButtonClicked.addListener(function(){
+			browser.notifications.onClicked.addListener(function(notificationId) {
+				browser.notifications.clear(notificationId);
 				browser.tabs.create({
 					url: 'https://tosdr.org/#' + service.id
 				});
 			});
-
 		}
 		
 	});

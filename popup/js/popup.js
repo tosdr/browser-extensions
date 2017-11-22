@@ -1,3 +1,5 @@
+function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[m]);
+
 jQuery(function () {
 	function tosdrPoint(serviceName ,dataPoint){
 	  var badge, icon, sign;
@@ -30,11 +32,11 @@ jQuery(function () {
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id)
 	      .append($("<div>", { class: dataPoint.tosdr.point })
 	      .append($("<h5>")
-	        .append($("<span>", { class: 'badge ' + badge , title: dataPoint.tosdr.point})
+	        .append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint.tosdr.point)})
 	          .append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
 	        )
 	        .append($("<span>").text(" " + dataPoint.title + " "))
-	        .append($("<a>", { href: dataPoint.discussion , target: '_blank', class : 'label context' , text: 'Discussion'}))
+	        .append($("<a>", { href: escapeHTML(dataPoint.discussion) , target: '_blank', class : 'label context' , text: 'Discussion'}))
 	      ));
 
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id).append($("<p>"));
@@ -73,17 +75,17 @@ jQuery(function () {
 				.append($("<h4>", { text : 'Not rated, yet.'}))
 				.append($("<p>",{ text : 'Write an email to tosdr@googlegroups.com with a link to the terms, a small quote from the terms about the point you‘re making and let us know if you think it‘s a good or a bad point. It‘s better to do one email thread by topic, rather than one email per service. For more details, read on!' , class : 'lbldesc'}))));
 			}else{
-				$("#service_url").attr('href', 'http://tosdr.org/#' + serviceName);
+				$("#service_url").attr('href', 'http://tosdr.org/#' + escapeHTML(serviceName));
 	  
 				//Update class
 				$("#service_class").addClass(service.class);
 				if(service.class){
 					$("#service_class").text("Class " + service.class);
-					$("#ratingText").html(RATING_TEXT[service.class]);
+					$("#ratingText").text(RATING_TEXT[service.class]);
 				}else{
 					$("#service_class").text("No Class Yet");
 					$("#service_class").remove();
-					$("#ratingText").html(RATING_TEXT[service.class]);
+					$("#ratingText").text(RATING_TEXT[service.class]);
 					
 				}
 				
@@ -111,7 +113,7 @@ jQuery(function () {
 
 					for (let i in service.links) {
 						$('.tosback2').append($("<li>")
-						.append($("<a>", { href:service.links[i].url , target: '_blank' , text :(service.links[i].name ? service.links[i].name : i)})));
+						.append($("<a>", { href:escapeHTML(service.links[i].url) , target: '_blank' , text :(service.links[i].name ? service.links[i].name : i)})));
 					}
 				}
 				

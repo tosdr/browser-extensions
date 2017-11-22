@@ -1,5 +1,12 @@
-function escapeHTML(str) str.replace(/[&"<>]/g, function (m) ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[m]);
-
+function escapeHTML(unsafe) {
+	  return (''+unsafe)
+	      .replace(/&(?!amp;)/g, "&amp;")
+	      .replace(/<(?!lt;)/g, "&lt;")
+	      .replace(/>(?!gt;)/g, "&gt;")
+	      .replace(/"(?!quot;)/g, "&quot;")
+	      .replace(/'(?!#039;)/g, "&#039;");
+	};
+	
 jQuery(function () {
 	function tosdrPoint(serviceName ,dataPoint){
 	  var badge, icon, sign;

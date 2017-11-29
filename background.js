@@ -98,7 +98,10 @@ getServices().then((servicesIndex)=>{
 		var gettingAllTabs = browser.tabs.query({});
 		return gettingAllTabs.then((tabs) => {
 			for (let tab of tabs) {
-				initializePageAction(tab);
+				//Only active tabs should get the pageAction
+				if (tab.active){
+					initializePageAction(tab);
+				}
 			}
 		});
 	});
@@ -234,6 +237,13 @@ function initializePageAction(tab) {
 		
 	}
 }
+
+//Run on activating the tab
+browser.tabs.onActivated.addListener((activeInfo) => {
+	browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+		initializePageAction(tabs[0]);
+	});
+});
 
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
 	initializePageAction(tab);

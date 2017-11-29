@@ -59,7 +59,7 @@ jQuery(function () {
 	};
 	
 	
-	var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/groups.google.com/d/forum/tosdr\">tosdr@googlegroups.com</a>.";
+	var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: tosdr@googlegroups.com.";
 	var RATING_TEXT = {
 		0: NOT_RATED_TEXT,
 		"false": NOT_RATED_TEXT,

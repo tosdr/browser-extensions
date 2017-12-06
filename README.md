@@ -11,7 +11,7 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.1]**
+[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.2]**
 
 [tosdr]: https://tosdr.org
 

@@ -4,7 +4,7 @@
 (function () {
 
   function renderDataPoint(service, dataPointId) {
-    $.ajax('http://tos-dr.info/points/' + dataPointId + '.json', {
+    $.ajax('https://tosdr.org/points/' + dataPointId + '.json', {
       success: function (dataPoint) {
         var badge, icon, sign, score;
         if (dataPoint.tosdr.point == 'good') {
@@ -43,7 +43,7 @@
     });
   }
 
-  var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"http:\/\/tos-dr.info/get-involved.html\">Get&nbsp;involved!</a>.";
+  var NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: <a target=\"_blank\" href=\"https:\/\/tosdr.org\/get-involved.html\">Get&nbsp;involved!</a>.";
   var RATING_TEXT = {
     0: NOT_RATED_TEXT,
     "false": NOT_RATED_TEXT,
@@ -69,11 +69,11 @@
   }
 
   function renderPopupHtml(name, longName, domain, verdict, ratingText, points, links, score) {
-    var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/#' + name +
+    var headerHtml = '<div class="modal-header"><h3><a href="https://tosdr.org/#' + name +
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" id="tosdr-logo" />' +
       '</a>' +
       ' for&nbsp; ' +
-      '<img src="http://tos-dr.info/logo/'+name+'.png" alt="" height="32">'+longName+'</h3></div>';
+      '<img src="https://tosdr.org/logo/'+name+'.png" alt="" height="32">'+longName+'</h3></div>';
     var classHtml = '<div class="tosdr-rating"><label class="label ' + verdict + '">' +
       (verdict ? 'Class ' + verdict : 'No Class Yet') + '</label><p>' + ratingText + '</p></div>';
     var renderables=[];
@@ -98,7 +98,7 @@
 
     // Add Links
     if (isEmpty(links)) {
-      bodyHtml += '<section><a href="http://tos-dr.info/get-involved.html" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';
+      bodyHtml += '<section><a href="https://tosdr.org/get-involved.html" class="btn" target="_blank"><i class="icon  icon-list-alt"></i> Get Involved</a></section>';
     } else {
       bodyHtml += '<section><h4>Read the Terms</h4><ul class="tosback2">';
       for (var i in links) {
@@ -116,14 +116,14 @@
   }
 
   function renderPopupEmptyHtml () {
-    var headerHtml = '<div class="modal-header"><h3><a href="http://tos-dr.info/' +
+    var headerHtml = '<div class="modal-header"><h3><a href="https://tosdr.org/' +
       '" target="_blank"><img src="images/tosdr-logo-32.png" alt="" class="pull-left" />' +
       '</a></h3></div>';
     var bodyHtml = '<div class="modal-body">' +
       '<p><strong>Not rated, yet.</strong><p>' +
       '<p>Write an email to <a href="mailto:tosdr@googlegroups.com">tosdr@googlegroups.com</a> with a link to the terms,' +
       ' a small quote from the terms about the point you‘re making and let us know if you think it‘s a good or a bad point.' +
-      ' It‘s better to do one email thread by topic, rather than one email per service. For more details, <a href="http://tos-dr.info/get-involved.html">read on</a>!</p>' +
+      ' It‘s better to do one email thread by topic, rather than one email per service. For more details, <a href="https://tosdr.org/get-involved.html">read on</a>!</p>' +
       '</div>';
     document.getElementById('page').innerHTML = headerHtml + bodyHtml;
   }

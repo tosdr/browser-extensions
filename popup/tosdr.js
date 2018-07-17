@@ -38,7 +38,9 @@ window.Tosdr = (function () {
   function getService (url) {
     var matchingServices = services.filter(function (service) {
       for (var i in service.urlsRegExp) {
-        return service.urlsRegExp[i].exec(url);
+        if (service.urlsRegExp[i].exec(url)) {
+          return service.urlsRegExp[i].exec(url);
+        }
       }
     });
     return matchingServices.length > 0 ? matchingServices[0] : null;

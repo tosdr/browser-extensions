@@ -1,4 +1,5 @@
 const APPLICABLE_PROTOCOLS = ["http:", "https:"];
+const REVIEW_PREFIX = 'tosdr/review/';
 const DEBUG = false;
 const RATING_TEXT = {
 	"D": "The terms of service are very uneven or there are some important issues that need your attention.",
@@ -13,42 +14,20 @@ function log(message) {
 		console.log(message);
 }
 
-function createRegExpForServiceUrl(serviceUrl) {
-	if (/^http/.exec(serviceUrl)) {
-		return serviceUrl + '.*';
-	} else {
-		return 'https?://[^:/]*\\b' + serviceUrl + '.*';
-	}
-}
-
 /*
 Returns true only if the URL's protocol is in APPLICABLE_PROTOCOLS.
 */
-function protocolIsApplicable(url) {
+function getDomain(url) {
 	var anchor = document.createElement('a');
 	anchor.href = url;
-	return APPLICABLE_PROTOCOLS.includes(anchor.protocol);
-}
-
-function loadService(serviceName, serviceIndexData) {
-	let requestURL = 'https://tosdr.org/services/' + serviceName + '.json';
-
-	const driveRequest = new Request(requestURL, {
-		method: "GET"
-	});
-
-	return fetch(driveRequest).then((response) => {
-		if (response.status === 200) {
-			return response.json();
-		} else {
-			throw response.status;
-		}
-	});
+	if (APPLICABLE_PROTOCOLS.includes(anchor.protocol)) {
+		return anchor.hostname
+	}
 }
 
 
 function getServices() {
-	const requestURL = "https://tosdr.org/index/services.json";
+	const requestURL = "https://tosdr.org/api/1/all.json";
 
 	const driveRequest = new Request(requestURL, {
 		method: "GET"
@@ -64,35 +43,8 @@ function getServices() {
 
 }
 
-getServices().then((servicesIndex)=>{
-	let promiseChain = [];
-
-	for (let serviceName in servicesIndex) {
-		promiseChain.push(loadService(serviceName, servicesIndex[serviceName]));
-	}
-
-	return Promise.all(promiseChain)
-	.then((servicesResponse)=>{
-		var setchain = [];
-
-		for (let s of servicesResponse) {
-			if (!s.url) {
-				continue;
-			}
-			s.urlRegExp = createRegExpForServiceUrl(s.url);
-			s.points = s.points;
-			s.class = s.class;
-			s.links = s.links;
-			if (!s.tosdr) {
-				s.tosdr = { rated: false };
-			}
-			var service = {};
-			service[s.id]= s;
-
-			setchain.push(browser.storage.local.set(service));
-		}
-		return Promise.all(setchain);
-	}).then((setchain)=>{
+getServices().then((services)=>{
+	browser.storage.local.set(services).then(() => {
 		/*When first loaded, initialize the page action for all tabs.
 		*/
 		var gettingAllTabs = browser.tabs.query({});
@@ -107,108 +59,75 @@ getServices().then((servicesIndex)=>{
 	});
 });
 
-function validateURL(service, url){
-	return new Promise((resolve, reject) => {
-		var re = new RegExp(service.urlRegExp);
-		var url_exists = re.test(url);
-		if(url_exists){
-			resolve(service);
-		}else{
-			resolve(null);
+function getDomainEntryFromStorage(domain) {
+	return browser.storage.local.get(REVIEW_PREFIX + domain);
+}
+
+function getServiceDetails(domain) {
+	return getDomainEntryFromStorage(domain).then((result) => {
+		if (result && result.see) {
+			// with the '.see' field, this domain entry can redirect us to a service's main domain, e.g.
+			// > ...
+			// > 'google.fr': {
+			// >   see: 'google.com'
+			// > },
+			// > ...
+			// > 'google.com': {
+			// >   class: 'C',
+			// >   points: [
+			// >   ... details you want
+			// > }
+			// > ...
+			return getDomainEntryFromStorage(result.see);
 		}
+		result.mainDomain = domain; // used as storage key when marking that notification has been displayed
+		return result;
 	});
 }
 
 function getService(tab) {
-	return browser.storage.local.get().then((services)=>{
-		let promiseChain = [];
-
-		for (let serviceName in services) {
-			promiseChain.push(validateURL(services[serviceName], tab.url));
-		}
-
-		return Promise.all(promiseChain, (service)=>{
-			return service;
-		}).then((arr)=>{
-			arr = arr.filter(function(n){ return n != null }); 
-			if(arr.length > 0 ){
-				return arr[0];
-			}else{
-				return null;
-			}
-		});
-	});
+	var domain = getDomain(tab.url);
+	return getServiceDetails(domain);
 }
 
 function getIconForService(service) {
-	var rated = false;
-	if(service.tosdr !== undefined){
-		rated = service.tosdr.rated;
-	}
+	var rated = service['class'];
 	var imageName = rated ? rated.toLowerCase() : 'false';
 	return 'icons/class/' + imageName + '.png';
 }
 
 
-function checkNotification(serviceId) {
-	var keys = [
-		serviceId,
-		'notification/' + serviceId + '/last/update',
-		'notification/' + serviceId + '/last/rate'
-	];
-	return browser.storage.local.get(keys).then(results => {
-		var service = results[serviceId];
-		var last = results['notification/' + serviceId + '/last/update'];
-		var lastRate = 'notification/' + serviceId + '/last/rate'];
-		var shouldShow = false;
-
-		if(service.tosdr !== undefined){
-			if (!service.tosdr.rated) { return; }
-		}
-
-		var rate = service.tosdr.rated;
-		if (rate === 'D' || rate === 'E') {
-
-			if (last) {
-				var lastModified = parseInt(Date.parse(last));
-				log(lastModified);
-				var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-				log(daysSinceLast);
-
-				if (daysSinceLast > 7) {
-					shouldShow = true;
-				}
-			} else {
-				shouldShow = true;
+function checkNotification(service) {
+	if (service['class'] === 'D' || service['class'] === 'E') {
+		if (service.last) {
+			var lastModified = parseInt(Date.parse(service.last));
+			log(lastModified);
+			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+			log(daysSinceLast);
+	
+			if (daysSinceLast <= 7) {
+				return;
 			}
-
-		} else if (lastRate === 'D' || lastRate === 'E') {
-			shouldShow = true;
 		}
-
-
-		if (shouldShow) {
-			storage.local.set({
-				'notification/' + service.name + '/last/update': new Date().toDateString()),
-				localStorage.setItem('notification/' + service.name + '/last/rate': rate
-			}).then() => {
-				var notification = browser.notifications.create('tosdr-notify', {
-					type: "basic",
-					title: service.id,
-					message: RATING_TEXT[rate],
-					iconUrl: './icons/icon@2x.png'
-				});
-
-				browser.notifications.onClicked.addListener(function(notificationId) {
-					browser.notifications.clear(notificationId);
-					browser.tabs.create({
-						url: 'https://tosdr.org/#' + service.id
-					});
+		service.last = new Date().toDateString();
+		var storageKey = service.mainDomain;
+		delete service['mainDomain'];
+		return browser.storage.local.set({ storageKey: service }).then(() => {
+			var notification = browser.notifications.create('tosdr-notify', {
+				type: "basic",
+				title: service.name,
+				message: RATING_TEXT[service['class']],
+				iconUrl: './icons/icon@2x.png'
+			});
+	
+			browser.notifications.onClicked.addListener(function(notificationId) {
+				browser.notifications.clear(notificationId);
+				browser.tabs.create({
+					url: 'https://tosdr.org/#' + service.id
 				});
 			});
-		}
-
-	});
+		});
+	}
 }
 
 /*
@@ -228,7 +147,7 @@ function initializePageAction(tab) {
 					popup: 'popup/popup.html#' + service.id
 				})
 				browser.pageAction.show(tab.id);
-				checkNotification(service.id);
+				checkNotification(service);
 			}else{
 				browser.pageAction.setIcon({
 					tabId: tab.id,

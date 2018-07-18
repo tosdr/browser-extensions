@@ -25,14 +25,14 @@ function createRegExpForServiceUrl(serviceUrl) {
 Returns true only if the URL's protocol is in APPLICABLE_PROTOCOLS.
 */
 function protocolIsApplicable(url) {
-	var anchor =  document.createElement('a');
+	var anchor = document.createElement('a');
 	anchor.href = url;
 	return APPLICABLE_PROTOCOLS.includes(anchor.protocol);
 }
 
 function loadService(serviceName, serviceIndexData) {
 	let requestURL = 'https://tosdr.org/services/' + serviceName + '.json';
-  
+
 	const driveRequest = new Request(requestURL, {
 		method: "GET"
 	});
@@ -48,33 +48,33 @@ function loadService(serviceName, serviceIndexData) {
 
 
 function getServices() {
-  const requestURL = "https://tosdr.org/index/services.json";
-  
-  const driveRequest = new Request(requestURL, {
-    method: "GET"
-  });
+	const requestURL = "https://tosdr.org/index/services.json";
 
-  return fetch(driveRequest).then((response) => {
-    if (response.status === 200) {
-      return response.json();
-    } else {
-      throw response.status;
-    }
-  });
+	const driveRequest = new Request(requestURL, {
+		method: "GET"
+	});
+
+	return fetch(driveRequest).then((response) => {
+		if (response.status === 200) {
+			return response.json();
+		} else {
+			throw response.status;
+		}
+	});
 
 }
 
 getServices().then((servicesIndex)=>{
 	let promiseChain = [];
-	
+
 	for (let serviceName in servicesIndex) {
 		promiseChain.push(loadService(serviceName, servicesIndex[serviceName]));
 	}
-	
+
 	return Promise.all(promiseChain)
 	.then((servicesResponse)=>{
 		var setchain = [];
-		
+
 		for (let s of servicesResponse) {
 			if (!s.url) {
 				continue;
@@ -122,11 +122,11 @@ function validateURL(service, url){
 function getService(tab) {
 	return browser.storage.local.get().then((services)=>{
 		let promiseChain = [];
-	
+
 		for (let serviceName in services) {
 			promiseChain.push(validateURL(services[serviceName], tab.url));
 		}
-		
+
 		return Promise.all(promiseChain, (service)=>{
 			return service;
 		}).then((arr)=>{
@@ -151,10 +151,15 @@ function getIconForService(service) {
 
 
 function checkNotification(serviceId) {
-	return browser.storage.local.get(serviceId).then((service)=>{
-		var service = service[serviceId];
-		var last = localStorage.getItem('notification/' + service.name + '/last/update');
-		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
+	var keys = [
+		serviceId,
+		'notification/' + serviceId + '/last/update',
+		'notification/' + serviceId + '/last/rate'
+	];
+	return browser.storage.local.get(keys).then(results => {
+		var service = results[serviceId];
+		var last = results['notification/' + serviceId + '/last/update'];
+		var lastRate = 'notification/' + serviceId + '/last/rate'];
 		var shouldShow = false;
 
 		if(service.tosdr !== undefined){
@@ -183,24 +188,26 @@ function checkNotification(serviceId) {
 
 
 		if (shouldShow) {
-			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
-			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
+			storage.local.set({
+				'notification/' + service.name + '/last/update': new Date().toDateString()),
+				localStorage.setItem('notification/' + service.name + '/last/rate': rate
+			}).then() => {
+				var notification = browser.notifications.create('tosdr-notify', {
+					type: "basic",
+					title: service.id,
+					message: RATING_TEXT[rate],
+					iconUrl: './icons/icon@2x.png'
+				});
 
-			var notification = browser.notifications.create('tosdr-notify', {
-				type: "basic",
-				title: service.id,
-				message: RATING_TEXT[rate],
-				iconUrl: './icons/icon@2x.png'
-			});
-
-			browser.notifications.onClicked.addListener(function(notificationId) {
-				browser.notifications.clear(notificationId);
-				browser.tabs.create({
-					url: 'https://tosdr.org/#' + service.id
+				browser.notifications.onClicked.addListener(function(notificationId) {
+					browser.notifications.clear(notificationId);
+					browser.tabs.create({
+						url: 'https://tosdr.org/#' + service.id
+					});
 				});
 			});
 		}
-		
+
 	});
 }
 
@@ -211,7 +218,7 @@ Only operates on tabs whose URL's protocol is applicable.
 function initializePageAction(tab) {
 	if (protocolIsApplicable(tab.url)) {
 		return getService(tab).then((service)=>{
-			if (service) {							
+			if (service) {
 				browser.pageAction.setIcon({
 					tabId: tab.id,
 					path: getIconForService(service)
@@ -234,7 +241,7 @@ function initializePageAction(tab) {
 				browser.pageAction.show(tab.id);
 			}
 		});
-		
+
 	}
 }
 

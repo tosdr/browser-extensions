@@ -121,53 +121,53 @@ function getIconForService(service) {
 }
 
 function checkNotification(service) {
-		var last = localStorage.getItem('notification/' + service.name + '/last/update');
-		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
-		var shouldShow = false;
+	var last = localStorage.getItem('notification/' + service.name + '/last/update');
+	var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
+	var shouldShow = false;
 
-		if (!service.rated) { return; }
+	if (!service.rated) { return; }
 
-		var rate = service.rated;
-		if (rate === 'D' || rate === 'E') {
+	var rate = service.rated;
+	if (rate === 'D' || rate === 'E') {
 
-			if (last) {
-				var lastModified = parseInt(Date.parse(last));
-				log(lastModified);
-				var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-				log(daysSinceLast);
+		if (last) {
+			var lastModified = parseInt(Date.parse(last));
+			log(lastModified);
+			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+			log(daysSinceLast);
 
-				if (daysSinceLast > 7) {
-					shouldShow = true;
-				}
-			} else {
+			if (daysSinceLast > 7) {
 				shouldShow = true;
 			}
-
-		} else if (lastRate === 'D' || lastRate === 'E') {
+		} else {
 			shouldShow = true;
 		}
 
+	} else if (lastRate === 'D' || lastRate === 'E') {
+		shouldShow = true;
+	}
 
-		if (shouldShow) {
-			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
-			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
 
-			var notification = browser.notifications.create('tosdr-notify', {
-				type: "basic",
-				title: service.name,
-				message: RATING_TEXT[rate],
-				iconUrl: './icons/icon@2x.png'
+	if (shouldShow) {
+		localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
+		localStorage.setItem('notification/' + service.name + '/last/rate', rate);
+
+		var notification = browser.notifications.create('tosdr-notify', {
+			type: "basic",
+			title: service.name,
+			message: RATING_TEXT[rate],
+			iconUrl: './icons/icon@2x.png'
+		});
+
+		browser.notifications.onClicked.addListener(function(notificationId) {
+			browser.notifications.clear(notificationId);
+			browser.tabs.create({
+				url: 'https://tosdr.org/#' + service.slug
 			});
-
-			browser.notifications.onClicked.addListener(function(notificationId) {
-				browser.notifications.clear(notificationId);
-				browser.tabs.create({
-					url: 'https://tosdr.org/#' + service.slug
-				});
-			});
-		}
-		
-	});
+		});
+	}
+	
+	
 }
 
 /*

@@ -120,43 +120,54 @@ function getIconForService(service) {
 	return 'icons/class/' + imageName + '.png';
 }
 
-
 function checkNotification(service) {
-	console.log('checkNotification', service);
-	if (service.rated === 'D' || service.rated === 'E') {
-		if (service.last) {
-			console.log('have last!')
-			var lastModified = parseInt(Date.parse(service.last));
-			log(lastModified);
-			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-			log(daysSinceLast);
-	
-			if (daysSinceLast <= 7) {
-				return;
+		var last = localStorage.getItem('notification/' + service.name + '/last/update');
+		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
+		var shouldShow = false;
+
+		if (!service.rated) { return; }
+
+		var rate = service.rated;
+		if (rate === 'D' || rate === 'E') {
+
+			if (last) {
+				var lastModified = parseInt(Date.parse(last));
+				log(lastModified);
+				var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+				log(daysSinceLast);
+
+				if (daysSinceLast > 7) {
+					shouldShow = true;
+				}
+			} else {
+				shouldShow = true;
 			}
+
+		} else if (lastRate === 'D' || lastRate === 'E') {
+			shouldShow = true;
 		}
-		service.last = new Date().toDateString();
-		var storageKey = REVIEW_PREFIX + service.mainDomain;
-		delete service['mainDomain'];
-		console.log('storing!', storageKey, service)
-		return browser.storage.local.set({ storageKey: service }).then((out) => {
-			console.log('stored!', storageKey, JSON.stringify(service))
-			browser.storage.local.get(storageKey).then((res) => { console.log('readback!', out, JSON.stringify(res)); });
+
+
+		if (shouldShow) {
+			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
+			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
+
 			var notification = browser.notifications.create('tosdr-notify', {
 				type: "basic",
 				title: service.name,
-				message: RATING_TEXT[service.rated],
+				message: RATING_TEXT[rate],
 				iconUrl: './icons/icon@2x.png'
 			});
-	
+
 			browser.notifications.onClicked.addListener(function(notificationId) {
 				browser.notifications.clear(notificationId);
 				browser.tabs.create({
-					url: 'https://tosdr.org/#' + service.id
+					url: 'https://tosdr.org/#' + service.slug
 				});
 			});
-		});
-	}
+		}
+		
+	});
 }
 
 /*

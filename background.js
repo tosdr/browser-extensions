@@ -63,27 +63,31 @@ getServices().then((services)=>{
 function getDomainEntryFromStorage(domain) {
 	console.log('getDomainEntryFromStorage', domain)
 	return browser.storage.local.get(REVIEW_PREFIX + domain).then(resultSet => {
-		return resultSet[REVIEW_PREFIX + domain];
+		return resultSet[REVIEW_PREFIX + domain] || undefined;
 	});
 }
 
-function getServiceDetails(domain) {
-	console.log('getServiceDetails', domain)
+function getServiceDetails(domain, tries = 0) {
+	console.log('getServiceDetails', domain, tries)
 	if (!domain) {
 		return Promise.reject(new Error('no domain name provided'));
 	}
-	var mainDomain = domain;
-	return getDomainEntryFromStorage(domain).then((result) => {
-		console.log('result', result);
-		if (!result) {
+	if (tries > 10) {
+		return Promise.reject(new Error('too many redirections ' + domain));
+	}
+	return getDomainEntryFromStorage(domain).then((details) => {
+		console.log('details', details);
+		if (!details) {
 			var domainParts = domain.split('.');
 			if (domainParts.length > 2) {
 				console.log('trying parent domain')
-				return getServiceDetails(domainParts.slice(1).join('.'));
+				return getServiceDetails(domainParts.slice(1).join('.'), tries + 1);
+			} else {
+				return Promise.reject(new Error('details not found'));
 			}
 		}
-		if (result && result.see) {
-			console.log('see', result.see);
+		if (details.see) {
+			console.log('see', details.see);
 			// with the '.see' field, this domain entry can redirect us to a service's main domain, e.g.
 			// > ...
 			// > 'google.fr': {
@@ -96,15 +100,10 @@ function getServiceDetails(domain) {
 			// >   ... details you want
 			// > }
 			// > ...
-			mainDomain = result.see;
-			return getDomainEntryFromStorage(mainDomain);
+			return getServiceDetails(details.see, tries + 1);
 		}
-		return result;
-	}).then((details) => {
-		if (details) {
-			details.mainDomain = mainDomain; // used as storage key when marking that notification has been displayed
-		}
-		console.log(details);
+		details.mainDomain = domain; // used as storage key when marking that notification has been displayed
+		console.log('mainDomain set', details);
 		return details;
 	});
 }
@@ -123,8 +122,10 @@ function getIconForService(service) {
 
 
 function checkNotification(service) {
+	console.log('checkNotification', service);
 	if (service.rated === 'D' || service.rated === 'E') {
 		if (service.last) {
+			console.log('have last!')
 			var lastModified = parseInt(Date.parse(service.last));
 			log(lastModified);
 			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
@@ -135,9 +136,12 @@ function checkNotification(service) {
 			}
 		}
 		service.last = new Date().toDateString();
-		var storageKey = service.mainDomain;
+		var storageKey = REVIEW_PREFIX + service.mainDomain;
 		delete service['mainDomain'];
-		return browser.storage.local.set({ storageKey: service }).then(() => {
+		console.log('storing!', storageKey, service)
+		return browser.storage.local.set({ storageKey: service }).then((out) => {
+			console.log('stored!', storageKey, JSON.stringify(service))
+			browser.storage.local.get(storageKey).then((res) => { console.log('readback!', out, JSON.stringify(res)); });
 			var notification = browser.notifications.create('tosdr-notify', {
 				type: "basic",
 				title: service.name,
@@ -162,6 +166,7 @@ Only operates on tabs whose URL's protocol is applicable.
 function initializePageAction(tab) {
 	console.log('initializePageAction', tab);
 	return getService(tab).then((service)=>{
+		console.log('got service', service);
 		if (service) {
 			browser.pageAction.setIcon({
 				tabId: tab.id,
@@ -169,7 +174,7 @@ function initializePageAction(tab) {
 			});
 			browser.pageAction.setPopup({
 				tabId: tab.id,
-				popup: 'popup/popup.html#' + service.id
+				popup: 'popup/popup.html#' + service.slug
 			})
 			browser.pageAction.show(tab.id);
 			checkNotification(service);
@@ -192,16 +197,11 @@ function initializePageAction(tab) {
 	});
 }
 
-//Run on activating the tab
+//Run when loading the tab completes
 console.log('setting tab event listeners');
-browser.tabs.onActivated.addListener((activeInfo) => {
-	console.log('activated', activeInfo);
-	browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-		initializePageAction(tabs[0]);
-	});
-});
-
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
-	console.log('updated', changeInfo);
-	initializePageAction(tab);
+	console.log('updated', id, changeInfo, tab);
+	if (changeInfo.status == 'complete') {
+		initializePageAction(tab);
+	}
 });

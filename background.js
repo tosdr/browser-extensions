@@ -43,7 +43,7 @@ function getServices() {
 
 }
 
-console.log('inline call to getServices');
+// console.log('inline call to getServices');
 getServices().then((services)=>{
 	browser.storage.local.set(services).then(() => {
 		/*When first loaded, initialize the page action for all tabs.
@@ -61,14 +61,14 @@ getServices().then((services)=>{
 });
 
 function getDomainEntryFromStorage(domain) {
-	console.log('getDomainEntryFromStorage', domain)
+	// console.log('getDomainEntryFromStorage', domain)
 	return browser.storage.local.get(REVIEW_PREFIX + domain).then(resultSet => {
 		return resultSet[REVIEW_PREFIX + domain] || undefined;
 	});
 }
 
 function getServiceDetails(domain, tries = 0) {
-	console.log('getServiceDetails', domain, tries)
+	// console.log('getServiceDetails', domain, tries)
 	if (!domain) {
 		return Promise.reject(new Error('no domain name provided'));
 	}
@@ -76,11 +76,11 @@ function getServiceDetails(domain, tries = 0) {
 		return Promise.reject(new Error('too many redirections ' + domain));
 	}
 	return getDomainEntryFromStorage(domain).then((details) => {
-		console.log('details', details);
+		// console.log('details', details);
 		if (!details) {
 			var domainParts = domain.split('.');
 			if (domainParts.length > 2) {
-				console.log('trying parent domain')
+				// console.log('trying parent domain')
 				return getServiceDetails(domainParts.slice(1).join('.'), tries + 1);
 			} else {
 				return Promise.reject(new Error('details not found'));
@@ -103,13 +103,13 @@ function getServiceDetails(domain, tries = 0) {
 			return getServiceDetails(details.see, tries + 1);
 		}
 		details.mainDomain = domain; // used as storage key when marking that notification has been displayed
-		console.log('mainDomain set', details);
+		// console.log('mainDomain set', details);
 		return details;
 	});
 }
 
 function getService(tab) {
-	console.log('getService', tab);
+	// console.log('getService', tab);
 	var domain = getDomain(tab.url);
 	return getServiceDetails(domain);
 }
@@ -175,9 +175,9 @@ Initialize the page action: set icon and title, then show.
 Only operates on tabs whose URL's protocol is applicable.
 */
 function initializePageAction(tab) {
-	console.log('initializePageAction', tab);
+	// console.log('initializePageAction', tab);
 	return getService(tab).then((service)=>{
-		console.log('got service', service);
+		// console.log('got service', service);
 		if (service) {
 			browser.pageAction.setIcon({
 				tabId: tab.id,
@@ -209,9 +209,9 @@ function initializePageAction(tab) {
 }
 
 //Run when loading the tab completes
-console.log('setting tab event listeners');
+// console.log('setting tab event listeners');
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
-	console.log('updated', id, changeInfo, tab);
+	// console.log('updated', id, changeInfo, tab);
 	if (changeInfo.status == 'complete') {
 		initializePageAction(tab);
 	}

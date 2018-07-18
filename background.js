@@ -43,6 +43,7 @@ function getServices() {
 
 }
 
+console.log('inline call to getServices');
 getServices().then((services)=>{
 	browser.storage.local.set(services).then(() => {
 		/*When first loaded, initialize the page action for all tabs.
@@ -60,12 +61,29 @@ getServices().then((services)=>{
 });
 
 function getDomainEntryFromStorage(domain) {
-	return browser.storage.local.get(REVIEW_PREFIX + domain);
+	console.log('getDomainEntryFromStorage', domain)
+	return browser.storage.local.get(REVIEW_PREFIX + domain).then(resultSet => {
+		return resultSet[REVIEW_PREFIX + domain];
+	});
 }
 
 function getServiceDetails(domain) {
+	console.log('getServiceDetails', domain)
+	if (!domain) {
+		return Promise.reject(new Error('no domain name provided'));
+	}
+	var mainDomain = domain;
 	return getDomainEntryFromStorage(domain).then((result) => {
+		console.log('result', result);
+		if (!result) {
+			var domainParts = domain.split('.');
+			if (domainParts.length > 2) {
+				console.log('trying parent domain')
+				return getServiceDetails(domainParts.slice(1).join('.'));
+			}
+		}
 		if (result && result.see) {
+			console.log('see', result.see);
 			// with the '.see' field, this domain entry can redirect us to a service's main domain, e.g.
 			// > ...
 			// > 'google.fr': {
@@ -73,32 +91,39 @@ function getServiceDetails(domain) {
 			// > },
 			// > ...
 			// > 'google.com': {
-			// >   class: 'C',
+			// >   rated: 'C',
 			// >   points: [
 			// >   ... details you want
 			// > }
 			// > ...
-			return getDomainEntryFromStorage(result.see);
+			mainDomain = result.see;
+			return getDomainEntryFromStorage(mainDomain);
 		}
-		result.mainDomain = domain; // used as storage key when marking that notification has been displayed
 		return result;
+	}).then((details) => {
+		if (details) {
+			details.mainDomain = mainDomain; // used as storage key when marking that notification has been displayed
+		}
+		console.log(details);
+		return details;
 	});
 }
 
 function getService(tab) {
+	console.log('getService', tab);
 	var domain = getDomain(tab.url);
 	return getServiceDetails(domain);
 }
 
 function getIconForService(service) {
-	var rated = service['class'];
+	var rated = service.rated;
 	var imageName = rated ? rated.toLowerCase() : 'false';
 	return 'icons/class/' + imageName + '.png';
 }
 
 
 function checkNotification(service) {
-	if (service['class'] === 'D' || service['class'] === 'E') {
+	if (service.rated === 'D' || service.rated === 'E') {
 		if (service.last) {
 			var lastModified = parseInt(Date.parse(service.last));
 			log(lastModified);
@@ -116,7 +141,7 @@ function checkNotification(service) {
 			var notification = browser.notifications.create('tosdr-notify', {
 				type: "basic",
 				title: service.name,
-				message: RATING_TEXT[service['class']],
+				message: RATING_TEXT[service.rated],
 				iconUrl: './icons/icon@2x.png'
 			});
 	
@@ -135,42 +160,48 @@ Initialize the page action: set icon and title, then show.
 Only operates on tabs whose URL's protocol is applicable.
 */
 function initializePageAction(tab) {
-	if (protocolIsApplicable(tab.url)) {
-		return getService(tab).then((service)=>{
-			if (service) {
-				browser.pageAction.setIcon({
-					tabId: tab.id,
-					path: getIconForService(service)
-				});
-				browser.pageAction.setPopup({
-					tabId: tab.id,
-					popup: 'popup/popup.html#' + service.id
-				})
-				browser.pageAction.show(tab.id);
-				checkNotification(service);
-			}else{
-				browser.pageAction.setIcon({
-					tabId: tab.id,
-					path: 'icons/class/none.png'
-				});
-				browser.pageAction.setPopup({
-					tabId: tab.id,
-					popup: 'popup/popup.html#none'
-				})
-				browser.pageAction.show(tab.id);
-			}
-		});
-
-	}
+	console.log('initializePageAction', tab);
+	return getService(tab).then((service)=>{
+		if (service) {
+			browser.pageAction.setIcon({
+				tabId: tab.id,
+				path: getIconForService(service)
+			});
+			browser.pageAction.setPopup({
+				tabId: tab.id,
+				popup: 'popup/popup.html#' + service.id
+			})
+			browser.pageAction.show(tab.id);
+			checkNotification(service);
+		}else{
+			browser.pageAction.setIcon({
+				tabId: tab.id,
+				path: 'icons/class/none.png'
+			});
+			browser.pageAction.setPopup({
+				tabId: tab.id,
+				popup: 'popup/popup.html#none'
+			})
+			browser.pageAction.show(tab.id);
+		}
+	}).catch(err => {
+        	if (err.message = 'no domain name provided') {
+			return;
+		}
+		console.error(err);
+	});
 }
 
 //Run on activating the tab
+console.log('setting tab event listeners');
 browser.tabs.onActivated.addListener((activeInfo) => {
+	console.log('activated', activeInfo);
 	browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
 		initializePageAction(tabs[0]);
 	});
 });
 
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
+	console.log('updated', changeInfo);
 	initializePageAction(tab);
 });

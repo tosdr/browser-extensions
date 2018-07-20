@@ -43,7 +43,27 @@ function getServices() {
 
 }
 
-// console.log('inline call to getServices');
+// In Firefox, we can access browsers.tabs and browser.storage.
+// In Chrome, there is no global variable called 'browser', but
+// there is one called 'chrome', which has almost the same functions,
+// so if 'browser.*' is not defined, use 'chrome.*' instead:
+if (typeof browser == 'undefined') {
+	browser = {
+		tabs: {
+			onUpdated: chrome.tabs.onUpdated,
+			query: (options) => new Promise(resolve => chrome.tabs.query(options, resolve)),
+			create: chrome.tabs.create
+		},
+		notifications: chrome.notifications,
+		storage: {
+			local: {
+				get: (keys) => new Promise(resolve => chrome.storage.local.get(keys, resolve)),
+				set: (values) => new Promise(resolve => chrome.storage.local.set(values, resolve))
+			}
+		},
+		pageAction: chrome.pageAction
+	}
+}
 getServices().then((services)=>{
 	browser.storage.local.set(services).then(() => {
 		/*When first loaded, initialize the page action for all tabs.
@@ -87,7 +107,7 @@ function getServiceDetails(domain, tries = 0) {
 			}
 		}
 		if (details.see) {
-			console.log('see', details.see);
+			// console.log('see', details.see);
 			// with the '.see' field, this domain entry can redirect us to a service's main domain, e.g.
 			// > ...
 			// > 'google.fr': {
@@ -121,6 +141,7 @@ function getIconForService(service) {
 }
 
 function checkNotification(service) {
+	// console.log('checkNotification', service);
 	var last = localStorage.getItem('notification/' + service.name + '/last/update');
 	var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
 	var shouldShow = false;

@@ -1,4 +1,5 @@
 const APPLICABLE_PROTOCOLS = ["http:", "https:"];
+const REVIEW_PREFIX = 'tosdr/review/';
 const DEBUG = false;
 const RATING_TEXT = {
 	"D": "The terms of service are very uneven or there are some important issues that need your attention.",
@@ -13,26 +14,21 @@ function log(message) {
 		console.log(message);
 }
 
-function createRegExpForServiceUrl(serviceUrl) {
-	if (/^http/.exec(serviceUrl)) {
-		return serviceUrl + '.*';
-	} else {
-		return 'https?://[^:/]*\\b' + serviceUrl + '.*';
-	}
-}
-
 /*
 Returns true only if the URL's protocol is in APPLICABLE_PROTOCOLS.
 */
-function protocolIsApplicable(url) {
-	var anchor =  document.createElement('a');
+function getDomain(url) {
+	var anchor = document.createElement('a');
 	anchor.href = url;
-	return APPLICABLE_PROTOCOLS.includes(anchor.protocol);
+	if (APPLICABLE_PROTOCOLS.includes(anchor.protocol)) {
+		return anchor.hostname
+	}
 }
 
-function loadService(serviceName, serviceIndexData) {
-	let requestURL = 'https://tosdr.org/services/' + serviceName + '.json';
-  
+
+function getServices() {
+	const requestURL = "https://tosdr.org/api/1/all.json";
+
 	const driveRequest = new Request(requestURL, {
 		method: "GET"
 	});
@@ -44,55 +40,12 @@ function loadService(serviceName, serviceIndexData) {
 			throw response.status;
 		}
 	});
-}
-
-
-function getServices() {
-  const requestURL = "https://tosdr.org/index/services.json";
-  
-  const driveRequest = new Request(requestURL, {
-    method: "GET"
-  });
-
-  return fetch(driveRequest).then((response) => {
-    if (response.status === 200) {
-      return response.json();
-    } else {
-      throw response.status;
-    }
-  });
 
 }
 
-getServices().then((servicesIndex)=>{
-	let promiseChain = [];
-	
-	for (let serviceName in servicesIndex) {
-		promiseChain.push(loadService(serviceName, servicesIndex[serviceName]));
-	}
-	
-	return Promise.all(promiseChain)
-	.then((servicesResponse)=>{
-		var setchain = [];
-		
-		for (let s of servicesResponse) {
-			if (!s.url) {
-				continue;
-			}
-			s.urlRegExp = createRegExpForServiceUrl(s.url);
-			s.points = s.points;
-			s.class = s.class;
-			s.links = s.links;
-			if (!s.tosdr) {
-				s.tosdr = { rated: false };
-			}
-			var service = {};
-			service[s.id]= s;
-
-			setchain.push(browser.storage.local.set(service));
-		}
-		return Promise.all(setchain);
-	}).then((setchain)=>{
+// console.log('inline call to getServices');
+getServices().then((services)=>{
+	browser.storage.local.set(services).then(() => {
 		/*When first loaded, initialize the page action for all tabs.
 		*/
 		var gettingAllTabs = browser.tabs.query({});
@@ -107,101 +60,114 @@ getServices().then((servicesIndex)=>{
 	});
 });
 
-function validateURL(service, url){
-	return new Promise((resolve, reject) => {
-		var re = new RegExp(service.urlRegExp);
-		var url_exists = re.test(url);
-		if(url_exists){
-			resolve(service);
-		}else{
-			resolve(null);
+function getDomainEntryFromStorage(domain) {
+	// console.log('getDomainEntryFromStorage', domain)
+	return browser.storage.local.get(REVIEW_PREFIX + domain).then(resultSet => {
+		return resultSet[REVIEW_PREFIX + domain] || undefined;
+	});
+}
+
+function getServiceDetails(domain, tries = 0) {
+	// console.log('getServiceDetails', domain, tries)
+	if (!domain) {
+		return Promise.reject(new Error('no domain name provided'));
+	}
+	if (tries > 10) {
+		return Promise.reject(new Error('too many redirections ' + domain));
+	}
+	return getDomainEntryFromStorage(domain).then((details) => {
+		// console.log('details', details);
+		if (!details) {
+			var domainParts = domain.split('.');
+			if (domainParts.length > 2) {
+				// console.log('trying parent domain')
+				return getServiceDetails(domainParts.slice(1).join('.'), tries + 1);
+			} else {
+				return Promise.reject(new Error('details not found'));
+			}
 		}
+		if (details.see) {
+			console.log('see', details.see);
+			// with the '.see' field, this domain entry can redirect us to a service's main domain, e.g.
+			// > ...
+			// > 'google.fr': {
+			// >   see: 'google.com'
+			// > },
+			// > ...
+			// > 'google.com': {
+			// >   rated: 'C',
+			// >   points: [
+			// >   ... details you want
+			// > }
+			// > ...
+			return getServiceDetails(details.see, tries + 1);
+		}
+		details.mainDomain = domain; // used as storage key when marking that notification has been displayed
+		// console.log('mainDomain set', details);
+		return details;
 	});
 }
 
 function getService(tab) {
-	return browser.storage.local.get().then((services)=>{
-		let promiseChain = [];
-	
-		for (let serviceName in services) {
-			promiseChain.push(validateURL(services[serviceName], tab.url));
-		}
-		
-		return Promise.all(promiseChain, (service)=>{
-			return service;
-		}).then((arr)=>{
-			arr = arr.filter(function(n){ return n != null }); 
-			if(arr.length > 0 ){
-				return arr[0];
-			}else{
-				return null;
-			}
-		});
-	});
+	// console.log('getService', tab);
+	var domain = getDomain(tab.url);
+	return getServiceDetails(domain);
 }
 
 function getIconForService(service) {
-	var rated = false;
-	if(service.tosdr !== undefined){
-		rated = service.tosdr.rated;
-	}
+	var rated = service.rated;
 	var imageName = rated ? rated.toLowerCase() : 'false';
 	return 'icons/class/' + imageName + '.png';
 }
 
+function checkNotification(service) {
+	var last = localStorage.getItem('notification/' + service.name + '/last/update');
+	var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
+	var shouldShow = false;
 
-function checkNotification(serviceId) {
-	return browser.storage.local.get(serviceId).then((service)=>{
-		var service = service[serviceId];
-		var last = localStorage.getItem('notification/' + service.name + '/last/update');
-		var lastRate = localStorage.getItem('notification/' + service.name + '/last/rate');
-		var shouldShow = false;
+	if (!service.rated) { return; }
 
-		if(service.tosdr !== undefined){
-			if (!service.tosdr.rated) { return; }
-		}
+	var rate = service.rated;
+	if (rate === 'D' || rate === 'E') {
 
-		var rate = service.tosdr.rated;
-		if (rate === 'D' || rate === 'E') {
+		if (last) {
+			var lastModified = parseInt(Date.parse(last));
+			log(lastModified);
+			var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+			log(daysSinceLast);
 
-			if (last) {
-				var lastModified = parseInt(Date.parse(last));
-				log(lastModified);
-				var daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-				log(daysSinceLast);
-
-				if (daysSinceLast > 7) {
-					shouldShow = true;
-				}
-			} else {
+			if (daysSinceLast > 7) {
 				shouldShow = true;
 			}
-
-		} else if (lastRate === 'D' || lastRate === 'E') {
+		} else {
 			shouldShow = true;
 		}
 
+	} else if (lastRate === 'D' || lastRate === 'E') {
+		shouldShow = true;
+	}
 
-		if (shouldShow) {
-			localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
-			localStorage.setItem('notification/' + service.name + '/last/rate', rate);
 
-			var notification = browser.notifications.create('tosdr-notify', {
-				type: "basic",
-				title: service.id,
-				message: RATING_TEXT[rate],
-				iconUrl: './icons/icon@2x.png'
+	if (shouldShow) {
+		localStorage.setItem('notification/' + service.name + '/last/update', new Date().toDateString());
+		localStorage.setItem('notification/' + service.name + '/last/rate', rate);
+
+		var notification = browser.notifications.create('tosdr-notify', {
+			type: "basic",
+			title: service.name,
+			message: RATING_TEXT[rate],
+			iconUrl: './icons/icon@2x.png'
+		});
+
+		browser.notifications.onClicked.addListener(function(notificationId) {
+			browser.notifications.clear(notificationId);
+			browser.tabs.create({
+				url: 'https://tosdr.org/#' + service.slug
 			});
-
-			browser.notifications.onClicked.addListener(function(notificationId) {
-				browser.notifications.clear(notificationId);
-				browser.tabs.create({
-					url: 'https://tosdr.org/#' + service.id
-				});
-			});
-		}
-		
-	});
+		});
+	}
+	
+	
 }
 
 /*
@@ -209,42 +175,44 @@ Initialize the page action: set icon and title, then show.
 Only operates on tabs whose URL's protocol is applicable.
 */
 function initializePageAction(tab) {
-	if (protocolIsApplicable(tab.url)) {
-		return getService(tab).then((service)=>{
-			if (service) {							
-				browser.pageAction.setIcon({
-					tabId: tab.id,
-					path: getIconForService(service)
-				});
-				browser.pageAction.setPopup({
-					tabId: tab.id,
-					popup: 'popup/popup.html#' + service.id
-				})
-				browser.pageAction.show(tab.id);
-				checkNotification(service.id);
-			}else{
-				browser.pageAction.setIcon({
-					tabId: tab.id,
-					path: 'icons/class/none.png'
-				});
-				browser.pageAction.setPopup({
-					tabId: tab.id,
-					popup: 'popup/popup.html#none'
-				})
-				browser.pageAction.show(tab.id);
-			}
-		});
-		
-	}
+	// console.log('initializePageAction', tab);
+	return getService(tab).then((service)=>{
+		// console.log('got service', service);
+		if (service) {
+			browser.pageAction.setIcon({
+				tabId: tab.id,
+				path: getIconForService(service)
+			});
+			browser.pageAction.setPopup({
+				tabId: tab.id,
+				popup: 'popup/popup.html#' + service.slug
+			})
+			browser.pageAction.show(tab.id);
+			checkNotification(service);
+		}else{
+			browser.pageAction.setIcon({
+				tabId: tab.id,
+				path: 'icons/class/none.png'
+			});
+			browser.pageAction.setPopup({
+				tabId: tab.id,
+				popup: 'popup/popup.html#none'
+			})
+			browser.pageAction.show(tab.id);
+		}
+	}).catch(err => {
+        	if (err.message = 'no domain name provided') {
+			return;
+		}
+		console.error(err);
+	});
 }
 
-//Run on activating the tab
-browser.tabs.onActivated.addListener((activeInfo) => {
-	browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-		initializePageAction(tabs[0]);
-	});
-});
-
+//Run when loading the tab completes
+// console.log('setting tab event listeners');
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
-	initializePageAction(tab);
+	// console.log('updated', id, changeInfo, tab);
+	if (changeInfo.status == 'complete') {
+		initializePageAction(tab);
+	}
 });

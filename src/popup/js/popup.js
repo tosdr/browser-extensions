@@ -32,14 +32,14 @@ jQuery(function () {
 	      icon = 'question-sign';
 	      sign = '?';
 	    }
-	    var pointText = dataPoint.description;
+	    var pointText = dataPoint.description || '';
 
 	    //Extract links from text
 	    var taggedText = pointText.split(/(<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>)/gim);
 	    $('#popup-point-' + serviceName + '-' + dataPoint.id)
 	      .append($("<div>", { class: dataPoint.point })
 	      .append($("<h5>")
-	        .append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint.tosdr.point)})
+	        .append($("<span>", { class: 'badge ' + badge , title: escapeHTML(dataPoint.point)})
 	          .append($("<span>", { class: 'glyphicon glyphicon-' + icon}))
 	        )
 	        .append($("<span>").text(" " + dataPoint.title + " "))
@@ -80,7 +80,7 @@ jQuery(function () {
 				$('#page').append($("<div>", {class : 'modal-body'})
 				.append($("<div>", {class : 'tosdr-rating' })
 				.append($("<h4>", { text : 'Not rated, yet.'}))
-				.append($("<p>",{ text : 'Write an email to tosdr@googlegroups.com with a link to the terms, a small quote from the terms about the point you‘re making and let us know if you think it‘s a good or a bad point. It‘s better to do one email thread by topic, rather than one email per service. For more details, read on!' , class : 'lbldesc'}))));
+				.append($("<p>",{ text : 'Go to https://edit.tosdr.org to help us review it!' , class : 'lbldesc'}))));
 			}else{
 				$("#service_url").attr('href', 'http://tosdr.org/#' + escapeHTML(service.url));
 	  
@@ -98,16 +98,16 @@ jQuery(function () {
 				
 				
 				//Points
-				for (var i in service.points){
+				for (let i in service.points){
 					$('.tosdr-points').append($("<li>", {id : 'popup-point-' + service.name + '-' + service.points[i].id , class:'point'}));
-					 tosdrPoint(service.name, service.point[i]);
+					 tosdrPoint(service.name, service.points[i]);
 				}
 			 
 				
 				// links inside of the dataPoints should open in a new window
 				$('.tosdr-points a').attr('target', '_blank');
 				
-				if(Object.keys(service.links).length > 0){
+				if(service.documents.length > 0){
 					$('#linksList')
 					.append($("<h4>", { text : 'Read the Terms'}))
 					.append($("<ul>", {class: 'tosback2'}));

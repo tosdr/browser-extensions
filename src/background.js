@@ -24,7 +24,7 @@ Only operates on tabs whose URL's protocol is applicable.
 function initializePageAction(tab) {
 	// console.log('initializePageAction', tab);
 	return getService(tab).then((service)=>{
-		// console.log('got service', service);
+		console.log('got service', service);
 		if (service) {
 			browser.pageAction.setIcon({
 				tabId: tab.id,
@@ -32,7 +32,7 @@ function initializePageAction(tab) {
 			});
 			browser.pageAction.setPopup({
 				tabId: tab.id,
-				popup: 'popup/popup.html#' + service.slug
+				popup: 'popup/popup.html#' + service.mainDomain
 			})
 			browser.pageAction.show(tab.id);
 			checkNotification(service);

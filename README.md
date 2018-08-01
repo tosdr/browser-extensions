@@ -27,11 +27,12 @@ Just open ```about:debugging``` and follow instructions.
 Building instructions
 ---------------------
 
-Just zip the file using this command:
+Make sure you have `node` installed, and from the repository root, run:
 
 ```bash
-zip -r archive.xpi * -x "*.DS_Store" -x "__MACOSX" -x "*._*"
+./build.sh
 ```
+This will create two extensions in the dist folder, one for Firefox and one for Chrome.
  
 -----------
 

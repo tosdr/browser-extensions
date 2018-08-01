@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "0.6.2",
+  "homepage_url": "https://tosdr.org",
+  "background": {
+    "scripts": [
+      "popup/js/jquery-3.2.1.min.js",
+      "popup/js/servicedata.js",
+      "background.js"
+    ]
+  },
+  "page_action": {
+    "default_icon": {
+      "19": "button/icon-19.png",
+      "38": "button/icon-38.png"
+    },
+    "default_title": "__MSG_extensionName__",
+    "browser_style": true
+  },
+  "permissions": [
+    "*://tosdr.org/*",
+    "tabs",
+    "notifications",
+    "storage"
+  ],
+  "icons": {
+    "48": "icons/icon.png",
+    "96": "icons/icon@2x.png"
+  },
+  "default_locale": "en"
+}

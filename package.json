@@ -1,0 +1,29 @@
+{
+  "name": "tosdr-firefox",
+  "version": "1.0.0",
+  "description": "“I have read and agree to the Terms” is the biggest lie on the web. We aim to fix that. “Terms of Service; Didn't Read” is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
+  "main": "mixin.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.2.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tosdr/tosdr-firefox.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tosdr/tosdr-firefox/issues"
+  },
+  "homepage": "https://github.com/tosdr/tosdr-firefox#readme"
+}

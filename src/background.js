@@ -47,7 +47,7 @@ function initializePageAction (tab) {
       browser.pageAction.show(tab.id)
     }
   }).catch(err => {
-    if (err.message = 'no domain name provided') {
+    if (err.message === 'no domain name provided') {
       return
     }
     console.error(err)
@@ -58,7 +58,7 @@ function initializePageAction (tab) {
 // console.log('setting tab event listeners');
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
   // console.log('updated', id, changeInfo, tab);
-  if (changeInfo.status == 'complete') {
+  if (changeInfo.status === 'complete') {
     initializePageAction(tab)
   }
 })

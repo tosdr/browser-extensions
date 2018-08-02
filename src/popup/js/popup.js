@@ -11,19 +11,19 @@ jQuery(function () {
   function tosdrPoint (serviceName, dataPoint) {
     var badge, icon, sign
     if (dataPoint) {
-      if (dataPoint.point == 'good') {
+      if (dataPoint.point === 'good') {
         badge = 'badge-success'
         icon = 'thumbs-up'
         sign = '+'
-      } else if (dataPoint.point == 'bad') {
+      } else if (dataPoint.point === 'bad') {
         badge = 'badge-warning'
         icon = 'thumbs-down'
         sign = '-'
-      } else if (dataPoint.point == 'blocker') {
+      } else if (dataPoint.point === 'blocker') {
         badge = 'badge-important'
         icon = 'remove'
         sign = '×'
-      } else if (dataPoint.point == 'neutral') {
+      } else if (dataPoint.point === 'neutral') {
         badge = 'badge-neutral'
         icon = 'asterisk'
         sign = '→'
@@ -39,11 +39,11 @@ jQuery(function () {
       $('#popup-point-' + serviceName + '-' + dataPoint.id)
         .append($('<div>', { class: dataPoint.point })
           .append($('<h5>')
-            .append($('<span>', { class: 'badge ' + badge, title: escapeHTML(dataPoint.point)})
-              .append($('<span>', { class: 'glyphicon glyphicon-' + icon}))
+            .append($('<span>', { class: 'badge ' + badge, title: escapeHTML(dataPoint.point) })
+              .append($('<span>', { class: 'glyphicon glyphicon-' + icon }))
             )
             .append($('<span>').text(' ' + dataPoint.title + ' '))
-            .append($('<a>', { href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'label context', text: 'Discussion'}))
+            .append($('<a>', { href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'label context', text: 'Discussion' }))
           ))
 
       $('#popup-point-' + serviceName + '-' + dataPoint.id).append($('<p>'))
@@ -76,9 +76,9 @@ jQuery(function () {
       if (serviceUrl === 'none') {
         $('#page').empty()
         $('#page').append($('<div>', {class: 'modal-body'})
-          .append($('<div>', {class: 'tosdr-rating' })
-            .append($('<h4>', { text: 'Not rated, yet.'}))
-            .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc'}))))
+          .append($('<div>', { class: 'tosdr-rating' })
+            .append($('<h4>', { text: 'Not rated, yet.' }))
+            .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc' }))))
       } else {
         $('#service_url').attr('href', 'http://tosdr.org/#' + escapeHTML(service.url))
 
@@ -95,7 +95,7 @@ jQuery(function () {
 
         // Points
         for (let i in service.points) {
-          $('.tosdr-points').append($('<li>', {id: 'popup-point-' + service.name + '-' + service.points[i].id, class: 'point'}))
+          $('.tosdr-points').append($('<li>', { id: 'popup-point-' + service.name + '-' + service.points[i].id, class: 'point' }))
           tosdrPoint(service.name, service.points[i])
         }
 
@@ -104,12 +104,12 @@ jQuery(function () {
 
         if (service.documents.length > 0) {
           $('#linksList')
-            .append($('<h4>', { text: 'Read the Terms'}))
-            .append($('<ul>', {class: 'tosback2'}))
+            .append($('<h4>', { text: 'Read the Terms' }))
+            .append($('<ul>', { class: 'tosback2' }))
 
           for (let i in service.documents) {
             $('.tosback2').append($('<li>')
-              .append($('<a>', { href: escapeHTML(service.documents[i].url), target: '_blank', text: service.documents[i].name})))
+              .append($('<a>', { href: escapeHTML(service.documents[i].url), target: '_blank', text: service.documents[i].name })))
           }
         }
       }

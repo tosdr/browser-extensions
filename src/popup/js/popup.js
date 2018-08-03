@@ -52,8 +52,8 @@ jQuery(() => {
 
       $(`#popup-point-${serviceName}-${dataPoint.id}`).append($('<p>'));
       if (taggedText.length > 1) {
-        taggedText.each((k) => {
-          $(`#popup-point-${serviceName}-${dataPoint.id} p`).append(taggedText[k]);
+        taggedText.forEach((t) => {
+          $(`#popup-point-${serviceName}-${dataPoint.id} p`).append(t);
         });
       } else {
         $(`#popup-point-${serviceName}-${dataPoint.id} p`).text(pointText);

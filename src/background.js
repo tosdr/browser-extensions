@@ -1,5 +1,51 @@
-/* global browser, getServices, getService, getIconForService */
+/* global browser, localStorage, log, RATING_TEXT, getServices, getService, getIconForService */
 /* requires ./popup/js/servicedata.js */
+
+function checkNotification(service) {
+  const last = localStorage.getItem(`notification/${service.name}/last/update`);
+  const lastRate = localStorage.getItem(`notification/${service.name}/last/rate`);
+  let shouldShow = false;
+
+  if (!service.rated) { return; }
+
+  const rate = service.rated;
+  if (rate === 'D' || rate === 'E') {
+    if (last) {
+      const lastModified = parseInt(Date.parse(last), 10);
+      log(lastModified);
+      const daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+      log(daysSinceLast);
+
+      if (daysSinceLast > 7) {
+        shouldShow = true;
+      }
+    } else {
+      shouldShow = true;
+    }
+  } else if (lastRate === 'D' || lastRate === 'E') {
+    shouldShow = true;
+  }
+
+
+  if (shouldShow) {
+    localStorage.setItem(`notification/${service.name}/last/update`, new Date().toDateString());
+    localStorage.setItem(`notification/${service.name}/last/rate`, rate);
+
+    browser.notifications.create('tosdr-notify', {
+      type: 'basic',
+      title: service.name,
+      message: RATING_TEXT[rate],
+      iconUrl: './icons/icon@2x.png',
+    });
+
+    browser.notifications.onClicked.addListener((notificationId) => {
+      browser.notifications.clear(notificationId);
+      browser.tabs.create({
+        url: `https://tosdr.org/#${service.slug}`,
+      });
+    });
+  }
+}
 
 /*
 Initialize the page action: set icon and title, then show.

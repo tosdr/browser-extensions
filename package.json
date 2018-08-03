@@ -5,7 +5,8 @@
   "main": "mixin.js",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^7.0.1",

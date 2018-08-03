@@ -1,4 +1,4 @@
-# Firefox add-on for [Terms of Service; Didn't Read][tosdr]
+# WebExtension for [Terms of Service; Didn't Read][tosdr]
 
 “I have read and agree to the Terms” is the biggest lie on the web.
 We aim to fix that. “Terms of Service; Didn't Read” is a user
@@ -11,7 +11,8 @@ icon to get summaries from the [Terms of Service; Didn't
 Read][tosdr] initiative.
 
 Get the extension
-[here](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.2]**
+[for Firefox](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.2]**
+or [for Chrome](https://chrome.google.com/webstore/detail/terms-of-service-didn%E2%80%99t-r/hjdoplcnndgiblooccencgcggcoihigg) **[0.7.0]**
 
 [tosdr]: https://tosdr.org
 
@@ -20,7 +21,7 @@ Get the extension
 Installation instructions
 -------------------------
 
-Just open ```about:debugging``` and follow instructions.
+Just open ```about:debugging``` (Firefox) or ``chrome:extensions`` (Chrome) and follow instructions.
 
 -----------
 

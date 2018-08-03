@@ -12,7 +12,7 @@ Read][tosdr] initiative.
 
 Get the extension
 [for Firefox](https://addons.mozilla.org/en-US/firefox/addon/terms-of-service-didnt-read) **[0.6.2]**
-or [for Chrome](https://chrome.google.com/webstore/detail/terms-of-service-didn%E2%80%99t-r/hjdoplcnndgiblooccencgcggcoihigg) **[0.7.0]**
+or [for Chrome](https://chrome.google.com/webstore/detail/terms-of-service-didn%E2%80%99t-r/hjdoplcnndgiblooccencgcggcoihigg) **[2.0.0]**
 
 [tosdr]: https://tosdr.org
 

@@ -3,51 +3,80 @@
 <head>
 	<meta charset="utf-8">
 	<title>Terms of Service; Didn’t Read</title>
+	<!-- Ensure all links open in new tab by default -->
+	<base target="_blank">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/custom.css">
-	
-	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/servicedata.js"></script>
+	<script type="text/javascript" src="js/constants.js"></script>
 	<script type="text/javascript" src="js/popup.js"></script>
 </head>
-<body>
+<body aria-live="polite">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="loading">Loading&#8230;</div>
 				<div class="modal-header">
 					<h3>
-						<a href="#" id="service_url" target="_blank"  class="pull-left">
+						<a href="#" id="service_url" class="pull-left">
 							<img src="images/tosdr-logo-32.png" alt="" />
 						</a>
 					</h3>
-					
+
 					<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
-					
+
 				</div>
-				
+
 				<div class="modal-body" >
 					<div id="page">
-						<div class="tosdr-rating">
-							<label id="service_class" class="label"></label>
-
-							<p id="ratingText"></p>
-						</div>
-						
-					   <section class="specificissues">
-					         <ul class="tosdr-points">
-									
-								</ul>
-							</section>
- 
-						<section id="linksList"></section>
+						<section class="tosdr-rating"></section>
+					  <section class="specificissues">
+					  	<ul class="tosdr-points"></ul>
+						</section>
+						<section id="documents"></section>
 					</div>
 
-					<a target="_blank" class="btn btn-default" href="https://edit.tosdr.org">Contribute</a>	  
+					<a class="btn btn-default" href="https://edit.tosdr.org">Contribute</a>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<!-- Template for a single point from a service's ToS -->
+	<template id="point-template">
+		<li class="point">
+			<h5>
+				<span js-badge class="badge">
+					<span js-badge-icon class="glyphicon"></span>
+				</span>
+				<span js-title></span>
+				<a js-discussion-link href="#" class="label context">Discussion</a>
+			</h5>
+
+			<p js-description></p>
+		</li>
+	</template>
+
+	<!-- Template for section content with addtional documents: tos, privacy policy, etc -->
+	<template id="documents-template">
+		<h4>Read the Terms</h4>
+		<ul js-list></ul>
+	</template>
+
+	<!-- Template for section content with rating label and rating overview -->
+	<template id="rating-template">
+		<label js-rating-label class="label"></label>
+		<p js-rating-text></p>
+	</template>
+
+	<!-- Template for unknown rating label and overview. Used for unrecognized services -->
+	<template id="rating-unknown-template">
+		<h4>Not rated, yet</h4>
+		<p>
+			Go to <a href="https://edit.tosdr.org">edit.tosdr.org</a> to help us review it.
+		</p>
+	</template>
 </body>
 </html>

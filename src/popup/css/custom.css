@@ -1,6 +1,6 @@
 body{
 	min-width:500px;
-	width:500px;	
+	width:500px;
 	padding-left: 1px; padding-right: 1px; overflow-x:hidden;
 }
 
@@ -148,7 +148,16 @@ li.point span.badge {
 /* =========== */
 /* = Loading = */
 /* =========== */
+
+/*
+Hide the loading indicator while the document does not have the aria-busy ARIA attribute.
+@see https://accessibilityresources.org/aria-busy
+ */
+:not([aria-busy]) .loading {
+	display: none;
+}
 /* Absolute Center Spinner */
+
 .loading {
   position: fixed;
   z-index: 999;

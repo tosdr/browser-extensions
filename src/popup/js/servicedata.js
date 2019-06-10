@@ -1,12 +1,8 @@
-/* globals document, browser: true, chrome, fetch, Request */
+/* globals document, browser: true, chrome, fetch, Request, RATING_TEXT */
 
 const APPLICABLE_PROTOCOLS = ['http:', 'https:']; // eslint-disable-line no-unused-vars
 const REVIEW_PREFIX = 'tosdr/review/'; // eslint-disable-line no-unused-vars
 const DEBUG = false;
-const RATING_TEXT = { // eslint-disable-line no-unused-vars
-  D: 'The terms of service are very uneven or there are some important issues that need your attention.',
-  E: 'The terms of service raise very serious concerns.',
-};
 
 const services = []; // eslint-disable-line no-unused-vars
 

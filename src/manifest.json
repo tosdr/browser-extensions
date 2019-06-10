@@ -6,8 +6,8 @@
   "homepage_url": "https://tosdr.org",
   "background": {
     "scripts": [
-      "popup/js/jquery-3.2.1.min.js",
       "popup/js/servicedata.js",
+      "popup/js/constants.js",
       "background.js"
     ]
   },

@@ -1,0 +1,11 @@
+{
+	"extensionName": {
+		"message": "Terms of Service; Didn’t Read",
+		"description": "Name of the extension."
+	},
+
+   "extensionDescription": {
+     "message": "Ottieni immediatamente informazioni sui termini di servizio dei siti Web e sulle politiche sulla privacy, con valutazioni e riepiloghi dal sito www.tosdr.org.",
+     "description": "Descrizione dell'estensione."
+   }
+}

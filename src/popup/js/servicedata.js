@@ -2,7 +2,7 @@
 
 const APPLICABLE_PROTOCOLS = ['http:', 'https:']; // eslint-disable-line no-unused-vars
 const REVIEW_PREFIX = 'tosdr/review/'; // eslint-disable-line no-unused-vars
-const DEBUG = false;
+const DEBUG = true;
 const RATING_TEXT = { // eslint-disable-line no-unused-vars
   D: 'The terms of service are very uneven or there are some important issues that need your attention.',
   E: 'The terms of service raise very serious concerns.',
@@ -24,13 +24,17 @@ function getDomain(url) {
   const anchor = document.createElement('a');
   anchor.href = url;
   if (APPLICABLE_PROTOCOLS.includes(anchor.protocol)) {
+
+    if (anchor.hostname.startsWith("www.")) {
+      return anchor.hostname.substr(4);
+    }
     return anchor.hostname;
   }
   return null;
 }
 
 function getServices() { // eslint-disable-line no-unused-vars
-  const requestURL = 'https://tosdr.org/api/1/all.json';
+  const requestURL = 'https://beta.tosdr.org/api/1/all.json';
 
   const driveRequest = new Request(requestURL, {
     method: 'GET',
@@ -72,6 +76,37 @@ function getDomainEntryFromStorage(domain) {
     .then(resultSet => resultSet[REVIEW_PREFIX + domain] || undefined);
 }
 
+function getLiveServiceDetails(domain, tries = 0) {
+  // console.log('getServiceDetails', domain, tries)
+  if (!domain) {
+    return Promise.reject(new Error('no domain name provided'));
+  }
+  if (tries > 10) {
+    return Promise.reject(new Error(`too many redirections ${domain}`));
+  }
+
+  return getDomainEntryFromStorage(domain).then((details) => {
+
+
+    const requestURL = 'https://beta.tosdr.org/api/1/' + details.slug + '.json';
+
+    const driveRequest = new Request(requestURL, {
+      method: 'GET',
+    });
+
+    return fetch(driveRequest).then((response) => {
+
+      if (response.status === 200) {
+        return response.json().then((data) => {
+          return Object.assign({
+            mainDomain: domain, // used as storage key when marking that notification has been displayed,
+          }, data);
+        });
+      }
+      throw response.status;
+    });
+  });
+}
 function getServiceDetails(domain, tries = 0) {
   // console.log('getServiceDetails', domain, tries)
   if (!domain) {
@@ -80,6 +115,7 @@ function getServiceDetails(domain, tries = 0) {
   if (tries > 10) {
     return Promise.reject(new Error(`too many redirections ${domain}`));
   }
+
   return getDomainEntryFromStorage(domain).then((details) => {
     // console.log('details', details)
     if (!details) {

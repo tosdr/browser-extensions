@@ -84,11 +84,11 @@ jQuery(() => {
             .append($('<h4>', { text: 'Not rated, yet.' }))
             .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc' }))));
       } else {
-        $('#service_url').attr('href', `http://tosdr.org/#${escapeHTML(service.url)}`);
+        $('#service_url').attr('href', `https://beta.tosdr.org/en/service/${service.id}`);
 
         // Update class
         $('#service_class').addClass(service.class);
-        if (service.class) {
+        if (service.class !== false) {
           $('#service_class').text(`Class ${service.class}`);
           $('#ratingText').text(RATING_TEXT[service.class]);
         } else {

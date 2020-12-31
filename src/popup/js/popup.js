@@ -61,7 +61,7 @@ jQuery(() => {
     }
   }
 
-  const NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: tosdr@googlegroups.com.";
+  const NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to on Phoenix: edit.tosdr.org";
   const RATING_TEXT = {
     0: NOT_RATED_TEXT,
     false: NOT_RATED_TEXT,

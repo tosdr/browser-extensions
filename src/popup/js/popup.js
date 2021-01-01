@@ -10,7 +10,7 @@ function escapeHTML(unsafe) {
 }
 
 jQuery(() => {
-  function tosdrPoint(serviceName, dataPoint) {
+  function tosdrPoint(service, dataPoint) {
     let badge;
     let icon;
     // let sign;
@@ -40,7 +40,7 @@ jQuery(() => {
 
       // Extract links from text
       const taggedText = pointText.split(/(<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>)/gim);
-      $(`#popup-point-${serviceName}-${dataPoint.id}`)
+      $(`#popup-point-${service.id}-${dataPoint.id}`)
         .append($('<div>', { class: dataPoint.point })
           .append($('<h5>')
             .append($('<span>', { class: `badge ${badge}`, title: escapeHTML(dataPoint.point) })
@@ -50,13 +50,13 @@ jQuery(() => {
               href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'label context', text: 'Discussion',
             }))));
 
-      $(`#popup-point-${serviceName}-${dataPoint.id}`).append($('<p>'));
+      $(`#popup-point-${service.id}-${dataPoint.id}`).append($('<p>'));
       if (taggedText.length > 1) {
         taggedText.forEach((t) => {
-          $(`#popup-point-${serviceName}-${dataPoint.id} p`).append(t);
+          $(`#popup-point-${service.id}-${dataPoint.id} p`).append(t);
         });
       } else {
-        $(`#popup-point-${serviceName}-${dataPoint.id} p`).text(pointText);
+        $(`#popup-point-${service.id}-${dataPoint.id} p`).text(pointText);
       }
     }
   }
@@ -99,8 +99,8 @@ jQuery(() => {
 
         // Points
         service.points.forEach((p) => {
-          $('.tosdr-points').append($('<li>', { id: `popup-point-${service.name}-${p}`, class: 'point' }));
-          tosdrPoint(service.name, service.pointsData[p]);
+          $('.tosdr-points').append($('<li>', { id: `popup-point-${service.id}-${p}`, class: 'point' }));
+          tosdrPoint(service, service.pointsData[p]);
         });
 
         // links inside of the dataPoints should open in a new window

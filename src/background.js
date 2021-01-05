@@ -41,7 +41,7 @@ function checkNotification(service) {
     browser.notifications.onClicked.addListener((notificationId) => {
       browser.notifications.clear(notificationId);
       browser.tabs.create({
-        url: `https://tosdr.org/#${service.slug}`,
+        url: `https://beta.tosdr.org/service/${service.slug}`,
       });
     });
   }

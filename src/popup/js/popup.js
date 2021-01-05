@@ -10,24 +10,24 @@ function escapeHTML(unsafe) {
 }
 
 jQuery(() => {
-  function tosdrPoint(serviceName, dataPoint) {
+  function tosdrPoint(service, dataPoint) {
     let badge;
     let icon;
     // let sign;
     if (dataPoint) {
-      if (dataPoint.point === 'good') {
+      if (dataPoint.tosdr.point === 'good') {
         badge = 'badge-success';
         icon = 'thumbs-up';
         // sign = '+';
-      } else if (dataPoint.point === 'bad') {
+      } else if (dataPoint.tosdr.point === 'bad') {
         badge = 'badge-warning';
         icon = 'thumbs-down';
         // sign = '-';
-      } else if (dataPoint.point === 'blocker') {
+      } else if (dataPoint.tosdr.point === 'blocker') {
         badge = 'badge-important';
         icon = 'remove';
         // sign = '×';
-      } else if (dataPoint.point === 'neutral') {
+      } else if (dataPoint.tosdr.point === 'neutral') {
         badge = 'badge-neutral';
         icon = 'asterisk';
         // sign = '→';
@@ -40,7 +40,7 @@ jQuery(() => {
 
       // Extract links from text
       const taggedText = pointText.split(/(<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>)/gim);
-      $(`#popup-point-${serviceName}-${dataPoint.id}`)
+      $(`#popup-point-${service.id}-${dataPoint.id}`)
         .append($('<div>', { class: dataPoint.point })
           .append($('<h5>')
             .append($('<span>', { class: `badge ${badge}`, title: escapeHTML(dataPoint.point) })
@@ -50,18 +50,18 @@ jQuery(() => {
               href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'label context', text: 'Discussion',
             }))));
 
-      $(`#popup-point-${serviceName}-${dataPoint.id}`).append($('<p>'));
+      $(`#popup-point-${service.id}-${dataPoint.id}`).append($('<p>'));
       if (taggedText.length > 1) {
         taggedText.forEach((t) => {
-          $(`#popup-point-${serviceName}-${dataPoint.id} p`).append(t);
+          $(`#popup-point-${service.id}-${dataPoint.id} p`).append(t);
         });
       } else {
-        $(`#popup-point-${serviceName}-${dataPoint.id} p`).text(pointText);
+        $(`#popup-point-${service.id}-${dataPoint.id} p`).text(pointText);
       }
     }
   }
 
-  const NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to our group: tosdr@googlegroups.com.";
+  const NOT_RATED_TEXT = "We haven't sufficiently reviewed the terms yet. Please contribute to on Phoenix: edit.tosdr.org";
   const RATING_TEXT = {
     0: NOT_RATED_TEXT,
     false: NOT_RATED_TEXT,
@@ -76,7 +76,7 @@ jQuery(() => {
   function updatePopup() {
     $('.loading').show();
 
-    getServiceDetails(serviceUrl).then((service) => {
+    getLiveServiceDetails(serviceUrl).then((service) => {
       if (serviceUrl === 'none') {
         $('#page').empty();
         $('#page').append($('<div>', { class: 'modal-body' })
@@ -84,34 +84,34 @@ jQuery(() => {
             .append($('<h4>', { text: 'Not rated, yet.' }))
             .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc' }))));
       } else {
-        $('#service_url').attr('href', `http://tosdr.org/#${escapeHTML(service.url)}`);
+        $('#service_url').attr('href', `https://beta.tosdr.org/en/service/${service.id}`);
 
         // Update class
-        $('#service_class').addClass(service.rated);
-        if (service.rated) {
-          $('#service_class').text(`Class ${service.rated}`);
-          $('#ratingText').text(RATING_TEXT[service.rated]);
+        $('#service_class').addClass(service.class);
+        if (service.class !== false) {
+          $('#service_class').text(`Class ${service.class}`);
+          $('#ratingText').text(RATING_TEXT[service.class]);
         } else {
           $('#service_class').text('No Class Yet');
           $('#service_class').remove();
-          $('#ratingText').text(RATING_TEXT[service.rated]);
+          $('#ratingText').text(RATING_TEXT[service.class]);
         }
 
         // Points
         service.points.forEach((p) => {
-          $('.tosdr-points').append($('<li>', { id: `popup-point-${service.name}-${p.id}`, class: 'point' }));
-          tosdrPoint(service.name, p);
+          $('.tosdr-points').append($('<li>', { id: `popup-point-${service.id}-${p}`, class: 'point' }));
+          tosdrPoint(service, service.pointsData[p]);
         });
 
         // links inside of the dataPoints should open in a new window
         $('.tosdr-points a').attr('target', '_blank');
 
-        if (service.documents.length > 0) {
+        if (service.links.length > 0) {
           $('#linksList')
             .append($('<h4>', { text: 'Read the Terms' }))
             .append($('<ul>', { class: 'tosback2' }));
 
-          service.documents.forEach((d) => {
+          service.links.forEach((d) => {
             $('.tosback2').append($('<li>')
               .append($('<a>', { href: escapeHTML(d.url), target: '_blank', text: d.name })));
           });

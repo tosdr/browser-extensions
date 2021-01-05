@@ -8,6 +8,12 @@ steps:
   - npm install
   - npm run lint
 
+- name: build
+  image: alpine
+  commands:
+  - apk --no-cache add zip
+  - sh build.sh
+
 - name: publish
   image: plugins/github-release
   settings:

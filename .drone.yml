@@ -8,5 +8,21 @@ steps:
   - npm install
   - npm run lint
 
+- name: publish
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: RELEASE_TOKEN
+    files:
+    - dist/*
+    checksum:
+    - md5
+    - sha1
+    - sha256
+    - sha512
+    - adler32
+    - crc32
+  when:
+    event: tag
 node:
   os: linux

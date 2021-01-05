@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir -p build; rm -rf build/*
 mkdir -p dist; rm -rf dist/*
 cp -r src build/firefox

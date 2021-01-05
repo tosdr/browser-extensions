@@ -1,4 +1,4 @@
-/* global window, $, jQuery, getServiceDetails */
+/* global window, $, jQuery, getLiveServiceDetails */
 
 function escapeHTML(unsafe) {
   return (`${unsafe}`)
@@ -75,7 +75,6 @@ jQuery(() => {
   const serviceUrl = window.location.hash.substr(1);
   function updatePopup() {
     $('.loading').show();
-
     getLiveServiceDetails(serviceUrl).then((service) => {
       if (serviceUrl === 'none') {
         $('#page').empty();

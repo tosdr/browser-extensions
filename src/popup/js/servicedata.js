@@ -32,6 +32,32 @@ function getDomain(url) {
     return null;
 }
 
+function getRatingText(label) { // eslint-disable-line no-unused-vars
+    let text = String;
+    switch (label) {
+        case 'A':
+            text = 'The terms of service treat you fairly, respect your rights and follows the best practices.';
+            break;
+        case 'B':
+            text = 'The terms of services are fair towards the user but they could be improved.';
+            break;
+        case 'C':
+            text = 'The terms of service are okay but some issues need your consideration.';
+            break;
+        case 'D':
+            text = 'The terms of service are very uneven or there are some important issues that need your attention.';
+            break;
+        case 'E':
+            text = 'The terms of service raise very serious concerns.';
+            break;
+        default:
+            text = 'We haven\'t sufficiently reviewed the terms yet.Please contribute to on Phoenix: edit.tosdr.org';
+    }
+
+    return text;
+}
+
+
 function getServices() { // eslint-disable-line no-unused-vars
     const requestURL = 'https://beta.tosdr.org/api/1/all.json';
 

@@ -2,7 +2,7 @@
 name: Bug report firefox
 about: Create a bug report for the firefox extension
 title: ''
-labels: bug,firefox
+labels: bug, firefox
 assignees: ''
 
 ---

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report for the firefox extension
+about: Create a bug report
 title: ''
 labels: bug
 assignees: ''

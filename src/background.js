@@ -75,7 +75,7 @@ function initializePageAction(tab) {
             });
             browser.pageAction.setPopup({
                 tabId: tab.id,
-                popup: 'popup/popup.html#none',
+                popup: `popup/popup.html#${getDomain(tab.url)}`,
             });
             browser.pageAction.show(tab.id);
         }

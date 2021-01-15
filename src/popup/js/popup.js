@@ -92,8 +92,8 @@ jQuery(() => {
                 // links inside of the dataPoints should open in a new window
                 $('.tosdr-points a').attr('target', '_blank');
 
-                $("#shieldimg").attr("src", `https://shields.tosdr.org/${service.id}.svg`);
-                $("#shieldurl").val(`https://shields.tosdr.org/${service.id}.svg`);
+                $('#shieldimg').attr('src', `https://shields.tosdr.org/${service.id}.svg`);
+                $('#shieldurl').val(`https://shields.tosdr.org/${service.id}.svg`);
 
                 if (Object.keys(service.links).length > 0) {
                     $('#linksList')
@@ -101,7 +101,6 @@ jQuery(() => {
                         .append($('<ul>', { class: 'tosback2' }));
 
                     Object.keys(service.links).forEach((d) => {
-
                         $('.tosback2').append($('<li>')
                             .append($('<a>', { href: escapeHTML(service.links[d].url), target: '_blank', text: service.links[d].name })));
                     });
@@ -114,6 +113,7 @@ jQuery(() => {
 
             $('.loading').hide();
         }).catch((err) => {
+            console.error(err);
             $('#page').empty();
             $('#page').append($('<div>', { class: 'modal-body' })
                 .append($('<div>', { class: 'tosdr-rating' })

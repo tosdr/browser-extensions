@@ -136,7 +136,6 @@ function getServiceDetails(domain, tries = 0) {
     }
 
     return getDomainEntryFromStorage(domain).then((details) => {
-        console.log('details', details);
         if (!details) {
             const domainParts = domain.split('.');
             if (domainParts.length > 2) {

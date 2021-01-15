@@ -1,5 +1,7 @@
 /* global browser, localStorage, log, RATING_TEXT, getServices, getService, getIconForService */
+/* global getDomain */
 /* requires ./popup/js/servicedata.js */
+/* eslint-disable indent */
 
 function checkNotification(service) {
     const last = localStorage.getItem(`notification/${service.id}/last/update`);
@@ -81,19 +83,18 @@ function initializePageAction(tab) {
         if (err.message === 'no domain name provided') {
             return;
         }
-        if (err.message === "details not found") {
+        if (err.message === 'details not found') {
             browser.pageAction.setIcon({
                 tabId: tab.id,
                 path: 'icons/class/false.png',
             });
             browser.pageAction.setPopup({
                 tabId: tab.id,
-                popup: 'popup/popup.html#' + getDomain(tab.url),
+                popup: `popup/popup.html# ${getDomain(tab.url)}`,
             });
             browser.pageAction.show(tab.id);
-
         }
-        console.error(err); // eslint-disable-line no-console
+        console.error(err);
     });
 }
 

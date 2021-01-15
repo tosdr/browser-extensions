@@ -47,7 +47,7 @@ jQuery(() => {
                         .append($('<span>', { class: `badge ${badge}`, title: escapeHTML(dataPoint.tosdr.point) })
                             .append($('<li>', { class: `fas fa-${icon}` })))
                         .append($('<a>', {
-                            href: escapeHTML(dataPoint.discussion), target: '_blank', text: dataPoint.title,
+                            href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'ml-2', text: dataPoint.title,
                         }))));
 
             $(`#popup-point-${service.id}-${dataPoint.id}`).append($('<p>'));

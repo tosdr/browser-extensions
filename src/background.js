@@ -86,7 +86,7 @@ function initializePageAction(tab) {
         if (err.message === 'details not found') {
             browser.pageAction.setIcon({
                 tabId: tab.id,
-                path: 'icons/class/false.png',
+                path: 'icons/class/none.png',
             });
             browser.pageAction.setPopup({
                 tabId: tab.id,

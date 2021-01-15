@@ -86,6 +86,7 @@ jQuery(() => {
 
             $('#shieldimg').attr('src', `https://shields.tosdr.org/${service.id}.svg`);
             $('#shieldurl').val(`https://shields.tosdr.org/${service.id}.svg`);
+            $('#serviceimg').attr('src', service.image).addClass('float-right');
 
             if (Object.keys(service.links).length > 0) {
                 $('#linksList')

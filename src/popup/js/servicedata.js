@@ -51,7 +51,7 @@ function getRatingText(label) { // eslint-disable-line no-unused-vars
             text = 'The terms of service raise very serious concerns.';
             break;
         default:
-            text = 'We haven\'t sufficiently reviewed the terms yet.Please contribute to on Phoenix: edit.tosdr.org';
+            text = 'We haven\'t sufficiently reviewed the terms yet. Please contribute to on Phoenix: edit.tosdr.org';
     }
 
     return text;

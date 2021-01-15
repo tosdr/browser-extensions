@@ -1,53 +1,65 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Terms of Service; Didn’t Read</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/custom.css">
-	
-	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="js/underscore-min.js"></script>
-	<script type="text/javascript" src="js/servicedata.js"></script>
-	<script type="text/javascript" src="js/popup.js"></script>
+    <meta charset="utf-8">
+    <title>Terms of Service; Didn’t Read</title>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/underscore-min.js"></script>
+    <script type="text/javascript" src="js/servicedata.js"></script>
+    <script type="text/javascript" src="js/popup.js"></script>
+    <script type="text/javascript" src="js/fontawesome.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
 </head>
 <body>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="loading">Loading&#8230;</div>
-				<div class="modal-header">
-					<h3>
-						<a href="#" id="service_url" target="_blank"  class="pull-left">
-							<img src="images/tosdr-logo-32.png" alt="" />
-						</a>
-					</h3>
-					
-					<button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
-					
-				</div>
-				
-				<div class="modal-body" >
-					<div id="page">
-						<div class="tosdr-rating">
-							<label id="service_class" class="label"></label>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loading">Loading&#8230;</div>
+                <div class="modal-header">
+                    <h3>
+                        <a href="#" id="service_url" target="_blank" class="pull-left">
+                            <img src="images/tosdr-logo-32.png" alt="" />
+                        </a>
+                    </h3>
 
-							<p id="ratingText"></p>
-						</div>
-						
-					   <section class="specificissues">
-					         <ul class="tosdr-points">
-									
-								</ul>
-							</section>
- 
-						<section id="linksList"></section>
-					</div>
+                    <button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
 
-					<a target="_blank" class="btn btn-default" href="https://edit.tosdr.org">Contribute</a>	  
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+
+                <div class="modal-body">
+                    <div id="page">
+                        <div class="tosdr-rating">
+                            <label id="service_class" class="label"></label>
+
+                            <p id="ratingText"></p>
+                        </div>
+
+                        <section class="specificissues">
+                            <ul class="tosdr-points">
+                            </ul>
+                        </section>
+
+                        <section id="linksList"></section>
+
+                        <section id="privacyshield">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><img id="shieldimg" src=""></span>
+                                </div>
+                                <input type="text" class="form-control" id="shieldurl" value="" readonly="">
+                            </div>
+
+                        </section>
+                    </div>
+
+                    <a target="_blank" class="btn btn-primary btn-block" href="https://edit.tosdr.org">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

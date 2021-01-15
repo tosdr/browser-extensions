@@ -59,7 +59,7 @@ function getRatingText(label) { // eslint-disable-line no-unused-vars
 
 
 function getServices() { // eslint-disable-line no-unused-vars
-    const requestURL = 'https://beta.tosdr.org/api/1/all.json';
+    const requestURL = 'https://api.tosdr.org/v1/service/all.json';
 
     const driveRequest = new Request(requestURL, {
         method: 'GET',
@@ -111,7 +111,7 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
     }
 
     return getDomainEntryFromStorage(domain).then((details) => {
-        const requestURL = `https://beta.tosdr.org/api/1/${details.slug}.json`;
+        const requestURL = `https://api.tosdr.org/v1/${details.id}.json`;
 
         const driveRequest = new Request(requestURL, {
             method: 'GET',
@@ -125,6 +125,7 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
         });
     });
 }
+
 function getServiceDetails(domain, tries = 0) {
     // console.log('getServiceDetails', domain, tries)
     if (!domain) {
@@ -135,7 +136,7 @@ function getServiceDetails(domain, tries = 0) {
     }
 
     return getDomainEntryFromStorage(domain).then((details) => {
-        // console.log('details', details)
+        console.log('details', details);
         if (!details) {
             const domainParts = domain.split('.');
             if (domainParts.length > 2) {

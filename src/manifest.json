@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "homepage_url": "https://tosdr.org",
   "background": {
     "scripts": [
@@ -21,7 +21,9 @@
   },
   "permissions": [
     "*://tosdr.org/*",
-    "*://beta.tosdr.org/*",
+    "*://api.tosdr.org/*",
+    "*://cdn.tosdr.org/*",
+    "*://shields.tosdr.org/*",
     "tabs",
     "notifications",
     "storage"

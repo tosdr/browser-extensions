@@ -26,15 +26,15 @@ jQuery(() => {
                 // sign = '-';
             } else if (dataPoint.tosdr.point === 'blocker') {
                 badge = 'badge-important';
-                icon = 'remove';
+                icon = 'times';
                 // sign = '×';
             } else if (dataPoint.tosdr.point === 'neutral') {
-                badge = 'badge-neutral';
+                badge = 'badge-secondary';
                 icon = 'asterisk';
                 // sign = '→';
             } else {
                 badge = '';
-                icon = 'question-sign';
+                icon = 'question';
                 // sign = '?';
             }
             const pointText = dataPoint.description || '';
@@ -44,11 +44,10 @@ jQuery(() => {
             $(`#popup-point-${service.id}-${dataPoint.id}`)
                 .append($('<div>', { class: dataPoint.point })
                     .append($('<h5>')
-                        .append($('<span>', { class: `badge ${badge}`, title: escapeHTML(dataPoint.point) })
-                            .append($('<span>', { class: `glyphicon glyphicon-${icon}` })))
-                        .append($('<span>').text(` ${dataPoint.title} `))
+                        .append($('<span>', { class: `badge ${badge}`, title: escapeHTML(dataPoint.tosdr.point) })
+                            .append($('<li>', { class: `fas fa-${icon}` })))
                         .append($('<a>', {
-                            href: escapeHTML(dataPoint.discussion), target: '_blank', class: 'label context', text: 'Discussion',
+                            href: escapeHTML(dataPoint.discussion), target: '_blank', text: dataPoint.title,
                         }))));
 
             $(`#popup-point-${service.id}-${dataPoint.id}`).append($('<p>'));
@@ -71,16 +70,15 @@ jQuery(() => {
                     .append($('<div>', { class: 'tosdr-rating' })
                         .append($('<h4>', { text: 'Not rated, yet.' }))
                         .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc' }))));
+                $('.loading').hide();
             } else {
-                $('#service_url').attr('href', `https://beta.tosdr.org/en/service/${service.id}`);
-
-                // Update class
+                $('#service_url').attr('href', `https://tosdr.org/en/service/${service.id}`);
                 $('#service_class').addClass(service.class);
                 if (service.class !== false) {
-                    $('#service_class').text(`Class ${service.class}`);
+                    $('#service_class').text(`Grade ${service.class}`);
                     $('#ratingText').text(getRatingText(service.class));
                 } else {
-                    $('#service_class').text('No Class Yet');
+                    $('#service_class').text('No Grade Yet');
                     $('#service_class').remove();
                     $('#ratingText').text(getRatingText(service.class));
                 }
@@ -94,14 +92,18 @@ jQuery(() => {
                 // links inside of the dataPoints should open in a new window
                 $('.tosdr-points a').attr('target', '_blank');
 
-                if (service.links.length > 0) {
+                $("#shieldimg").attr("src", `https://shields.tosdr.org/${service.id}.svg`);
+                $("#shieldurl").val(`https://shields.tosdr.org/${service.id}.svg`);
+
+                if (Object.keys(service.links).length > 0) {
                     $('#linksList')
                         .append($('<h4>', { text: 'Read the Terms' }))
                         .append($('<ul>', { class: 'tosback2' }));
 
-                    service.links.forEach((d) => {
+                    Object.keys(service.links).forEach((d) => {
+
                         $('.tosback2').append($('<li>')
-                            .append($('<a>', { href: escapeHTML(d.url), target: '_blank', text: d.name })));
+                            .append($('<a>', { href: escapeHTML(service.links[d].url), target: '_blank', text: service.links[d].name })));
                     });
                 }
             }
@@ -110,6 +112,13 @@ jQuery(() => {
                 window.close();
             });
 
+            $('.loading').hide();
+        }).catch((err) => {
+            $('#page').empty();
+            $('#page').append($('<div>', { class: 'modal-body' })
+                .append($('<div>', { class: 'tosdr-rating' })
+                    .append($('<h4>', { text: 'This service is not rated, yet.' }))
+                    .append($('<a>', { text: `Request ${serviceUrl} to be added`, class: 'btn btn-success btn-block', href: 'https://forum.tosdr.org/request' }))));
             $('.loading').hide();
         });
     }

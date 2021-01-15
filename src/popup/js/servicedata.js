@@ -57,6 +57,30 @@ function getRatingText(label) { // eslint-disable-line no-unused-vars
     return text;
 }
 
+function getTweetText(service) { // eslint-disable-line no-unused-vars
+    let text = String;
+    console.log(service.class);
+    switch (service.class) {
+        case 'A':
+            text = `Thank you ${service.name} for caring about my privacy! Grade ${service.class}!`;
+            break;
+        case 'B':
+            text = `Thank you ${service.name} for caring about my privacy! Grade ${service.class} is good but it could be improved!`;
+            break;
+        case 'C':
+            text = `${service.name}, your Grade ${service.class} is not that good, can you comment?`;
+            break;
+        case 'D':
+        case 'E':
+            text = `Your Grade ${service.class} rating worries me ${service.name}, can you comment?`;
+            break;
+        default:
+            return false;
+    }
+
+    return text;
+}
+
 
 function getServices() { // eslint-disable-line no-unused-vars
     const requestURL = 'https://api.tosdr.org/v1/service/all.json';

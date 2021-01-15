@@ -1,4 +1,4 @@
-/* global window, $, jQuery, getLiveServiceDetails, getRatingText */
+/* global window, $, jQuery, getLiveServiceDetails, getRatingText, getTweetText */
 /* eslint-disable indent */
 
 function escapeHTML(unsafe) {
@@ -87,6 +87,11 @@ jQuery(() => {
             $('#shieldimg').attr('src', `https://shields.tosdr.org/${service.id}.svg`);
             $('#shieldurl').val(`https://shields.tosdr.org/${service.id}.svg`);
             $('#serviceimg').attr('src', service.image).addClass('float-right');
+            if (getTweetText(service) !== false) {
+                $('#twitter_url').attr('href', encodeURI(`https://twitter.com/intent/tweet?text=${getTweetText(service)}&via=ToSDR&hashtags=ToS`));
+            } else {
+                $('#twitter_url').remove();
+            }
 
             if (Object.keys(service.links).length > 0) {
                 $('#linksList')

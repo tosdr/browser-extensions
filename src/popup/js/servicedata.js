@@ -59,7 +59,6 @@ function getRatingText(label) { // eslint-disable-line no-unused-vars
 
 function getTweetText(service) { // eslint-disable-line no-unused-vars
     let text = String;
-    console.log(service.class);
     switch (service.class) {
         case 'A':
             text = `Thank you ${service.name} for caring about my privacy! Grade ${service.class}!`;

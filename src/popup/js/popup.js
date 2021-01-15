@@ -64,47 +64,38 @@ jQuery(() => {
     function updatePopup() {
         $('.loading').show();
         getLiveServiceDetails(serviceUrl).then((service) => {
-            if (serviceUrl === 'none') {
-                $('#page').empty();
-                $('#page').append($('<div>', { class: 'modal-body' })
-                    .append($('<div>', { class: 'tosdr-rating' })
-                        .append($('<h4>', { text: 'Not rated, yet.' }))
-                        .append($('<p>', { text: 'Go to https://edit.tosdr.org to help us review it!', class: 'lbldesc' }))));
-                $('.loading').hide();
+            $('#service_url').attr('href', `https://tosdr.org/en/service/${service.id}`);
+            $('#service_class').addClass(service.class);
+            if (service.class !== false) {
+                $('#service_class').text(`Grade ${service.class}`);
+                $('#ratingText').text(getRatingText(service.class));
             } else {
-                $('#service_url').attr('href', `https://tosdr.org/en/service/${service.id}`);
-                $('#service_class').addClass(service.class);
-                if (service.class !== false) {
-                    $('#service_class').text(`Grade ${service.class}`);
-                    $('#ratingText').text(getRatingText(service.class));
-                } else {
-                    $('#service_class').text('No Grade Yet');
-                    $('#service_class').remove();
-                    $('#ratingText').text(getRatingText(service.class));
-                }
+                $('#service_class').text('No Grade Yet');
+                $('#service_class').remove();
+                $('#ratingText').text(getRatingText(service.class));
+            }
 
-                // Points
-                service.points.forEach((p) => {
-                    $('.tosdr-points').append($('<li>', { id: `popup-point-${service.id}-${p}`, class: 'point' }));
-                    tosdrPoint(service, service.pointsData[p]);
+            // Points
+            service.points.forEach((p) => {
+                $('.tosdr-points').append($('<li>', { id: `popup-point-${service.id}-${p}`, class: 'point' }));
+                tosdrPoint(service, service.pointsData[p]);
+            });
+
+            // links inside of the dataPoints should open in a new window
+            $('.tosdr-points a').attr('target', '_blank');
+
+            $('#shieldimg').attr('src', `https://shields.tosdr.org/${service.id}.svg`);
+            $('#shieldurl').val(`https://shields.tosdr.org/${service.id}.svg`);
+
+            if (Object.keys(service.links).length > 0) {
+                $('#linksList')
+                    .append($('<h4>', { text: 'Read the Terms' }))
+                    .append($('<ul>', { class: 'tosback2' }));
+
+                Object.keys(service.links).forEach((d) => {
+                    $('.tosback2').append($('<li>')
+                        .append($('<a>', { href: escapeHTML(service.links[d].url), target: '_blank', text: service.links[d].name })));
                 });
-
-                // links inside of the dataPoints should open in a new window
-                $('.tosdr-points a').attr('target', '_blank');
-
-                $('#shieldimg').attr('src', `https://shields.tosdr.org/${service.id}.svg`);
-                $('#shieldurl').val(`https://shields.tosdr.org/${service.id}.svg`);
-
-                if (Object.keys(service.links).length > 0) {
-                    $('#linksList')
-                        .append($('<h4>', { text: 'Read the Terms' }))
-                        .append($('<ul>', { class: 'tosback2' }));
-
-                    Object.keys(service.links).forEach((d) => {
-                        $('.tosback2').append($('<li>')
-                            .append($('<a>', { href: escapeHTML(service.links[d].url), target: '_blank', text: service.links[d].name })));
-                    });
-                }
             }
             // [x] Button
             $('#closeButton,.close').click(() => {

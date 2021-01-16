@@ -11,6 +11,9 @@
       "background.js"
     ]
   },
+  "options_ui": {
+    "page": "settings/settings.html"
+  },
   "page_action": {
     "default_icon": {
       "19": "button/icon-19.png",

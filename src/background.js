@@ -1,52 +1,55 @@
 /* global browser, localStorage, log, RATING_TEXT, getServices, getService, getIconForService */
 /* global getDomain */
 /* requires ./popup/js/servicedata.js */
-/* eslint-disable indent */
+/* eslint-disable indent, max-len */
 
 function checkNotification(service) {
-    const last = localStorage.getItem(`notification/${service.id}/last/update`);
-    const lastRate = localStorage.getItem(`notification/${service.id}/last/rate`);
-    let shouldShow = false;
+    browser.storage.local.get('settings').then((items) => {
+        if (items.settings.notifications) {
+            const last = localStorage.getItem(`notification/${service.id}/last/update`);
+            const lastRate = localStorage.getItem(`notification/${service.id}/last/rate`);
+            let shouldShow = false;
 
-    if (!service.rated) { return; }
+            if (!service.rated) { return; }
 
-    const rate = service.rated;
-    if (rate === 'D' || rate === 'E') {
-        if (last) {
-            const lastModified = parseInt(Date.parse(last), 10);
-            log(lastModified);
-            const daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
-            log(daysSinceLast);
+            const rate = service.rated;
+            if (rate === 'D' || rate === 'E') {
+                if (last) {
+                    const lastModified = parseInt(Date.parse(last), 10);
+                    log(lastModified);
+                    const daysSinceLast = (new Date().getTime() - lastModified) / (1000 * 60 * 60 * 24);
+                    log(daysSinceLast);
 
-            if (daysSinceLast > 7) {
+                    if (daysSinceLast > 7) {
+                        shouldShow = true;
+                    }
+                } else {
+                    shouldShow = true;
+                }
+            } else if (lastRate === 'D' || lastRate === 'E') {
                 shouldShow = true;
             }
-        } else {
-            shouldShow = true;
+
+            if (shouldShow) {
+                localStorage.setItem(`notification/${service.id}/last/update`, new Date().toDateString());
+                localStorage.setItem(`notification/${service.id}/last/rate`, rate);
+
+                browser.notifications.create('tosdr-notify', {
+                    type: 'basic',
+                    title: service.name,
+                    message: RATING_TEXT[rate],
+                    iconUrl: './icons/icon@2x.png',
+                });
+
+                browser.notifications.onClicked.addListener((notificationId) => {
+                    browser.notifications.clear(notificationId);
+                    browser.tabs.create({
+                        url: `https://tosdr.org/service/${service.id}`,
+                    });
+                });
+            }
         }
-    } else if (lastRate === 'D' || lastRate === 'E') {
-        shouldShow = true;
-    }
-
-
-    if (shouldShow) {
-        localStorage.setItem(`notification/${service.id}/last/update`, new Date().toDateString());
-        localStorage.setItem(`notification/${service.id}/last/rate`, rate);
-
-        browser.notifications.create('tosdr-notify', {
-            type: 'basic',
-            title: service.name,
-            message: RATING_TEXT[rate],
-            iconUrl: './icons/icon@2x.png',
-        });
-
-        browser.notifications.onClicked.addListener((notificationId) => {
-            browser.notifications.clear(notificationId);
-            browser.tabs.create({
-                url: `https://tosdr.org/service/${service.id}`,
-            });
-        });
-    }
+    });
 }
 
 /*
@@ -94,7 +97,6 @@ function initializePageAction(tab) {
             });
             browser.pageAction.show(tab.id);
         }
-        console.error(err);
     });
 }
 
@@ -121,4 +123,8 @@ browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
         initializePageAction(tab);
     }
+});
+
+browser.runtime.onInstalled.addListener(() => {
+    browser.runtime.openOptionsPage();
 });

@@ -109,8 +109,7 @@ jQuery(() => {
             });
 
             $('.loading').hide();
-        }).catch((err) => {
-            console.error(err);
+        }).catch(() => {
             $('#page').empty();
             $('#page').append($('<div>', { class: 'modal-body' })
                 .append($('<div>', { class: 'tosdr-rating' })

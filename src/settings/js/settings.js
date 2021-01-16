@@ -24,10 +24,12 @@ jQuery(() => {
     function updateSettings() {
         browser.storage.local.get('settings').then((items) => {
             $('form input').each(() => {
-                if ($(this).attr('type') === 'checkbox') {
-                    $(this).attr('checked', items.settings[this.name]);
-                } else {
-                    $(this).val(items.settings[this.name]);
+                if (typeof items.settings !== undefined) {
+                    if ($(this).attr('type') === 'checkbox') {
+                        $(this).attr('checked', items.settings[this.name]);
+                    } else {
+                        $(this).val(items.settings[this.name]);
+                    }
                 }
             });
             $('.loading').hide();

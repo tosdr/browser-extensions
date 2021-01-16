@@ -24,7 +24,7 @@ jQuery(() => {
     function updateSettings() {
         browser.storage.local.get('settings').then((items) => {
             $('form input').each(() => {
-                if (typeof items.settings !== undefined) {
+                if (typeof items.settings !== 'undefined') {
                     if ($(this).attr('type') === 'checkbox') {
                         $(this).attr('checked', items.settings[this.name]);
                     } else {

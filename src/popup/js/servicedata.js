@@ -1,21 +1,13 @@
 /* globals document, browser: true, chrome, fetch, Request */
-/* eslint-disable indent */
+/* eslint-disable indent, max-len */
 const APPLICABLE_PROTOCOLS = ['http:', 'https:']; // eslint-disable-line no-unused-vars
 const REVIEW_PREFIX = 'tosdr/review/'; // eslint-disable-line no-unused-vars
-const DEBUG = true;
 const RATING_TEXT = { // eslint-disable-line no-unused-vars
     D: 'The terms of service are very uneven or there are some important issues that need your attention.',
     E: 'The terms of service raise very serious concerns.',
 };
 
 const services = []; // eslint-disable-line no-unused-vars
-
-/** ***************** UTILS *************** */
-function log(message) { // eslint-disable-line no-unused-vars
-    if (DEBUG) {
-        console.log(message); // eslint-disable-line no-console
-    }
-}
 
 /*
 Returns true only if the URL's protocol is in APPLICABLE_PROTOCOLS.
@@ -82,17 +74,19 @@ function getTweetText(service) { // eslint-disable-line no-unused-vars
 
 
 function getServices() { // eslint-disable-line no-unused-vars
-    const requestURL = 'https://api.tosdr.org/v1/service/all.json';
+    return browser.storage.local.get('settings').then((items) => {
+        const requestURL = `${items.settings.api_endpoint}/all.json`;
 
-    const driveRequest = new Request(requestURL, {
-        method: 'GET',
-    });
+        const driveRequest = new Request(requestURL, {
+            method: 'GET',
+        });
 
-    return fetch(driveRequest).then((response) => {
-        if (response.status === 200) {
-            return response.json();
-        }
-        throw response.status;
+        return fetch(driveRequest).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            }
+            throw response.status;
+        });
     });
 }
 
@@ -133,8 +127,8 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
         return Promise.reject(new Error(`too many redirections ${domain}`));
     }
 
-    return getDomainEntryFromStorage(domain).then((details) => {
-        const requestURL = `https://api.tosdr.org/v1/${details.id}.json`;
+    return getDomainEntryFromStorage(domain).then(details => browser.storage.local.get('settings').then((items) => {
+        const requestURL = `${items.settings.api_endpoint}/${details.id}.json`;
 
         const driveRequest = new Request(requestURL, {
             method: 'GET',
@@ -146,7 +140,7 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
             }
             throw response.status;
         });
-    });
+    }));
 }
 
 function getServiceDetails(domain, tries = 0) {

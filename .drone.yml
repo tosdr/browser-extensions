@@ -9,7 +9,7 @@ steps:
   - npm run lint
 
 - name: build
-  image: alpine
+  image: node:alpine
   commands:
   - apk --no-cache add zip
   - sh build.sh

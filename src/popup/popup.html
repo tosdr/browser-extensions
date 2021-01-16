@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
     <meta charset="utf-8">
@@ -40,9 +40,15 @@
 
                         <div class="container"><hr /></div>
 
-                        <section id="sharelist">
+                        <section id="sharelist" class="btn-group">
                             <a href="#" id="twitter_url" target="_blank" class="btn btn-info">
                                 <i class="fab fa-twitter"></i> Tweet
+                            </a>
+                            <a href="#" id="edit_url" data-visiblity="curator" style="display: none;" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit Service
+                            </a>
+                            <a href="#" id="add_document_url" data-visiblity="curator" style="display: none;" target="_blank" class="btn btn-warning">
+                                <i class="fas fa-file-word"></i> Add Document
                             </a>
                         </section>
 
@@ -53,7 +59,7 @@
 
                         <section id="linksList"></section>
 
-                        <section id="privacyshield">
+                        <section id="privacyshield" style="display: none;">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><img id="shieldimg" src=""></span>
@@ -67,6 +73,7 @@
                         <div class="btn-group">
                             <a target="_blank" class="btn btn-primary" href="https://edit.tosdr.org">Contribute</a>
                             <a target="_blank" class="btn btn-success" href="https://opencollective.com/tosdr">Donate to ToS;DR</a>
+                            <a target="_blank" class="btn btn-danger" href="https://github.com/tosdr/browser-extensions/issues/new/choose">Report a bug</a>
                         </div>
                     </center>
                 </div>

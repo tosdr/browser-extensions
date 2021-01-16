@@ -11,8 +11,9 @@ steps:
 - name: build
   image: node:alpine
   commands:
-  - apk --no-cache add zip
-  - sh build.sh
+  - apk --no-cache add zip bash
+  - sed -i 's/\r$//' build.sh
+  - bash build.sh
 
 - name: publish
   image: plugins/github-release

@@ -1,7 +1,7 @@
 /* globals  browser */
 /* eslint-disable indent */
 
-const FORCE_DEBUG = false;
+const FORCE_DEBUG = true;
 
 function log(...args) { // eslint-disable-line no-unused-vars
     browser.storage.local.get('settings').then((items) => {

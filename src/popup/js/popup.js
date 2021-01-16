@@ -90,7 +90,7 @@ jQuery(() => {
                     $('#shieldurl').val(`${items.settings.shield_endpoint}${service.id}.svg`);
                     $('#privacyshield').show();
                 }
-                if (!items.settings.curatormode) {
+                if (items.settings.curator) {
                     $('#edit_url').attr('href', `https://edit.tosdr.org/services/${service.id}/edit`);
                     $('#add_document_url').attr('href', `https://edit.tosdr.org/documents/new?service=${service.id}`);
                     $('[data-visiblity="curator"]').show();

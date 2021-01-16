@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
     <meta charset="utf-8">
@@ -23,25 +23,25 @@
                     <div id="page">
                         <form id="settings">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="notifications" name="notifications" checked>
+                                <input class="form-check-input" type="checkbox" data-default="true" id="notifications" name="notifications">
                                 <label class="form-check-label" for="notifications">
                                     Send Notifications
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="curator" name="curator">
+                                <input class="form-check-input" type="checkbox" data-default="false" id="curator" name="curator">
                                 <label class="form-check-label" for="curator">
                                     Curator Mode
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="hideshields" name="hideshields">
+                                <input class="form-check-input" data-default="false" type="checkbox" id="hideshields" name="hideshields">
                                 <label class="form-check-label" for="hideshields">
                                     Hide Privacy Shields
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="advanced" name="advanced">
+                                <input class="form-check-input" data-default="false" type="checkbox" id="advanced" name="advanced">
                                 <label class="form-check-label" for="advanced">
                                     Advanced Mode
                                 </label>
@@ -50,18 +50,18 @@
                                 <hr />
                                 <h1>Advanced Settings</h1>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="debug" name="debug">
+                                    <input class="form-check-input" data-default="false" type="checkbox" id="debug" name="debug">
                                     <label class="form-check-label" for="debug">
                                         Debug
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label for="api_endpoint">API Endpoint Override:</label>
-                                    <input type="text" class="form-control" id="api_endpoint" name="api_endpoint" value="https://api.tosdr.org/v1/service/">
+                                    <input type="text" class="form-control" id="api_endpoint" name="api_endpoint" data-default="https://api.tosdr.org/v1/service/">
                                 </div>
                                 <div class="form-group">
                                     <label for="shield_endpoint">Shield Endpoint Override:</label>
-                                    <input type="text" class="form-control" id="shield_endpoint" name="shield_endpoint" value="https://shields.tosdr.org/">
+                                    <input type="text" class="form-control" id="shield_endpoint" name="shield_endpoint" data-default="https://shields.tosdr.org/">
                                 </div>
                             </section>
                         </form>

@@ -57,12 +57,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="api_endpoint">API Endpoint Override:</label>
-                                    <input type="text" class="form-control" id="api_endpoint" name="api_endpoint" data-default="https://api.tosdr.org/v1/service/">
+                                    <input type="text" class="form-control" id="api_endpoint" name="api_endpoint" data-default="https://api.tosdr.org/v1/service/" value="https://api.tosdr.org/v1/service/">
                                 </div>
                                 <div class="form-group">
                                     <label for="shield_endpoint">Shield Endpoint Override:</label>
-                                    <input type="text" class="form-control" id="shield_endpoint" name="shield_endpoint" data-default="https://shields.tosdr.org/">
+                                    <input type="text" class="form-control" id="shield_endpoint" name="shield_endpoint" data-default="https://shields.tosdr.org/" value="" https: //shields.tosdr.org/"">
                                 </div>
+                                <button class="btn btn-danger" onclick="browser.storage.local.clear();">Clear API Cache</button>
                             </section>
                         </form>
                     </div>

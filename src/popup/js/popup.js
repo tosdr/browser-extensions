@@ -64,6 +64,7 @@ jQuery(() => {
     function updatePopup() {
         $('.loading').show();
         getLiveServiceDetails(serviceUrl).then((service) => {
+            log("service", service);
             browser.storage.local.get('settings').then((items) => {
                 $('#service_url').attr('href', `https://tosdr.org/en/service/${service.id}`);
                 $('#service_class').addClass(service.class);
@@ -86,8 +87,8 @@ jQuery(() => {
                 $('.tosdr-points a').attr('target', '_blank');
 
                 if (!items.settings.hideshields) {
-                    $('#shieldimg').attr('src', `${items.settings.shield_endpoint}/${service.id}.svg`);
-                    $('#shieldurl').val(`${items.settings.shield_endpoint}${service.id}.svg`);
+                    $('#shieldimg').attr('src', `${(typeof items.settings === 'undefined' ? FALLBACK_SHIELDS : items.settings.shield_endpoint)}/${service.id}.svg`);
+                    $('#shieldurl').val(`${(typeof items.settings === 'undefined' ? FALLBACK_SHIELDS : items.settings.shield_endpoint)}${service.id}.svg`);
                     $('#privacyshield').show();
                 }
                 if (items.settings.curator) {

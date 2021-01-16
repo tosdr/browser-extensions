@@ -101,9 +101,9 @@ function initializePageAction(tab) {
 }
 
 getServices().then((services) => {
+    log(services);
     browser.storage.local.set(services).then(() => {
-        /* When first loaded, initialize the page action for all tabs.
-        */
+        log('initialized');
         const gettingAllTabs = browser.tabs.query({});
         return gettingAllTabs.then((tabs) => {
             tabs.forEach((t) => {

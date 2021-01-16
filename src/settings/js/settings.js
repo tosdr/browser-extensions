@@ -33,7 +33,6 @@ function saveOptions(e, defaultData = false) {
     } else {
         $('#advancedmode').hide();
     }
-
     browser.storage.local.set({ settings: getFormData(defaultData) }).then(() => $('.loading').hide());
 }
 

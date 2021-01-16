@@ -7,6 +7,9 @@ const RATING_TEXT = { // eslint-disable-line no-unused-vars
     E: 'The terms of service raise very serious concerns.',
 };
 
+const FALLBACK_API = 'https://api.tosdr.org/v1/service/';
+const FALLBACK_SHIELDS = 'https://shields.tosdr.org/';
+
 const services = []; // eslint-disable-line no-unused-vars
 
 /*
@@ -75,8 +78,7 @@ function getTweetText(service) { // eslint-disable-line no-unused-vars
 
 function getServices() { // eslint-disable-line no-unused-vars
     return browser.storage.local.get('settings').then((items) => {
-        const requestURL = `${items.settings.api_endpoint}/all.json`;
-
+        const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_API : items.settings.api_endpoint)}/all.json`;
         const driveRequest = new Request(requestURL, {
             method: 'GET',
         });
@@ -88,28 +90,6 @@ function getServices() { // eslint-disable-line no-unused-vars
             throw response.status;
         });
     });
-}
-
-// In Firefox, we can access browsers.tabs and browser.storage.
-// In Chrome, there is no global variable called 'browser', but
-// there is one called 'chrome', which has almost the same functions,
-// so if 'browser.*' is not defined, use 'chrome.*' instead:
-if (typeof browser === 'undefined') {
-    browser = {
-        tabs: {
-            onUpdated: chrome.tabs.onUpdated,
-            query: options => new Promise(resolve => chrome.tabs.query(options, resolve)),
-            create: chrome.tabs.create,
-        },
-        notifications: chrome.notifications,
-        storage: {
-            local: {
-                get: keys => new Promise(resolve => chrome.storage.local.get(keys, resolve)),
-                set: values => new Promise(resolve => chrome.storage.local.set(values, resolve)),
-            },
-        },
-        pageAction: chrome.pageAction,
-    };
 }
 
 function getDomainEntryFromStorage(domain) {
@@ -128,8 +108,8 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
     }
 
     return getDomainEntryFromStorage(domain).then(details => browser.storage.local.get('settings').then((items) => {
-        const requestURL = `${items.settings.api_endpoint}/${details.id}.json`;
 
+        const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_API : items.settings.api_endpoint)}/${details.id}.json`;
         const driveRequest = new Request(requestURL, {
             method: 'GET',
         });
@@ -144,7 +124,7 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
 }
 
 function getServiceDetails(domain, tries = 0) {
-    // console.log('getServiceDetails', domain, tries)
+    log('getServiceDetails', domain, tries);
     if (!domain) {
         return Promise.reject(new Error('no domain name provided'));
     }
@@ -156,9 +136,10 @@ function getServiceDetails(domain, tries = 0) {
         if (!details) {
             const domainParts = domain.split('.');
             if (domainParts.length > 2) {
-                // console.log('trying parent domain')
+                log('trying parent domain');
                 return getServiceDetails(domainParts.slice(1).join('.'), tries + 1);
             }
+            log('details of domain not found', domain);
             return Promise.reject(new Error('details not found'));
         }
         if (details.see) {

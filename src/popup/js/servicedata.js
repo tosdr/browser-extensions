@@ -1,4 +1,4 @@
-/* globals document, browser: true, chrome, fetch, Request */
+/* globals document, browser: true, fetch, Request, log */
 /* eslint-disable indent, max-len */
 const APPLICABLE_PROTOCOLS = ['http:', 'https:']; // eslint-disable-line no-unused-vars
 const REVIEW_PREFIX = 'tosdr/review/'; // eslint-disable-line no-unused-vars
@@ -7,8 +7,8 @@ const RATING_TEXT = { // eslint-disable-line no-unused-vars
     E: 'The terms of service raise very serious concerns.',
 };
 
-const FALLBACK_API = 'https://api.tosdr.org/v1/service/';
-const FALLBACK_SHIELDS = 'https://shields.tosdr.org/';
+const FALLBACK_API = 'https://api.tosdr.org/v1/service/'; // eslint-disable-line no-unused-vars
+const FALLBACK_SHIELDS = 'https://shields.tosdr.org/'; // eslint-disable-line no-unused-vars
 
 const services = []; // eslint-disable-line no-unused-vars
 
@@ -108,7 +108,6 @@ function getLiveServiceDetails(domain, tries = 0) { // eslint-disable-line no-un
     }
 
     return getDomainEntryFromStorage(domain).then(details => browser.storage.local.get('settings').then((items) => {
-
         const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_API : items.settings.api_endpoint)}/${details.id}.json`;
         const driveRequest = new Request(requestURL, {
             method: 'GET',

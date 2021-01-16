@@ -1,4 +1,4 @@
-/* globals browser, chrome */
+/* globals browser: true, chrome:true */
 /* eslint-disable indent */
 
 const FORCE_DEBUG = true;
@@ -28,7 +28,7 @@ if (typeof browser === 'undefined') {
             local: {
                 get: keys => new Promise(resolve => chrome.storage.local.get(keys, resolve)),
                 set: values => new Promise(resolve => chrome.storage.local.set(values, resolve)),
-                clear: values => new Promise(resolve => chrome.storage.local.clear(values, resolve)),
+                clear: values => new Promise(resolve => chrome.storage.local.clear(values, resolve)), // eslint-disable-line max-len
             },
         },
         pageAction: chrome.pageAction,

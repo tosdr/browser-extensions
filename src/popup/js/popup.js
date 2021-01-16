@@ -1,4 +1,5 @@
-/* global window, $, jQuery, getLiveServiceDetails, getRatingText, getTweetText, browser */
+/* global window, $, jQuery, getLiveServiceDetails, getRatingText,
+getTweetText, browser, FALLBACK_SHIELDS, log */
 /* eslint-disable indent */
 
 function escapeHTML(unsafe) {
@@ -64,7 +65,7 @@ jQuery(() => {
     function updatePopup() {
         $('.loading').show();
         getLiveServiceDetails(serviceUrl).then((service) => {
-            log("service", service);
+            log('service', service);
             browser.storage.local.get('settings').then((items) => {
                 $('#service_url').attr('href', `https://tosdr.org/en/service/${service.id}`);
                 $('#service_class').addClass(service.class);

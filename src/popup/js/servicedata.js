@@ -75,18 +75,19 @@ function getTweetText(service) { // eslint-disable-line no-unused-vars
     return text;
 }
 
-
 function compareVersion() { // eslint-disable-line no-unused-vars
-    const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_UPDATE_API : items.settings.update_api_endpoint)}${browser.runtime.getManifest().version}.json`;
-    const driveRequest = new Request(requestURL, {
-        method: 'GET',
-    });
+    return browser.storage.local.get('settings').then((items) => {
+        const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_UPDATE_API : items.settings.update_api_endpoint)}${browser.runtime.getManifest().version}.json`;
+        const driveRequest = new Request(requestURL, {
+            method: 'GET',
+        });
 
-    return fetch(driveRequest).then((response) => {
-        if (response.status === 200) {
-            return response.json();
-        }
-        throw response.status;
+        return fetch(driveRequest).then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            }
+            throw response.status;
+        });
     });
 }
 

@@ -9,7 +9,7 @@ const RATING_TEXT = { // eslint-disable-line no-unused-vars
 
 const FALLBACK_API = 'https://api.tosdr.org/v1/service/'; // eslint-disable-line no-unused-vars
 const FALLBACK_SHIELDS = 'https://shields.tosdr.org/'; // eslint-disable-line no-unused-vars
-
+const FALLBACK_UPDATE_API = 'https://api.tosdr.org/updatecheck/';
 const services = []; // eslint-disable-line no-unused-vars
 
 /*
@@ -75,6 +75,20 @@ function getTweetText(service) { // eslint-disable-line no-unused-vars
     return text;
 }
 
+
+function compareVersion() { // eslint-disable-line no-unused-vars
+    const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_UPDATE_API : items.settings.update_api_endpoint)}${browser.runtime.getManifest().version}.json`;
+    const driveRequest = new Request(requestURL, {
+        method: 'GET',
+    });
+
+    return fetch(driveRequest).then((response) => {
+        if (response.status === 200) {
+            return response.json();
+        }
+        throw response.status;
+    });
+}
 
 function getServices() { // eslint-disable-line no-unused-vars
     return browser.storage.local.get('settings').then((items) => {

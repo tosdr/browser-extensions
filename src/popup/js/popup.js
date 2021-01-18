@@ -1,5 +1,5 @@
 /* global window, $, jQuery, getLiveServiceDetails, getRatingText,
-getTweetText, browser, FALLBACK_SHIELDS, log */
+getTweetText, browser, FALLBACK_SHIELDS, log, compareVersion */
 /* eslint-disable indent */
 
 function escapeHTML(unsafe) {
@@ -120,6 +120,24 @@ jQuery(() => {
                 });
 
                 $('.loading').hide();
+                if (!items.settings.dontcheckforupdates) {
+                    compareVersion().then((response) => {
+                        if (response.parameters.compare === -1) {
+                            $('#updatecheck').html(`You are running an unreleased version (${response.parameters.given}), bugs may occur.`);
+                            $('#updatecheck').addClass('alert alert-warning');
+                        } else if (response.parameters.compare === 0) {
+                            $('#updatecheck').remove();
+                            $('#updatecheckbottom').html('You are up to date, cool beans!');
+                            $('#updatecheckbottom').addClass('alert alert-success');
+                        } else {
+                            $('#updatecheck').html(`Your version (${response.parameters.given}) is out of date! The Latest version is ${response.parameters.latest}`);
+                            $('#updatecheck').addClass('alert alert-danger');
+                        }
+                    });
+                } else {
+                    $('#updatecheckbottom').remove();
+                    $('#updatecheck').remove();
+                }
             });
         }).catch(() => {
             $('#page').empty();

@@ -75,9 +75,13 @@ function getTweetText(service) { // eslint-disable-line no-unused-vars
     return text;
 }
 
-function compareVersion() { // eslint-disable-line no-unused-vars
+function compareVersion(version = null) { // eslint-disable-line no-unused-vars
+    let _version = version; // eslint-disable-line no-underscore-dangle
+    if (version === null) {
+        _version = browser.runtime.getManifest().version;
+    }
     return browser.storage.local.get('settings').then((items) => {
-        const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_UPDATE_API : items.settings.update_api_endpoint)}${browser.runtime.getManifest().version}.json`;
+        const requestURL = `${(typeof items.settings === 'undefined' ? FALLBACK_UPDATE_API : items.settings.update_api_endpoint)}${_version}.json`;
         const driveRequest = new Request(requestURL, {
             method: 'GET',
         });

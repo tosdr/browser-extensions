@@ -1,8 +1,8 @@
 ---
-name: Bug report edge
-about: Create a bug report for the edge extension
+name: Opera
+about: Create a bug report for the opera extension
 title: ''
-labels: bug, edge
+labels: bug, opera
 assignees: ''
 
 ---
@@ -25,14 +25,19 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information if applicable):**
  - OS: [e.g. iOS]
- - Browser: Edge
- - Version [e.g. 45.12.4.5121]
+ - Browser: Opera
+ - Version: [e.g. 73.0.3856.329]
 
 **Smartphone (please complete the following information if applicable):**
  - Device: [e.g. iPhone6]
  - OS: [e.g. iOS8.1]
- - Browser: Edge
- - Version [e.g. 45.12.4.5121]
+ - Browser: Opera
+ - Version: [e.g. 73.0.3856.329]
+
+
+**Extension (please complete the following information):**
+- Version: [e.g. 1.0.0]
+- Packed? [Yes if downloaded from Store]
 
 **Additional context**
 Add any other context about the problem here.

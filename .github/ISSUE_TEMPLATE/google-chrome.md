@@ -1,8 +1,8 @@
 ---
-name: Bug report edge
-about: Create a bug report for the edge extension
+name: Google Chrome
+about: Create a bug report for the chrome extension
 title: ''
-labels: bug, edge
+labels: bug, chrome
 assignees: ''
 
 ---
@@ -23,16 +23,21 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information if applicable):**
+**Desktop (please complete the following information):**
  - OS: [e.g. iOS]
- - Browser: Edge
- - Version [e.g. 45.12.4.5121]
+ - Browser: Chrome
+ - Version: [e.g. 87.0.4280.141]
 
-**Smartphone (please complete the following information if applicable):**
+**Smartphone (please complete the following information):**
  - Device: [e.g. iPhone6]
  - OS: [e.g. iOS8.1]
- - Browser: Edge
- - Version [e.g. 45.12.4.5121]
+ - Browser: Chrome
+ - Version: [e.g. 87.0.4280.141]
+
+
+**Extension (please complete the following information):**
+- Version: [e.g. 1.0.0]
+- Packed? [Yes if downloaded from Store]
 
 **Additional context**
 Add any other context about the problem here.

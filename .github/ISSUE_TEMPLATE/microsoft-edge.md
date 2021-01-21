@@ -1,5 +1,5 @@
 ---
-name: Bug report edge
+name: Microsoft Edge
 about: Create a bug report for the edge extension
 title: ''
 labels: bug, edge

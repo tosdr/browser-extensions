@@ -1,7 +1,7 @@
 /* globals browser: true, chrome:true */
 /* eslint-disable indent */
 
-const FORCE_DEBUG = true;
+const FORCE_DEBUG = false;
 
 function log(...args) { // eslint-disable-line no-unused-vars
     browser.storage.local.get('settings').then((items) => {
@@ -10,7 +10,7 @@ function log(...args) { // eslint-disable-line no-unused-vars
         }
     });
 }
-
+/*
 // In Firefox, we can access browsers.tabs and browser.storage.
 // In Chrome, there is no global variable called 'browser', but
 // there is one called 'chrome', which has almost the same functions,
@@ -34,3 +34,4 @@ if (typeof browser === 'undefined') {
         pageAction: chrome.pageAction,
     };
 }
+*/

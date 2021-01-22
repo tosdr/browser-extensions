@@ -23,6 +23,9 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Console Log**
+If applicable, add console logs by enabling the `Debug` Option in `Options` -> `Advanced Mode`
+
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - Browser: Chrome
@@ -41,3 +44,8 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+
+- [ ] I make sure not to use an API override
+- [ ] I make sure not to use a shield override
+- [ ] I make sure not to use an updatecheck override

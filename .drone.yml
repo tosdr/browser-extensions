@@ -8,12 +8,33 @@ steps:
   - npm install
   - npm run lint
 
-- name: build
+- name: build_tag#_minor
   image: node:alpine
   commands:
   - apk --no-cache add zip bash
+  - npm version minor
   - sed -i 's/\r$//' build.sh
   - bash build.sh
+  when:
+    event:
+    - cron
+    cron:
+    - minor
+
+- name: push tag
+  image: appleboy/drone-git-push
+  settings:
+    branch: master
+    remote: git@github.com:tosdr/browser-extensions.git
+    force: false
+    commit: true
+    follow_tags: true
+    commit_message: "[skip ci] Automatic Minor Release"
+  when:
+    event:
+    - cron
+    cron:
+    - minor
 
 - name: publish
   image: plugins/github-release
@@ -25,6 +46,9 @@ steps:
     checksum:
     - sha256
   when:
-    event: tag
+    event:
+    - cron
+    cron:
+    - minor
 node:
   os: linux

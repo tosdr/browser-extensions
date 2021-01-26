@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
 mkdir -p build; rm -rf build/*
 mkdir -p dist; rm -rf dist/*
 cp -r src build/firefox

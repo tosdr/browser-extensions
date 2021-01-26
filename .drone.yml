@@ -16,7 +16,6 @@ steps:
   - git config user.name "ToS;DR Automation"
   - git add .
   - git commit -m "Upped package-lock.json"
-  - git status
   - npm version patch -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
@@ -34,7 +33,6 @@ steps:
   - git config user.name "ToS;DR Automation"
   - git add .
   - git commit -m "Upped package-lock.json"
-  - git status
   - npm version minor -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
@@ -52,7 +50,6 @@ steps:
   - git config user.name "ToS;DR Automation"
   - git add .
   - git commit -m "Upped package-lock.json"
-  - git status
   - npm version major -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json

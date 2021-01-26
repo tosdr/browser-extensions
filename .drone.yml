@@ -11,15 +11,15 @@ steps:
 - name: build_tag#_minor
   image: node:alpine
   commands:
-  - apk --no-cache add zip bash
+  - apk --no-cache add zip bash git
   - npm version minor
   - sed -i 's/\r$//' build.sh
   - bash build.sh
   when:
     event:
-    - cron
-    cron:
-    - minor
+    - promote
+    target:
+    - production
 
 - name: push tag
   image: appleboy/drone-git-push
@@ -27,14 +27,16 @@ steps:
     branch: master
     remote: git@github.com:tosdr/browser-extensions.git
     force: false
+    ssh_key:
+        from_secret: SSH_KEY
     commit: true
     follow_tags: true
-    commit_message: "[skip ci] Automatic Minor Release"
+    commit_message: "[skip ci] Minor Release"
   when:
     event:
-    - cron
-    cron:
-    - minor
+    - promote
+    target:
+    - production
 
 - name: publish
   image: plugins/github-release
@@ -47,8 +49,8 @@ steps:
     - sha256
   when:
     event:
-    - cron
-    cron:
-    - minor
+    - promote
+    target:
+    - production
 node:
   os: linux

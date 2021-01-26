@@ -14,8 +14,6 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - git add .
-  - git commit -m "Upped package-lock.json"
   - npm version patch -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
@@ -31,8 +29,6 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - git add .
-  - git commit -m "Upped package-lock.json"
   - npm version minor -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
@@ -48,8 +44,6 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - git add .
-  - git commit -m "Upped package-lock.json"
   - npm version major -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json

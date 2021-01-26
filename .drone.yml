@@ -8,10 +8,12 @@ steps:
   - npm install
   - npm run lint
 
-- name: build_tag#_minor
+- name: build_tag_minor
   image: node:alpine
   commands:
   - apk --no-cache add zip bash git
+  - git config user.email "automation@tosdr.org"
+  - git config user.name "ToS;DR Automation"
   - npm version minor
   - sed -i 's/\r$//' build.sh
   - bash build.sh

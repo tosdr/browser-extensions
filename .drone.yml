@@ -17,6 +17,7 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git status
   - npm version patch -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - bash build.sh
@@ -32,6 +33,7 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git status
   - npm version minor -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - bash build.sh
@@ -47,6 +49,7 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git status
   - npm version major -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - bash build.sh

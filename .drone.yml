@@ -67,7 +67,7 @@ steps:
     commit: true
     author_name: "ToS;DR Automation"
     author_email: "automation@tosdr.org"
-    follow_tags: true
+    followtags: true
     commit_message: "Release"
   when:
     event:

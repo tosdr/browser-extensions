@@ -10,13 +10,12 @@ steps:
 
 - name: build_tag_patch
   image: node:alpine
-  environment:
-    SSH_KEY:
-      from_secret: SSH_KEY
   commands:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git add .
+  - git commit -m "Upped package-lock.json"
   - git status
   - npm version patch -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
@@ -33,6 +32,8 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git add .
+  - git commit -m "Upped package-lock.json"
   - git status
   - npm version minor -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
@@ -49,6 +50,8 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - git add .
+  - git commit -m "Upped package-lock.json"
   - git status
   - npm version major -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh

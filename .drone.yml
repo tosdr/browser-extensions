@@ -8,20 +8,53 @@ steps:
   - npm install
   - npm run lint
 
-- name: build_tag_minor
+- name: build_tag_patch
   image: node:alpine
+  environment:
+    SSH_KEY:
+      from_secret: SSH_KEY
   commands:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - npm version minor
+  - npm version patch -m "Upgrade to %s"
   - sed -i 's/\r$//' build.sh
   - bash build.sh
   when:
     event:
     - promote
     target:
-    - production
+    - patch
+
+- name: build_tag_minor
+  image: node:alpine
+  commands:
+  - apk --no-cache add zip bash git
+  - git config user.email "automation@tosdr.org"
+  - git config user.name "ToS;DR Automation"
+  - npm version minor -m "Upgrade to %s"
+  - sed -i 's/\r$//' build.sh
+  - bash build.sh
+  when:
+    event:
+    - promote
+    target:
+    - minor
+
+- name: build_tag_major
+  image: node:alpine
+  commands:
+  - apk --no-cache add zip bash git
+  - git config user.email "automation@tosdr.org"
+  - git config user.name "ToS;DR Automation"
+  - npm version major -m "Upgrade to %s"
+  - sed -i 's/\r$//' build.sh
+  - bash build.sh
+  when:
+    event:
+    - promote
+    target:
+    - major
 
 - name: push tag
   image: appleboy/drone-git-push
@@ -32,13 +65,13 @@ steps:
     ssh_key:
         from_secret: SSH_KEY
     commit: true
+    author_name: "ToS;DR Automation"
+    author_email: "automation@tosdr.org"
     follow_tags: true
-    commit_message: "[skip ci] Minor Release"
+    commit_message: "Release"
   when:
     event:
     - promote
-    target:
-    - production
 
 - name: publish
   image: plugins/github-release
@@ -51,8 +84,6 @@ steps:
     - sha256
   when:
     event:
-    - promote
-    target:
-    - production
+    - tag
 node:
   os: linux

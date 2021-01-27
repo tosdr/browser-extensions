@@ -8,50 +8,19 @@ steps:
   - npm install
   - npm run lint
 
-- name: Up Version As Patch
+- name: Up Version
   image: node:alpine
   commands:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
+  - npm version $DRONE_DEPLOY_TO --no-git-tag-version
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
-  - npm version patch -m "Upgrade to %s" --force
+  - git tag $(npm run env | grep npm_package_version | cut -d '=' -f 2) -a "Updated to $(npm run env | grep npm_package_version | cut -d '=' -f 2)"
   - sed -i 's/\r$//' build.sh
   when:
     event:
     - promote
-    target:
-    - patch
-
-- name: Up Version As Minor
-  image: node:alpine
-  commands:
-  - apk --no-cache add zip bash git
-  - git config user.email "automation@tosdr.org"
-  - git config user.name "ToS;DR Automation"
-  - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
-  - npm version minor -m "Upgrade to %s" --force 
-  - sed -i 's/\r$//' build.sh
-  when:
-    event:
-    - promote
-    target:
-    - minor
-
-- name: Up Version As Major
-  image: node:alpine
-  commands:
-  - apk --no-cache add zip bash git
-  - git config user.email "automation@tosdr.org"
-  - git config user.name "ToS;DR Automation"
-  - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
-  - npm version major -m "Upgrade to %s" --force 
-  - sed -i 's/\r$//' build.sh
-  when:
-    event:
-    - promote
-    target:
-    - major
 
 - name: Push Tags
   image: appleboy/drone-git-push

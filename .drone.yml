@@ -37,7 +37,11 @@ steps:
     commit_message: "Release"
   when:
     event:
-    - promote
+    - promote    
+    target:
+    - patch
+    - minor
+    - major
 
 - name: Build Extension
   image: node:alpine

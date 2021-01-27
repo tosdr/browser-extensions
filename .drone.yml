@@ -15,8 +15,9 @@ steps:
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
   - npm version $DRONE_DEPLOY_TO --no-git-tag-version
-  - git tag $(npm run env | grep npm_package_version | cut -d '=' -f 2) -a -m "Updated to $(npm run env | grep npm_package_version | cut -d '=' -f 2)"
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
+  - git add . && git commit -m "Update manifest version"
+  - git tag $(npm run env | grep npm_package_version | cut -d '=' -f 2) -a -m "Updated to $(npm run env | grep npm_package_version | cut -d '=' -f 2)"
   - sed -i 's/\r$//' build.sh
   when:
     event:

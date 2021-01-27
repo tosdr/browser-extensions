@@ -14,9 +14,9 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - npm version patch -m "Upgrade to %s"
-  - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
+  - npm version patch -m "Upgrade to %s" --force
+  - sed -i 's/\r$//' build.sh
   when:
     event:
     - promote
@@ -29,9 +29,9 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - npm version minor -m "Upgrade to %s"
-  - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
+  - npm version minor -m "Upgrade to %s" --force 
+  - sed -i 's/\r$//' build.sh
   when:
     event:
     - promote
@@ -44,9 +44,9 @@ steps:
   - apk --no-cache add zip bash git
   - git config user.email "automation@tosdr.org"
   - git config user.name "ToS;DR Automation"
-  - npm version major -m "Upgrade to %s"
-  - sed -i 's/\r$//' build.sh
   - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
+  - npm version major -m "Upgrade to %s" --force 
+  - sed -i 's/\r$//' build.sh
   when:
     event:
     - promote

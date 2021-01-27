@@ -79,6 +79,16 @@ steps:
     event:
     - tag
 
+- name: Sign Release  
+  image: plugins/gpgsign
+  settings:
+    key:
+        from_secret: SIGN_KEY
+    passphrase:
+        from_secret: SIGN_KEY_PASS
+    files:
+      - dist/*
+
 - name: Publish Release
   image: plugins/github-release
   settings:

@@ -38,6 +38,14 @@ This will create two extensions in the dist folder, one for Firefox and one for 
 -----------
 
 
+Verification
+======
+
+Official Artifacts are from version 3.4.3 and upwards are always GPG Signed.
+
+You can verify each release with our associated GPG Key found [here](https://raw.githubusercontent.com/tosdr/browser-extensions/master/signkey_0xE719AF12.asc)
+
+
 License
 ======
 

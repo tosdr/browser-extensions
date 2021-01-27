@@ -88,6 +88,9 @@ steps:
         from_secret: SIGN_KEY_PASS
     files:
       - dist/*
+  when:
+    event:
+    - tag
 
 - name: Publish Release
   image: plugins/github-release

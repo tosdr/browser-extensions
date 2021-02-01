@@ -125,6 +125,8 @@ browser.tabs.onUpdated.addListener((id, changeInfo, tab) => {
     }
 });
 
-browser.runtime.onInstalled.addListener(() => {
-    browser.runtime.openOptionsPage();
+browser.runtime.onInstalled.addListener((details) => {
+    if (typeof details !== 'undefined' && (details.reason === 'install' || details.reason === 'update')) {
+        browser.runtime.openOptionsPage();
+    }
 });

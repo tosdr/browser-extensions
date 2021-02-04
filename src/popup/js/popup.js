@@ -11,6 +11,24 @@ function escapeHTML(unsafe) {
         .replace(/'(?!#039;)/g, '&#039;');
 }
 
+function loading(_element, _loading) {
+    if (_loading) {
+        $(_element).show();
+        $('#sharelist').hide();
+        $('#seperator').hide();
+        $('#updatecheck').hide();
+        $('#updatecheckbottom').hide();
+        $('#tosdrlinks').hide();
+    } else {
+        $(_element).hide();
+        $('#sharelist').show();
+        $('#seperator').show();
+        $('#updatecheck').show();
+        $('#updatecheckbottom').show();
+        $('#tosdrlinks').show();
+    }
+}
+
 jQuery(() => {
     function tosdrPoint(service, dataPoint) {
         let badge;
@@ -63,7 +81,10 @@ jQuery(() => {
     }
     const serviceUrl = window.location.hash.substr(1);
     function updatePopup() {
-        $('.loading').show();
+        $('#closeButton,.close').click(() => {
+            window.close();
+        });
+        loading('.loading', true);
         getLiveServiceDetails(serviceUrl).then((service) => {
             log('service', service);
             browser.storage.local.get('settings').then((items) => {
@@ -114,12 +135,8 @@ jQuery(() => {
                             .append($('<a>', { href: escapeHTML(service.links[d].url), target: '_blank', text: service.links[d].name })));
                     });
                 }
-                // [x] Button
-                $('#closeButton,.close').click(() => {
-                    window.close();
-                });
 
-                $('.loading').hide();
+                loading('.loading', false);
                 if (!items.settings.dontcheckforupdates) {
                     compareVersion().then((response) => {
                         if (response.parameters.compare === -1) {

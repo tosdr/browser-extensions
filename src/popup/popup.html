@@ -27,7 +27,7 @@
                         </a>
                     </h3>
 
-                    <button id="closeButton" data-dismiss="modal" class="close pull-right" type="button">×</button>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                 </div>
 
@@ -39,9 +39,9 @@
                             <p id="ratingText"></p>
                         </div>
 
-                        <div class="container"><hr /></div>
+                        <div id="seperator" class="container"><hr /></div>
 
-                        <section id="sharelist" class="btn-group">
+                        <section id="sharelist" style="display: none;" class="btn-group">
                             <a href="#" id="twitter_url" target="_blank" class="btn btn-info">
                                 <i class="fab fa-twitter"></i> Tweet
                             </a>
@@ -52,7 +52,7 @@
                                 <i class="fas fa-file-word"></i> Add Document
                             </a>
                         </section>
-                        <span id="updatecheck" class="row">Checking the latest version...</span>
+                        <span id="updatecheck" class="row"></span>
 
                         <section class="specificissues">
                             <ul class="tosdr-points">
@@ -72,14 +72,14 @@
                         </section>
                     </div>
                     <center>
-                        <div class="btn-group">
+                        <div id="tosdrlinks" class="btn-group">
                             <a target="_blank" class="btn btn-primary" href="https://edit.tosdr.org">Contribute</a>
                             <a target="_blank" class="btn btn-success" href="https://opencollective.com/tosdr">Donate to ToS;DR</a>
                             <a target="_blank" class="btn btn-danger" href="https://github.com/tosdr/browser-extensions/issues/new/choose">Report a bug</a>
                         </div>
                     </center>
                     <hr />
-                    <span id="updatecheckbottom"></span>
+                    <span id="updatecheckbottom">Checking the latest version...</span>
                 </div>
             </div>
         </div>

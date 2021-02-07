@@ -47,6 +47,10 @@ function checkNotification(service) {
                         url: `https://tosdr.org/en/service/${service.id}`,
                     });
                 });
+
+                browser.notifications.onClosed.addListener((notificationId) => {
+                    browser.notifications.clear(notificationId);
+                });
             }
         }
     });

@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version":"4.0.5",
+  "version":"4.0.6",
   "homepage_url": "https://tosdr.org",
   "background": {
     "scripts": [

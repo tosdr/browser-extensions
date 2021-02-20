@@ -7,9 +7,9 @@ const RATING_TEXT = { // eslint-disable-line no-unused-vars
     E: 'The terms of service raise very serious concerns.',
 };
 
-const FALLBACK_API = 'https://api.tosdr.org/v1/service/'; // eslint-disable-line no-unused-vars
-const FALLBACK_SHIELDS = 'https://shields.tosdr.org/'; // eslint-disable-line no-unused-vars
-const FALLBACK_UPDATE_API = 'https://api.tosdr.org/updatecheck/';
+const FALLBACK_API = 'https://tosdr.org/api/v1/service/'; // eslint-disable-line no-unused-vars
+const FALLBACK_SHIELDS = 'https://tosdr.org/api/badge/service/'; // eslint-disable-line no-unused-vars
+const FALLBACK_UPDATE_API = 'https://tosdr.org/api/updatecheck/';
 const services = []; // eslint-disable-line no-unused-vars
 
 /*

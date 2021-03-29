@@ -55,7 +55,7 @@ steps:
   image: plugins/s3
   settings:
     bucket: tosdr-artifacts
-    source: dist/**/*
+    source: **/*
     access_key:
       from_secret: aws_access_key_id
     secret_key:

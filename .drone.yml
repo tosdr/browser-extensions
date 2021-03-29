@@ -49,23 +49,6 @@ steps:
   commands:
   - apk --no-cache add zip bash
   - bash build.sh
- 
-   
-- name: Upload Artifacts
-  image: plugins/s3
-  settings:
-    bucket: tosdr-artifacts
-    source: ./**/*
-    access_key:
-      from_secret: aws_access_key_id
-    secret_key:
-      from_secret: aws_secret_access_key
-    exclude:
-      - ./.git
-      - ./node_modules
-      - ./.vs
-    target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
-    endpoint: https://s3.eu-west-2.jbcdn.net
 
 - name: Sign Release  
   image: plugins/gpgsign
@@ -76,9 +59,18 @@ steps:
         from_secret: SIGN_KEY_PASS
     files:
       - dist/*
-  when:
-    event:
-    - tag
+      
+- name: Upload Artifacts
+  image: plugins/s3
+  settings:
+    bucket: tosdr-artifacts
+    source: ./dist/*
+    access_key:
+      from_secret: aws_access_key_id
+    secret_key:
+      from_secret: aws_secret_access_key
+    target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
+    endpoint: https://s3.eu-west-2.jbcdn.net
 
 - name: Publish GitHub Release
   image: plugins/github-release

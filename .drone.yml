@@ -61,9 +61,9 @@ steps:
     secret_key:
       from_secret: aws_secret_access_key
     exclude:
-      - .git
-      - node_modules
-      - .vs
+      - ./.git
+      - ./node_modules
+      - ./.vs
     target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
     endpoint: https://s3.eu-west-2.jbcdn.net
 

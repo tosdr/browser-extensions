@@ -78,5 +78,3 @@ steps:
   when:
     event:
     - tag
-node:
-  os: linux

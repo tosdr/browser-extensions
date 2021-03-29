@@ -59,6 +59,11 @@ steps:
         from_secret: SIGN_KEY_PASS
     files:
       - dist/*
+  when:
+      branch:
+      - master
+      event:
+      - push
       
 - name: Upload Build Artifacts
   image: plugins/s3
@@ -72,6 +77,11 @@ steps:
       from_secret: aws_secret_access_key
     target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
     endpoint: https://s3.eu-west-2.jbcdn.net
+  when:
+      branch:
+      - master
+      event:
+      - push
 
 - name: Publish GitHub Release
   image: plugins/github-release

@@ -1,9 +1,8 @@
 {
   "name": "tosdr-browser-extension",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "“I have read and agree to the Terms” is the biggest lie on the web. We aim to fix that. “Terms of Service; Didn't Read” is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
   "main": "mixin.js",
-  "dependencies": {},
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",

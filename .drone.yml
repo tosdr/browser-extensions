@@ -60,7 +60,7 @@ steps:
     files:
       - dist/*
       
-- name: Upload Artifacts
+- name: Upload Build Artifacts
   image: plugins/s3
   settings:
     bucket: tosdr-artifacts
@@ -81,6 +81,21 @@ steps:
     - dist/*
     checksum:
     - sha256
+  when:
+    event:
+    - tag
+
+- name: Upload Release Artifacts
+  image: plugins/s3
+  settings:
+    bucket: tosdr-artifacts
+    source: ./dist/*
+    access_key:
+      from_secret: aws_access_key_id
+    secret_key:
+      from_secret: aws_secret_access_key
+    target: /browser-extensions/releases/${DRONE_TAG}
+    endpoint: https://s3.eu-west-2.jbcdn.net
   when:
     event:
     - tag

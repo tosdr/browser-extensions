@@ -49,9 +49,15 @@ steps:
   commands:
   - apk --no-cache add zip bash
   - bash build.sh
-  when:
-    event:
-    - tag
+ 
+   
+- name: Upload Artifacts
+  image: plugins/s3
+  settings:
+    bucket: tosdr-artifacts
+    source: dist/**/*
+    target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
+    endpoint: https://s3.eu-west-2.jbcdn.net
 
 - name: Sign Release  
   image: plugins/gpgsign

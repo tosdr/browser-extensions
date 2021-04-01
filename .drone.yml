@@ -1,4 +1,3 @@
-
 kind: pipeline
 name: default
 
@@ -88,9 +87,9 @@ steps:
   image: appleboy/drone-discord
   settings:
     webhook_id:
-        from_secret: WEBHOOK_ID
+		from_secret: WEBHOOK_ID
     webhook_token:
-        from_secret: WEBHOOK_SECRET
+		from_secret: WEBHOOK_SECRET
     message: >
           {{#success build.status}}
           Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:
@@ -109,6 +108,12 @@ steps:
           Build:
           {{build.link}}
           {{/success}}
+
+    when:
+      branch:
+      - master
+      event:
+      - push
 
 - name: Publish GitHub Release
   image: plugins/github-release

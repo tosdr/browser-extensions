@@ -82,6 +82,32 @@ steps:
       - master
       event:
       - push
+      
+- name: Discord Build Notification
+  image: appleboy/drone-discord
+  settings:
+    webhook_id:
+		from_secret: WEBHOOK_ID
+    webhook_token:
+		from_secret: WEBHOOK_SECRET
+    message: >
+      {{#success build.status}}
+        Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:
+        
+        Chrome:
+        https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/chrome.zip
+        
+        Firefox:
+        https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/firefox.xpi
+        
+        Build:
+        {{DRONE_SYSTEM_PROTO}}://{{DRONE_SYSTEM_HOSTNAME}}/{{DRONE_REPO}}/{{build.number}}
+      {{else}}
+        Browser Extension Build {{build.number}} failed.
+        
+        Build:
+        {{DRONE_SYSTEM_PROTO}}://{{DRONE_SYSTEM_HOSTNAME}}/{{DRONE_REPO}}/{{build.number}}
+      {{/success}}
 
 - name: Publish GitHub Release
   image: plugins/github-release

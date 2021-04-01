@@ -1,4 +1,3 @@
-
 kind: pipeline
 name: default
 
@@ -110,6 +109,12 @@ steps:
           {{build.link}}
           {{/success}}
 
+    when:
+      branch:
+      - master
+      event:
+      - push
+
 - name: Publish GitHub Release
   image: plugins/github-release
   settings:
@@ -139,7 +144,7 @@ steps:
     - tag
 
 - name: update-status-to-github
-  image: codehimanshu/gitdrone:1.7
+  image: codehimanshu/gitdrone
   environment:
     drone_access_token:
       from_secret: drone_access_token

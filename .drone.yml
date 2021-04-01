@@ -142,17 +142,3 @@ steps:
   when:
     event:
     - tag
-
-- name: update-status-to-github
-  image: codehimanshu/gitdrone
-  environment:
-    drone_access_token:
-      from_secret: drone_access_token
-    github_installation_id:
-      from_secret: github_installation_id
-    github_app_id: 108216
-    private_key:
-      from_secret: private_key
-  when:
-    status: [ failure ]
-    event: pull_request

@@ -98,12 +98,12 @@ steps:
             https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/firefox.xpi
             
             Build:
-            {{DRONE_SYSTEM_PROTO}}://{{DRONE_SYSTEM_HOSTNAME}}/{{DRONE_REPO}}/{{build.number}}
+            {{build.link}}
           {{else}}
             Browser Extension Build {{build.number}} failed.
             
             Build:
-            {{DRONE_SYSTEM_PROTO}}://{{DRONE_SYSTEM_HOSTNAME}}/{{DRONE_REPO}}/{{build.number}}
+            {{build.link}}
           {{/success}}
       webhook_id: 
         from_secret: WEBHOOK_ID

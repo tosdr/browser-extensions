@@ -88,9 +88,9 @@ steps:
   image: appleboy/drone-discord
   settings:
     webhook_id:
-		from_secret: WEBHOOK_ID
+        from_secret: WEBHOOK_ID
     webhook_token:
-		from_secret: WEBHOOK_SECRET
+        from_secret: WEBHOOK_SECRET
     message: >
           {{#success build.status}}
           Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:

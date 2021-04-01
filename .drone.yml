@@ -89,21 +89,21 @@ steps:
     settings: 
       message: |
           {{#success build.status}}
-            Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:
+          Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:
             
-            Chrome:
-            https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/chrome.zip
+          Chrome:
+          https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/chrome.zip
             
-            Firefox:
-            https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/firefox.xpi
+          Firefox:
+          https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/firefox.xpi
             
-            Build:
-            {{build.link}}
+          Build:
+          {{build.link}}
           {{else}}
-            Browser Extension Build {{build.number}} failed.
-            
-            Build:
-            {{build.link}}
+          Browser Extension Build {{build.number}} failed.
+          
+          Build:
+          {{build.link}}
           {{/success}}
           ---
       webhook_id: 

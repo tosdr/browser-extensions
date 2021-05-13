@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: default
 
@@ -142,3 +143,8 @@ steps:
   when:
     event:
     - tag
+---
+kind: signature
+hmac: c78a0f83b43c260147d40c9a2130ec1b6898d4af47968611e89a99a095ade3d0
+
+...

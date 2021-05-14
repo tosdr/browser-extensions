@@ -1,0 +1,4 @@
+contact_links:
+  - name: Report a Bug
+    url: https://tosdr.org/en/downloads#bug
+    about: Report a bug using our anonymous issue collector.

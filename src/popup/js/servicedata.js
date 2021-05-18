@@ -31,7 +31,7 @@ function getRatingText(label) { // eslint-disable-line no-unused-vars
     let text = String;
     switch (label) {
         case 'A':
-            text = 'The terms of service treat you fairly, respect your rights and follows the best practices.';
+            text = 'The terms of service treat you fairly, respect your rights and follow the best practices.';
             break;
         case 'B':
             text = 'The terms of services are fair towards the user but they could be improved.';

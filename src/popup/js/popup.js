@@ -113,6 +113,9 @@ jQuery(() => {
                     $('#shieldurl').val(`${(typeof items.settings === 'undefined' ? FALLBACK_SHIELDS : items.settings.shield_endpoint)}${service.id}.svg`);
                     $('#privacyshield').show();
                 }
+                if (!items.settings.hidetwitter) {
+                    $('#twitter_url').show();
+                }
                 if (items.settings.curator) {
                     $('#edit_url').attr('href', `https://edit.tosdr.org/services/${service.id}/edit`);
                     $('#add_document_url').attr('href', `https://edit.tosdr.org/documents/new?service=${service.id}`);

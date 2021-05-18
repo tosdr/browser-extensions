@@ -114,7 +114,7 @@ jQuery(() => {
                     $('#privacyshield').show();
                 }
                 if (!items.settings.hidetwitter) {
-                    $("#twitter_url").show();
+                    $('#twitter_url').show();
                 }
                 if (items.settings.curator) {
                     $('#edit_url').attr('href', `https://edit.tosdr.org/services/${service.id}/edit`);

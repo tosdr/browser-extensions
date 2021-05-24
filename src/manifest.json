@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version":"4.0.8",
+  "version": "4.0.8",
   "homepage_url": "https://tosdr.org",
   "background": {
     "scripts": [
@@ -15,6 +15,17 @@
   },
   "options_ui": {
     "page": "settings/settings.html"
+  },
+  "chrome_settings_overrides": {
+    "search_provider": {
+      "favicon_url": "https://tosdr.org/themes/crisp/favicon/favicon.ico",
+      "is_default": true,
+      "encoding": "UTF-8",
+      "keyword": "tosdr",
+      "name": "ToS;DR Search",
+      "search_url": "https://search.tosdr.org/search?q={searchTerms}",
+      "suggest_url": "https://search.tosdr.org/autocompleter?q={searchTerms}"
+    }
   },
   "page_action": {
     "default_icon": {
@@ -29,6 +40,7 @@
     "*://api.tosdr.org/*",
     "*://cdn.tosdr.org/*",
     "*://shields.tosdr.org/*",
+    "*://search.tosdr.org/*",
     "tabs",
     "notifications",
     "storage"

@@ -19,7 +19,7 @@
   "chrome_settings_overrides": {
     "search_provider": {
       "favicon_url": "https://tosdr.org/themes/crisp/favicon/favicon.ico",
-      "is_default": true,
+      "is_default": false,
       "encoding": "UTF-8",
       "keyword": "tosdr",
       "name": "ToS;DR Search",

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Terms of Service; Didn’t Read</title>
+    <script type="text/javascript" src="../polyfill.min.js"></script>
+    <script type="text/javascript" src="../utils.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/servicedata.js"></script>
+    <script type="text/javascript" src="js/popup.js"></script>
+    <script type="text/javascript" src="js/fontawesome.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loading">Loading&#8230;</div>
+                <div class="modal-header">
+                    <h3>
+                        <a href="#" id="service_url" target="_blank" class="pull-left">
+                            <img src="images/tosdr-logo-32.png" alt="" />
+                        </a>
+                    </h3>
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+
+                <div class="modal-body">
+                    <div id="page">
+                        <div class="tosdr-rating">
+                            <img id="serviceimg" width="64" src=""> <label id="service_class" class="label"></label>
+
+                            <p id="ratingText"></p>
+                        </div>
+
+                        <div id="seperator" class="container"><hr /></div>
+
+                        <section id="sharelist" style="display: none;" class="btn-group">
+                            <a href="#" id="twitter_url" style="display: none;" target="_blank" class="btn btn-info">
+                                <i class="fab fa-twitter"></i> Tweet
+                            </a>
+                            <a href="#" id="edit_url" data-visiblity="curator" style="display: none;" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit Service
+                            </a>
+                            <a href="#" id="add_document_url" data-visiblity="curator" style="display: none;" target="_blank" class="btn btn-warning">
+                                <i class="fas fa-file-word"></i> Add Document
+                            </a>
+                        </section>
+                        <span id="updatecheck" class="row"></span>
+
+                        <section class="specificissues">
+                            <ul class="tosdr-points">
+                            </ul>
+                        </section>
+
+                        <section id="linksList"></section>
+
+                        <section id="privacyshield" style="display: none;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><img id="shieldimg" src=""></span>
+                                </div>
+                                <input type="text" class="form-control" id="shieldurl" value="" readonly="">
+                            </div>
+
+                        </section>
+                    </div>
+                    <center>
+                        <div id="tosdrlinks" class="btn-group">
+                            <a target="_blank" class="btn btn-primary" href="https://edit.tosdr.org">Contribute</a>
+                            <a target="_blank" class="btn btn-success" href="https://opencollective.com/tosdr">Donate to ToS;DR</a>
+                            <a target="_blank" class="btn btn-danger" href="https://github.com/tosdr/browser-extensions/issues/new/choose">Report a bug</a>
+                        </div>
+                    </center>
+                    <hr />
+                    <span id="updatecheckbottom">Checking the latest version...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

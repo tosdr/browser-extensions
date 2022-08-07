@@ -1,0 +1,11 @@
+{
+	"extensionName": {
+		"message": "你没阅读的服务条款",
+		"description": "Name of the extension."
+	},
+
+   "extensionDescription": {
+     "message": "查阅网站的服务条款和隐私政策，以及 www.tosdr.org 给出的评分和摘要。",
+     "description": "Description of the extension."
+   }
+}

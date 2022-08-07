@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a Bug
+    url: https://tosdr.org/en/downloads#bug
+    about: Report a bug using our anonymous issue collector.
+  - name: Suggest a Feature
+    url: https://tosdr.org/en/downloads#feature
+    about: Suggest a feature using our anonymous issue collector.

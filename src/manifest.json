@@ -1,0 +1,53 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version":"4.1.2",
+  "homepage_url": "https://tosdr.org",
+  "background": {
+    "scripts": [
+      "polyfill.min.js",
+      "utils.js",
+      "popup/js/jquery-3.2.1.min.js",
+      "popup/js/servicedata.js",
+      "background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "settings/settings.html"
+  },
+  "chrome_settings_overrides": {
+    "search_provider": {
+      "favicon_url": "https://tosdr.org/themes/crisp/favicon/favicon.ico",
+      "is_default": false,
+      "encoding": "UTF-8",
+      "keyword": "tosdr",
+      "name": "ToS;DR Search",
+      "search_url": "https://search.tosdr.org/search?q={searchTerms}",
+      "suggest_url": "https://search.tosdr.org/autocompleter?q={searchTerms}"
+    }
+  },
+  "page_action": {
+    "default_icon": {
+      "19": "button/icon-19.png",
+      "38": "button/icon-38.png"
+    },
+    "default_title": "__MSG_extensionName__",
+    "browser_style": true
+  },
+  "permissions": [
+    "*://tosdr.org/*",
+    "*://api.tosdr.org/*",
+    "*://cdn.tosdr.org/*",
+    "*://shields.tosdr.org/*",
+    "*://search.tosdr.org/*",
+    "tabs",
+    "notifications",
+    "storage"
+  ],
+  "icons": {
+    "48": "icons/icon.png",
+    "96": "icons/icon@2x.png"
+  },
+  "default_locale": "en"
+}

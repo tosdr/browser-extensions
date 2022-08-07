@@ -1,0 +1,150 @@
+---
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: node
+  commands:
+  - npm install
+  - npm run lint
+
+- name: Up Version
+  image: node:alpine
+  commands:
+  - apk --no-cache add zip bash git
+  - git config user.email "automation@tosdr.org"
+  - git config user.name "ToS;DR Automation"
+  - npm version $DRONE_DEPLOY_TO --no-git-tag-version
+  - cat src/manifest.json | sed '/"version":/ s/"version":[^,]*/"version":"'$(npm run env | grep npm_package_version | cut -d '=' -f 2)'"/' > src/manifest.json
+  - git add . && git commit -m "Update manifest version"
+  - git tag $(npm run env | grep npm_package_version | cut -d '=' -f 2) -a -m "Updated to $(npm run env | grep npm_package_version | cut -d '=' -f 2)"
+  - sed -i 's/\r$//' build.sh
+  when:
+    event:
+    - promote
+
+- name: Push Tags
+  image: appleboy/drone-git-push
+  settings:
+    branch: master
+    remote: git@github.com:tosdr/browser-extensions.git
+    force: false
+    ssh_key:
+        from_secret: SSH_KEY
+    commit: true
+    author_name: "ToS;DR Automation"
+    author_email: "automation@tosdr.org"
+    followtags: true
+    commit_message: "Release"
+  when:
+    event:
+    - promote    
+    target:
+    - patch
+    - minor
+    - major
+
+- name: Build Extension
+  image: node:alpine
+  commands:
+  - apk --no-cache add zip bash
+  - bash build.sh
+
+- name: Sign Release  
+  image: plugins/gpgsign
+  settings:
+    key:
+        from_secret: SIGN_KEY
+    passphrase:
+        from_secret: SIGN_KEY_PASS
+    files:
+      - dist/*
+  when:
+      branch:
+      - master
+      event:
+      - push
+      
+- name: Upload Build Artifacts
+  image: plugins/s3
+  settings:
+    bucket: tosdr-artifacts
+    source: ./dist/*
+    strip_prefix: true
+    access_key:
+      from_secret: aws_access_key_id
+    secret_key:
+      from_secret: aws_secret_access_key
+    target: /browser-extensions/builds/${DRONE_BUILD_NUMBER}
+    endpoint: https://s3.eu-west-2.jbcdn.net
+  when:
+      branch:
+      - master
+      event:
+      - push
+      
+- name: Discord Build Notification
+  image: appleboy/drone-discord
+  settings:
+    webhook_id:
+        from_secret: WEBHOOK_ID
+    webhook_token:
+        from_secret: WEBHOOK_SECRET
+    message: >
+          {{#success build.status}}
+          Browser Extension Build {{build.number}} succeeded. The artifacts can be downloaded here:
+            
+          Chrome:
+          https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/chrome.zip
+            
+          Firefox:
+          https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/browser-extensions/builds/{{build.number}}/dist/firefox.xpi
+            
+          Build:
+          {{build.link}}
+          {{else}}
+          Browser Extension Build {{build.number}} failed.
+          
+          Build:
+          {{build.link}}
+          {{/success}}
+
+    when:
+      branch:
+      - master
+      event:
+      - push
+
+- name: Publish GitHub Release
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: RELEASE_TOKEN
+    files:
+    - dist/*
+    checksum:
+    - sha256
+  when:
+    event:
+    - tag
+
+- name: Upload Release Artifacts
+  image: plugins/s3
+  settings:
+    bucket: tosdr-artifacts
+    source: ./dist/*
+    access_key:
+      from_secret: aws_access_key_id
+    secret_key:
+      from_secret: aws_secret_access_key
+    target: /browser-extensions/releases/${DRONE_TAG}
+    endpoint: https://s3.eu-west-2.jbcdn.net
+  when:
+    event:
+    - tag
+---
+kind: signature
+hmac: c78a0f83b43c260147d40c9a2130ec1b6898d4af47968611e89a99a095ade3d0
+
+...

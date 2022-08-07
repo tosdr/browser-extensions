@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Terms of Service; Didn’t Read</title>
+    <script type="text/javascript" src="../polyfill.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/servicedata.js"></script>
+    <script type="text/javascript" src="../utils.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/fontawesome.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loading">Loading&#8230;</div>
+                <div class="modal-body">
+                    <div id="page">
+                        <form id="settings">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" data-default="true" id="notifications" name="notifications">
+                                <label class="form-check-label" for="notifications">
+                                    Send Notifications
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" data-default="false" id="curator" name="curator">
+                                <label class="form-check-label" for="curator">
+                                    Curator Mode
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" data-default="false" type="checkbox" id="hideshields" name="hideshields">
+                                <label class="form-check-label" for="hideshields">
+                                    Hide Privacy Shields
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" data-default="false" type="checkbox" id="hidetwitter" name="hidetwitter">
+                                <label class="form-check-label" for="hidetwitter">
+                                    Hide Twitter
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" data-default="false" type="checkbox" id="advanced" name="advanced">
+                                <label class="form-check-label" for="advanced">
+                                    Advanced Mode
+                                </label>
+                            </div>
+                            <section id="advancedmode" style="display: none;">
+                                <hr />
+                                <h1>Advanced Settings</h1>
+                                <div class="form-check">
+                                    <input class="form-check-input" data-default="false" type="checkbox" id="debug" name="debug">
+                                    <label class="form-check-label" for="debug">
+                                        Debug
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" data-default="false" id="dontcheckforupdates" name="dontcheckforupdates">
+                                    <label class="form-check-label" for="dontcheckforupdates">
+                                        Disable Update Check
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="api_endpoint">API Endpoint Override:</label>
+                                    <input type="text" class="form-control" id="api_endpoint" name="api_endpoint" data-default="https://api.tosdr.org/v1/service/" value="https://api.tosdr.org/v1/service/">
+                                </div>
+                                <div class="form-group">
+                                    <label for="update_api_endpoint">Update API Endpoint Override:</label>
+                                    <input type="text" class="form-control" id="update_api_endpoint" name="update_api_endpoint" data-default="https://api.tosdr.org/updatecheck/" value="https://api.tosdr.org/updatecheck/">
+                                </div>
+                                <div class="form-group">
+                                    <label for="shield_endpoint">Shield Endpoint Override:</label>
+                                    <input type="text" class="form-control" id="shield_endpoint" name="shield_endpoint" data-default="https://shields.tosdr.org/" value="https://shields.tosdr.org/">
+                                </div>
+                                <button class="btn btn-danger" onclick="browser.storage.local.clear();">Clear API Cache</button>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

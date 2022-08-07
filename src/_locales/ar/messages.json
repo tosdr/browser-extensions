@@ -1,0 +1,11 @@
+{
+	"extensionName": {
+		"message": "Terms of Service; Didn’t Read",
+		"description": "Name of the extension."
+	},
+
+   "extensionDescription": {
+     "message": "تقوم هذه الإضافة بتلخيص الشروط و الأحكام الخاصة بأي موقع و إعطاء تقييم لتوفير الوقت علي المستخدمين بدلاً من قراءة اتفاقية الاستخدام و الخصوصية بالكامل، مزيد من التفاصيل علي موقع tosdr.org",
+     "description": "Description of the extension."
+   }
+}

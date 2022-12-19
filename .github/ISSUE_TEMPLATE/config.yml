@@ -1,4 +1,4 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
   - name: Report a Bug
     url: https://tosdr.org/en/downloads#bug

@@ -1,5 +1,7 @@
 # WebExtension for [Terms of Service; Didn't Read][tosdr]
 
+> :warning: **THIS BRANCH IS NO LONGER MAINTAINED**: The old release of the extension is in a read-only state! Please switch to master
+
 “I have read and agree to the Terms” is the biggest lie on the web.
 We aim to fix that. “Terms of Service; Didn't Read” is a user
 rights initiative to rate and label website terms & privacy

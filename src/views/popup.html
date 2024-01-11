@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style/popup.css" />
+    </head>
+
+    <body>
+        <div id="nourl" style="display: none">
+            <div class="header">
+                <div class="logo">
+                    <img alt="Logo" src="icons/icon128.png" />
+                </div>
+                <div class="text">
+                    <div id="title" class="title">Welcome!</div>
+                </div>
+                <div class="labels">
+                    <div id="source" class="label other web">
+                        <img class="icon" alt="Web" src="icons/web.svg" />
+                        <div class="labeltext">Source Code</div>
+                    </div>
+                    <div id="opentosdr" class="label other web">
+                        <img class="icon" alt="Web" src="icons/web.svg" />
+                        <div class="labeltext">Open ToS;DR</div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="center" id="notreviewed" style="display: none">
+                We haven't sufficiently reviewed the terms yet. Please
+                contribute to on Phoenix:
+                <a id="edittext" href="#">edit.tosdr.org</a>
+            </h3>
+        </div>
+        <div id="loading" style="opacity: 1">
+            <div>
+                <img
+                    class="loadingIcon"
+                    alt="Loading..."
+                    src="icons/loading.svg"
+                />
+                <h2>Please wait, loading...</h2>
+            </div>
+        </div>
+        <div id="error" style="display: none">
+            <img class="errorIcon" alt="Error!" src="icons/error.svg" />
+            <h2>An error has occured. Try again.</h2>
+        </div>
+        <div id="loaded" style="filter: blur(10px)">
+            <div id="headerPopup" class="header">
+                <div class="headerlogo">
+                    <div class="logo">
+                        <img id="logo" alt="Logo" />
+                    </div>
+                    <div class="text">
+                        <div id="title" class="title serviceName">Loading</div>
+                    </div>
+                </div>
+                <div class="labels">
+                    <div id="gradelabel" class="label">
+                        <img class="icon" alt="Grade" src="icons/shield.svg" />
+                        <div class="labeltext">
+                            Grade: <a id="grade">...</a>
+                        </div>
+                    </div>
+                    <div class="label other web" id="webbutton">
+                        <img class="icon" alt="Web" src="icons/web.svg" />
+                        <div class="labeltext">Open on ToS;DR</div>
+                    </div>
+                </div>
+                <div id="curator" class="labels" style="display: none">
+                    <div class="label other">
+                        <img
+                            class="icon"
+                            alt="Points"
+                            src="icons/warning.svg"
+                        />
+                        <div class="labeltext">
+                            Points: <a id="pointsCount">...</a>
+                        </div>
+                    </div>
+                    <div class="label other web" id="phoenixButton">
+                        <img class="icon" alt="Web" src="icons/web.svg" />
+                        <div class="labeltext">Open on Phoenix</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="center" id="notreviewedShown" style="display: none">
+            We haven't sufficiently reviewed the terms yet. Please contribute to
+            on Phoenix: <a id="edittext" href="#">edit.tosdr.org</a>
+        </h3>
+        <p id="id" style="display: none">Placeholder</p>
+        <h3 style="display: none">
+            Points for <a class="serviceName">...</a>:
+        </h3>
+
+        <div id="pointList">
+            <a style="display: none">...</a>
+        </div>
+        <a>
+            <button id="toggleButton">Toggle Darkmode</button> -
+            <button id="settingsButton">Settings</button> -
+            <button id="sourceButton">Source Code</button> - v5.0.0
+        </a>
+    </body>
+    <script src="../scripts/views/popup.js"></script>
+</html>

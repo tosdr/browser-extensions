@@ -1,0 +1,10 @@
+env:
+    browser: true
+    es2021: true
+    webextensions: true
+    node: true
+extends: eslint:recommended
+parserOptions:
+    ecmaVersion: latest
+rules: {}
+ignorePatterns: ['dist/*', 'build/*', 'src/scripts/dist/*', 'tsc/*']

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style/settings.css" />
+    </head>
+
+    <body>
+        <h2>Main Settings</h2>
+        <h4>Appearance Settings</h4>
+        <div class="group">
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/theme.svg" />
+                        <p>Theme Header w/ Logo</p>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input id="theme" type="checkbox" />
+                    <div class="switchinternal">
+                        <a style="display: none">...</a>
+                    </div>
+                </label>
+            </div>
+            <hr />
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/theme.svg" />
+                        <p>Theme Header w/ Rating</p>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input id="themeRating" type="checkbox" />
+                    <div class="switchinternal">
+                        <a style="display: none">...</a>
+                    </div>
+                </label>
+            </div>
+            <hr />
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/edit.svg" />
+                        <p>Curator Mode</p>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input id="curatorMode" type="checkbox" />
+                    <div class="switchinternal">
+                        <a style="display: none">...</a>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <h4>Database Settings</h4>
+        <div class="group">
+            <div class="setting dbavailable">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/update.svg" />
+                        <p>
+                            Database Update Interval - <a id="days">7</a> Days
+                        </p>
+                    </div>
+                    <p class="caption">
+                        Determines how often the local database should update.
+                    </p>
+                    <div class="title">
+                        <input
+                            type="range"
+                            min="1"
+                            max="14"
+                            value="7"
+                            class="slider"
+                            id="update"
+                        />
+                    </div>
+                </div>
+            </div>
+            <hr class="dbavailable" />
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/calendar.svg" />
+                        <p>Database Date</p>
+                    </div>
+                    <p class="caption">
+                        The date the Database was last compiled at.
+                    </p>
+                </div>
+                <p id="date">...</p>
+            </div>
+            <hr class="dbavailable" />
+            <div class="setting dbavailable">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/database.svg" />
+                        <p>Services Indexed</p>
+                    </div>
+                    <p class="caption">
+                        The number of services that are indexed in the database
+                        and available offline.
+                    </p>
+                </div>
+                <p id="indexed">...</p>
+            </div>
+        </div>
+
+        <h4>Advanced Debugging Settings</h4>
+        <div class="group">
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/error.svg" />
+                        <p>Error Telemetry</p>
+                    </div>
+                    <p class="caption">
+                        Determines whether or not the Extension<br>
+                        should send error telemetry to the API.
+                    </p>
+                </div>
+                <label class="switch">
+                    <input id="telemetry" type="checkbox" />
+                    <div class="switchinternal">
+                        <a style="display: none">...</a>
+                    </div>
+                </label>
+            </div>
+            <hr />
+            <div class="setting">
+                <div class="maincontent">
+                    <div class="title">
+                        <img src="icons/update.svg" />
+                        <p>
+                            API Endpoint Override
+                        </p>
+                    </div>
+                    <p class="caption">
+                        Overrides the API the Extension uses. Please only enter the hostname.
+                    </p>
+                    <div class="title">
+                        <input
+                            type="text"
+                            value="api.tosdr.org"
+                            id="api"
+                            class="text"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../../scripts/views/settings.js"></script>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "ES6",
+        "target": "ES2016",
+        "moduleResolution": "bundler",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "skipLibCheck": true,
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "outDir": "tsc/",
+        "rootDir": "src/",
+        "sourceMap": false,
+        "strict": true
+    },
+    "include": [
+        "src/scripts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "tosdr_browser_extension",
+  "version": "5.0.0",
+  "description": "“I have read and agree to the Terms” is the biggest lie on the web. We aim to fix that. “Terms of Service; Didn't Read” is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
+  "author": "ToS;DR Team",
+  "license": "AGPL-3.0-or-later",
+  "devDependencies": {
+    "@types/chrome": "^0.0.251",
+    "clean-css": "^5.3.2",
+    "eslint": "^8.53.0",
+    "html-minifier": "^4.0.0",
+    "prettier": "3.0.3",
+    "terser": "^5.24.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "tsc && npm run copy-assets && npm run webpack && node minify.js",
+    "copy-assets": "node copy.js",
+    "clean": "node clean.js",
+    "webpack": "webpack"
+  },
+  "dependencies": {
+    "@sentry/browser": "^7.80.1",
+    "jszip": "^3.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tosdr/browser-extensions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tosdr/browser-extensions/issues"
+  },
+  "homepage": "https://github.com/tosdr/browser-extensions#readme",
+  "keywords": []
+}

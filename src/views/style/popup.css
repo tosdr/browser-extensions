@@ -1,0 +1,362 @@
+@font-face {
+    font-family: 'Open Sans';
+    src:
+        url('fonts/OpenSans-Regular.woff2') format('woff2'),
+        url('fonts/OpenSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4em;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f1f7;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    min-width: 350px;
+    min-height: 600px;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* height: 5rem; */
+    background: rgb(241, 241, 241);
+    background: linear-gradient(
+        180deg,
+        rgba(241, 241, 241, 0.7) 0%,
+        rgba(241, 241, 241, 0.7) 90%,
+        rgba(241, 241, 241, 0) 100%
+    );
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+
+    /* z-index: -1; */
+}
+
+.header.a {
+    background: rgb(64, 133, 88);
+    background: linear-gradient(
+        180deg,
+        rgba(64, 133, 88, 0.7) 0%,
+        rgba(64, 133, 88, 0.7) 90%,
+        rgba(64, 133, 88, 0) 100%
+    );
+    padding-bottom: 1rem;
+}
+
+.header.b {
+    background: rgb(135, 181, 95);
+    background: linear-gradient(
+        180deg,
+        rgba(135, 181, 95, 0.7) 0%,
+        rgba(135, 181, 95, 0.7) 90%,
+        rgba(135, 181, 95, 0) 100%
+    );
+    padding-bottom: 1rem;
+}
+
+.header.c {
+    background: rgb(245, 195, 68);
+    background: linear-gradient(
+        180deg,
+        rgba(245, 195, 68, 0.7) 0%,
+        rgba(245, 195, 68, 0.7) 90%,
+        rgba(245, 195, 68, 0) 100%
+    );
+    padding-bottom: 1rem;
+}
+
+.header.d {
+    background: rgb(201, 117, 61);
+    background: linear-gradient(
+        180deg,
+        rgba(201, 117, 61, 0.7) 0%,
+        rgba(201, 117, 61, 0.7) 90%,
+        rgba(201, 117, 61, 0) 100%
+    );
+    padding-bottom: 1rem;
+}
+
+.header.e {
+    background: rgb(203, 68, 75);
+    background: linear-gradient(
+        180deg,
+        rgba(203, 68, 75, 0.7) 0%,
+        rgba(203, 68, 75, 0.7) 90%,
+        rgba(203, 68, 75, 0) 100%
+    );
+    padding-bottom: 1rem;
+}
+
+.header > .text {
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header > .labels {
+    background: rgba(0, 0, 0, 0);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.header > .labels.scrollable {
+    justify-content: flex-start;
+    /* scrollable horizontally */
+    overflow-x: auto;
+    white-space: nowrap;
+    /* scrollbar */
+    scrollbar-width: thin;
+}
+
+.center {
+    text-align: center;
+    width: 100%;
+}
+
+#logo {
+    object-fit: contain;
+    margin: 1rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    background-color: #f1f1f1;
+    box-shadow: 0px 0px 5px black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+#title {
+    font-size: 2rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+    display: table-caption;
+    line-height: 1;
+    text-shadow: 0px 0px 5px white;
+}
+
+.label {
+    background: #222529;
+    color: white;
+    border-radius: 2rem;
+    display: flex;
+    padding: 0.4rem;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    margin-bottom: 0.6rem;
+}
+
+.label.a {
+    background: #408558;
+}
+
+.label.b {
+    background: #87b55f;
+}
+
+.label.c {
+    background: #f5c344;
+}
+
+.label.d {
+    background: #c9753d;
+}
+
+.label.e {
+    background: #cb444b;
+}
+
+.label.other {
+    background: #3684fd;
+}
+
+.label.web {
+    cursor: pointer;
+}
+
+.labeltext {
+    font-size: 1rem;
+    font-weight: normal;
+    padding: 0.2rem;
+}
+
+#nourl {
+    width: 100%;
+    height: 100%;
+}
+
+#error {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(40, 40, 40);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: white;
+}
+
+#loading {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.796);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transition:
+        visibility 0.3s linear,
+        opacity 0.3s linear;
+}
+
+#loading > div > img {
+    width: 100%;
+    height: 100px;
+    animation: rotation 2s infinite linear;
+}
+
+#loading > div > h2 {
+    color: white;
+}
+
+h3 {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.point {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.point > img {
+    user-select: none;
+    width: 2rem;
+    height: 2rem;
+    margin: 0.5rem;
+}
+
+.point > p {
+    font-size: larger;
+    margin: 0;
+}
+
+#pointList > hr {
+    border: none;
+    height: 1px;
+    width: 90%;
+    background-color: #e7e7e7;
+}
+
+#pointList > hr.group {
+    border: none;
+    height: 1px;
+    width: 90%;
+    background-color: #cccbcb;
+}
+
+#pointList {
+    margin: 0.5rem;
+    padding: 0.4rem;
+    background-color: #fefefe;
+    border-radius: 1rem;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(359deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.dark-mode {
+    background-color: #000000;
+    color: #fbfbfd;
+}
+
+.dark-mode .header {
+    /* background-color: #1c1c1eaf; */
+    background: rgba(28, 28, 30, 0.7);
+    background: linear-gradient(
+        180deg,
+        rgba(28, 28, 30, 0.7) 0%,
+        rgba(28, 28, 30, 0.7) 90%,
+        rgba(28, 28, 30, 0) 100%
+    );
+}
+
+.dark-mode #pointList {
+    background-color: #1c1c1e;
+}
+
+.dark-mode #pointList > hr.group {
+    background-color: #232323;
+}
+
+.dark-mode #pointList > hr {
+    background-color: #1b1b1d;
+}
+
+#toggleButton,
+#settingsButton,
+#sourceButton {
+    user-select: none;
+}
+
+.dark-mode button {
+    filter: invert(1);
+}
+
+.dark-mode #logo {
+    background-color: #1c1c1e;
+    box-shadow: 0px 0px 5px black;
+}
+
+.dark-mode #title {
+    text-shadow: 0px 0px 5px black;
+}
+
+.headerlogo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

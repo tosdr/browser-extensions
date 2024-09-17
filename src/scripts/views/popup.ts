@@ -66,7 +66,7 @@ function getServiceIDFromURL(url: string) {
         window.open(`https://edit.tosdr.org/services/${serviceID}`);
     };
     document.getElementById('webbutton')!.onclick = function () {
-        window.open(`https://edit.tosdr.org/services/${serviceID}`);
+        window.open(`https://tosdr.org/en/service/${serviceID}`);
     };
 
     themeHeaderIfEnabled(serviceID);

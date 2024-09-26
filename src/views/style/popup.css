@@ -24,6 +24,7 @@ body::-webkit-scrollbar {
 html {
     min-width: 350px;
     min-height: 600px;
+    overflow-x: hidden;
 }
 
 .header {

@@ -65,6 +65,7 @@ Publishing the Edge extension
 * upload it to the [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge/a77b3f51-22a2-4310-a2cd-e118e062cc63/packages).
 * this will require a [client certificate](https://github.com/tosdr/browser-extensions/issues/109#issuecomment-2545206825)
 * click through the 'continue' and 'publish'
+* after [review by Microsoft](https://github.com/tosdr/browser-extensions/issues/109#issuecomment-2545207271) it will be [available to Edge users](https://microsoftedge.microsoft.com/addons/detail/terms-of-service-didn%E2%80%99t-/oaaecoiolcpocebdnakfpfjegbmmpkjn)
 
 Artifacts
 ======

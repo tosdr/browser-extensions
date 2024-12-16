@@ -45,7 +45,27 @@ Make sure you have `node` installed, and from the repository root run the follow
 `npm run build`
 
 3. Package up the contents of `./dist/chrome` and `./dist/firefox`
- 
+
+Publishing the Chrome extension
+-----------------------------
+
+TODO: document
+
+Publishing the Firefox extension
+--------------------------------
+
+TODO: document
+
+Publishing the Edge extension
+-----------------------------
+
+* follow the build instructions
+* cd ./dist/chrome
+* zip -r ../chrome.zip .
+* upload it to the [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge/a77b3f51-22a2-4310-a2cd-e118e062cc63/packages).
+* this will require a [client certificate](https://github.com/tosdr/browser-extensions/issues/109#issuecomment-2545206825)
+* click through the 'continue' and 'publish'
+
 Artifacts
 ======
 

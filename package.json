@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "tsc && npm run copy-assets && npm run webpack && node minify.js",
+    "dev": "tsc && npm run copy-assets && npm run webpack",
     "copy-assets": "node copy.js",
     "clean": "node clean.js",
     "webpack": "webpack"

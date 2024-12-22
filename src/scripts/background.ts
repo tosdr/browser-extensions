@@ -27,6 +27,7 @@ function serviceDetected(tab: chrome.tabs.Tab, service: any) {
     setTabIcon(tab, service.rating.toLowerCase());
 
     setPopup(tab?.id ?? null, `/views/popup.html?service-id=${service.id}`);
+    setTabBadgeNotification(false, tab)
 }
 
 function initializePageAction(tab: chrome.tabs.Tab) {
@@ -34,6 +35,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
         console.log('tab is undefined');
         setPopup(null, '/views/popup.html');
         setTabIcon(tab, 'logo');
+        setTabBadgeNotification(true, tab)
         return;
     }
     const url = new URL(tab.url);
@@ -41,18 +43,20 @@ function initializePageAction(tab: chrome.tabs.Tab) {
         // we only want to check http and https
         setPopup(tab?.id ?? null, '/views/popup.html');
         setTabIcon(tab, 'logo');
+        setTabBadgeNotification(true, tab)
         return;
     }
 
     if (tab.url == '') {
         setPopup(tab?.id ?? null, '/views/popup.html');
         setTabIcon(tab, 'logo');
-        
+        setTabBadgeNotification(true, tab)
         return;
     }
 
     // change icon to icons/loading.png
     setTabIcon(tab, 'loading');
+    setTabBadgeNotification(false, tab)
 
     // get database from chrome.storage
     chrome.storage.local.get(['db'], function (result) {
@@ -133,6 +137,17 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
         argumentsIcon.tabId = tab.id;
     }
     chrome.action.setIcon(argumentsIcon);
+}
+async function setTabBadgeNotification(on:boolean, tab: chrome.tabs.Tab ) {
+    // Retrieve the value from storage and ensure it's a boolean
+    const data = await chrome.storage.local.get('displayDonationReminder');
+    let dDR: boolean = Boolean(data.displayDonationReminder);
+    
+    if (on === true && dDR === true) {
+        chrome.action.setBadgeText({text: '!', tabId: tab.id})
+    } else {
+    chrome.action.setBadgeText({text: '', tabId: tab.id})
+    }
 }
 
 async function downloadDatabase() {

@@ -12,7 +12,12 @@ async function donationReminderLogic() {
                 const currentDate = new Date();
                 const currentMonth = currentDate.getMonth();
                 const currentYear = currentDate.getFullYear();
-                chrome.action.setBadgeText({ text: '' });
+                // Reset the badge text for all tabs
+                chrome.tabs.query({}, (tabs) => {
+                    for (let tab of tabs) {
+                        chrome.action.setBadgeText({ text: '', tabId: tab.id });
+                    }
+                });
                 chrome.storage.local.set(
                     {
                         lastDismissedReminder: { month: currentMonth, year: currentYear },

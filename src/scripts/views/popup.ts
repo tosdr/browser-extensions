@@ -336,7 +336,9 @@ document.getElementById('settingsButton')!.onclick = function () {
 document.getElementById('sourceButton')!.onclick = function () {
     window.open('https://github.com/tosdr/browser-extensions');
 };
-
+document.getElementById('donationButton')!.onclick = function () {
+    window.open('https://tosdr.org/en/sites/donate');
+};
 
 document.getElementById('source')!.onclick = function () {
     window.open('https://github.com/tosdr');

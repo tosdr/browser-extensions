@@ -1,5 +1,5 @@
 import JSZip from 'jszip';
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/browser';
 
 const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
@@ -13,7 +13,7 @@ function getBrowserEnviroment() {
 
 function setPopup(tabId: number | null, popup: string) {
     if (tabId === null) {
-        console.log('tabid is undefined, goodbye')
+        console.log('tabid is undefined, goodbye');
         Sentry.captureException(`tabid is undefined! - ${popup}`);
         return;
     }
@@ -47,6 +47,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
     if (tab.url == '') {
         setPopup(tab?.id ?? null, '/views/popup.html');
         setTabIcon(tab, 'logo');
+        
         return;
     }
 
@@ -126,7 +127,7 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
             32: '/icons/' + icon + '/' + icon + '32.png',
             48: '/icons/' + icon + '/' + icon + '48.png',
             128: '/icons/' + icon + '/' + icon + '128.png',
-        }
+        },
     } as chrome.action.TabIconDetails;
     if (tab) {
         argumentsIcon.tabId = tab.id;
@@ -137,7 +138,10 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
 async function downloadDatabase() {
     // check if jszip is undefined
     if (typeof JSZip === 'undefined') {
-        if (sentry) Sentry.captureException(`JSZip is undefined! - ${getBrowserEnviroment()}`);
+        if (sentry)
+            Sentry.captureException(
+                `JSZip is undefined! - ${getBrowserEnviroment()}`
+            );
         throw new Error('JSZip is undefined');
     }
     // get the database version from the server
@@ -151,11 +155,41 @@ async function downloadDatabase() {
     // check if the database is up to date
     if (data.error !== 256) {
         // We have an error! show a badge
-        if (sentry) Sentry.captureException(`Database error ${data.error}! - ${getBrowserEnviroment()}`);
+        if (sentry)
+            Sentry.captureException(
+                `Database error ${data.error}! - ${getBrowserEnviroment()}`
+            );
         chrome.action.setBadgeText({ text: 'err' });
         return;
     }
+
     chrome.action.setBadgeText({ text: '' });
+    //check if its time to show a donation reminder
+    async function checkDonationReminder() {
+        // Retrieve the value from storage and ensure it's a boolean
+        const data = await chrome.storage.local.get('displayDonationReminder');
+        let dDR: boolean = Boolean(data.displayDonationReminder);
+        if ( dDR !== true) {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+    
+            const data: any = await chrome.storage.local.get('lastDismissedReminder');
+            const lastDismissedReminder = data.lastDismissedReminder;
+            const lastDismissedMonth = lastDismissedReminder?.month;
+            const lastDismissedYear = lastDismissedReminder?.year;
+    
+            if (currentYear > lastDismissedYear) {
+                chrome.action.setBadgeText({ text: '!' });
+                chrome.storage.local.set({ displayDonationReminder: true });
+            }
+        }
+        else {
+            chrome.action.setBadgeText({ text: '!' });
+        }
+    }
+    checkDonationReminder();
+
     const hash = data.parameters.version;
     const download = data.parameters.signed_url;
     const lastModified = data.parameters.last_modified;
@@ -169,8 +203,11 @@ async function downloadDatabase() {
 
     const dbfile = await zip.file('tosdr/db.json')?.async('text');
     if (!dbfile) {
-        if (sentry) Sentry.captureException(`dbfile is null/undef! - ${getBrowserEnviroment()}`);
-        console.log("db file is null/undef");
+        if (sentry)
+            Sentry.captureException(
+                `dbfile is null/undef! - ${getBrowserEnviroment()}`
+            );
+        console.log('db file is null/undef');
     }
     const db = await JSON.parse(dbfile!);
 
@@ -190,7 +227,7 @@ function checkIfUpdateNeeded(firstStart = false) {
             if (result.sentry) {
                 sentry = result.sentry;
                 Sentry.init({
-                    dsn: "https://07c0ebcab5894cff990fd0d3871590f0@sentry.internal.jrbit.de/38",
+                    dsn: 'https://07c0ebcab5894cff990fd0d3871590f0@sentry.internal.jrbit.de/38',
                 });
             }
             if (result.api) {
@@ -206,11 +243,14 @@ function checkIfUpdateNeeded(firstStart = false) {
                 // check if the database is less than 7 days old
                 const lastModified = new Date(result.lastModified);
                 const today = new Date();
-                const diffTime = Math.abs(today.getTime() - lastModified.getTime());
+                const diffTime = Math.abs(
+                    today.getTime() - lastModified.getTime()
+                );
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 if (diffDays < interval) {
                     console.log(
-                        `Database is less than ${interval - 1
+                        `Database is less than ${
+                            interval - 1
                         } days old, skipping download`
                     );
                     return;
@@ -242,13 +282,24 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function () {
-    chrome.storage.local.set({ themeHeader: true, sentry: false }, function () {
-        console.log('enabled theme header by default');
-        checkIfUpdateNeeded(true);
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            initializePageAction(tabs[0]);
-        });
-    });
+    chrome.storage.local.set(
+        {
+            themeHeader: true,
+            sentry: false,
+            lastDismissedReminder: { month: null, year: 2023 },
+            displayDonationReminder: false,
+        },
+        function () {
+            console.log('enabled theme header by default');
+            checkIfUpdateNeeded(true);
+            chrome.tabs.query(
+                { active: true, currentWindow: true },
+                function (tabs) {
+                    initializePageAction(tabs[0]);
+                }
+            );
+        }
+    );
 });
 
 chrome.runtime.onStartup.addListener(function () {

@@ -1,11 +1,37 @@
 var curatorMode = false;
+var renderDonationReminder = false;
 
 var apiUrl = 'api.tosdr.org';
+
+async function donationReminderLogic() {
+    console.log("hey")
+    chrome.storage.local.get('displayDonationReminder', function (result) {
+    console.log('displayDonationReminder:', result.displayDonationReminder);
+        if ( result.displayDonationReminder === true){
+            try {
+                const currentDate = new Date();
+                const currentMonth = currentDate.getMonth();
+                const currentYear = currentDate.getFullYear();
+                chrome.action.setBadgeText({ text: '' });
+                chrome.storage.local.set(
+                    {
+                        lastDismissedReminder: { month: currentMonth, year: currentYear },
+                        displayDonationReminder: false,
+                    }
+                )
+                document.getElementById('donationReminder')!.style.display = "block";
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    });
+}
 
 async function handleUrlInURLIfExists(urlOriginal: string) {
     var url = urlOriginal.split('?url=')[1];
     if (!url) {
         // no service-id in url, show error
+        donationReminderLogic()
         document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
@@ -29,6 +55,7 @@ async function handleUrlInURLIfExists(urlOriginal: string) {
 
         getServiceDetails(result, true);
     } else {
+        donationReminderLogic()
         document.getElementById('id')!.innerText = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
@@ -50,6 +77,7 @@ function getServiceIDFromURL(url: string) {
     serviceID = serviceID.replace('#', '');
 
     if (serviceID === '-1') { // -1 is the default value for when the service is not found
+        donationReminderLogic()
         document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';

@@ -142,9 +142,10 @@ async function setTabBadgeNotification(on:boolean, tab: chrome.tabs.Tab ) {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
     let dDR: boolean = Boolean(data.displayDonationReminder);
-    
+
     if (on === true && dDR === true) {
         chrome.action.setBadgeText({text: '!', tabId: tab.id})
+        chrome.action.setBadgeBackgroundColor({color: 'red'})
     } else {
     chrome.action.setBadgeText({text: '', tabId: tab.id})
     }

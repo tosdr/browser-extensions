@@ -1,4 +1,3 @@
-import JSZip from 'jszip';
 import * as Sentry from '@sentry/browser';
 
 const ALLOWED_PROTOCOLS = ['http:', 'https:'];
@@ -152,32 +151,20 @@ async function setTabBadgeNotification(on:boolean, tab: chrome.tabs.Tab ) {
 }
 
 async function downloadDatabase() {
-    // check if jszip is undefined
-    if (typeof JSZip === 'undefined') {
-        if (sentry)
-            Sentry.captureException(
-                `JSZip is undefined! - ${getBrowserEnviroment()}`
-            );
-        throw new Error('JSZip is undefined');
-    }
-    // get the database version from the server
-    const db_url = `https://${apiUrl}/appdb/version/v1`;
-    const response = await fetch(db_url);
+    // get the database directly from the new endpoint
+    const db_url = `https://${apiUrl}/appdb/version/v2`;
+    const response = await fetch(db_url, {
+        headers: {
+            'apikey': atob('Y29uZ3JhdHMgb24gZ2V0dGluZyB0aGUga2V5IDpQ')
+        }
+    });
+
     if (response.status >= 300) {
         chrome.action.setBadgeText({ text: 'err ' + response.status });
         return;
     }
+
     const data = await response.json();
-    // check if the database is up to date
-    if (data.error !== 256) {
-        // We have an error! show a badge
-        if (sentry)
-            Sentry.captureException(
-                `Database error ${data.error}! - ${getBrowserEnviroment()}`
-            );
-        chrome.action.setBadgeText({ text: 'err' });
-        return;
-    }
 
     chrome.action.setBadgeText({ text: '' });
     //check if its time to show a donation reminder
@@ -187,12 +174,10 @@ async function downloadDatabase() {
         let dDR: boolean = Boolean(data.displayDonationReminder);
         if ( dDR !== true) {
             const currentDate = new Date();
-            const currentMonth = currentDate.getMonth();
             const currentYear = currentDate.getFullYear();
     
             const data: any = await chrome.storage.local.get('lastDismissedReminder');
             const lastDismissedReminder = data.lastDismissedReminder;
-            const lastDismissedMonth = lastDismissedReminder?.month;
             const lastDismissedYear = lastDismissedReminder?.year;
     
             if (currentYear > lastDismissedYear) {
@@ -206,39 +191,21 @@ async function downloadDatabase() {
     }
     checkDonationReminder();
 
-    const hash = data.parameters.version;
-    const download = data.parameters.signed_url;
-    const lastModified = data.parameters.last_modified;
-
-    // download the database (zip format)
-    const downloadedDB = await fetch(download);
-    const blob = await downloadedDB.blob();
-
-    /*eslint no-undef : "off"*/
-    const zip = await JSZip.loadAsync(blob);
-
-    const dbfile = await zip.file('tosdr/db.json')?.async('text');
-    if (!dbfile) {
-        if (sentry)
-            Sentry.captureException(
-                `dbfile is null/undef! - ${getBrowserEnviroment()}`
-            );
-        console.log('db file is null/undef');
-    }
-    const db = await JSON.parse(dbfile!);
-
-    // Save the data to chrome.storage
     chrome.storage.local.set(
-        { db: db, hash: hash, lastModified: lastModified },
+        { 
+            db: data,
+            lastModified: new Date().toISOString()
+        },
         function () {
             console.log('Database downloaded and saved to chrome.storage');
+            checkDonationReminder();
         }
     );
 }
 
 function checkIfUpdateNeeded(firstStart = false) {
     chrome.storage.local.get(
-        ['db', 'hash', 'lastModified', 'interval', 'api', 'sentry'],
+        ['db', 'lastModified', 'interval', 'api', 'sentry'],
         function (result) {
             if (result.sentry) {
                 sentry = result.sentry;
@@ -250,7 +217,7 @@ function checkIfUpdateNeeded(firstStart = false) {
                 if (result.api.length !== 0) apiUrl = result.api;
             }
 
-            if (result.db && result.hash && result.lastModified) {
+            if (result.db && result.lastModified) {
                 var interval = 8;
                 if (result.interval) {
                     interval = result.interval;

@@ -24,8 +24,7 @@
     "webpack": "webpack"
   },
   "dependencies": {
-    "@sentry/browser": "^7.80.1",
-    "jszip": "^3.10.1"
+    "@sentry/browser": "^7.80.1"
   },
   "repository": {
     "type": "git",

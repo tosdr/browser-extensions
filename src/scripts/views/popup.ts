@@ -148,7 +148,7 @@ function themeHeaderColorIfEnabled(rating: string) {
 }
 
 async function getServiceDetails(id: string, unverified = false) {
-    const service_url = `https://${apiUrl}/service/v2/?id=${id}`;
+    const service_url = `https://${apiUrl}/service/v3?id=${id}`;
     const response = await fetch(service_url);
 
     // check if we got a 200 response
@@ -161,16 +161,9 @@ async function getServiceDetails(id: string, unverified = false) {
 
     const data = await response.json();
 
-    if (data.error !== 256) {
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('error')!.style.display = 'flex';
-        return;
-    }
-
-    const name = data.parameters.name;
-    const rating = data.parameters.rating;
-    const points = data.parameters.points;
+    const name = data.name;
+    const rating = data.rating;
+    const points = data.points;
 
     const serviceNames = document.getElementsByClassName('serviceName');
 
@@ -188,7 +181,7 @@ async function getServiceDetails(id: string, unverified = false) {
     } else {
         document.getElementById('grade')!.innerText = 'N/A';
     }
-    document.getElementById('pointsCount')!.innerText = points.length;
+    document.getElementById('pointsCount')!.innerText = points.length.toString();
 
     document.getElementById('loading')!.style.opacity = '0';
     document.getElementById('loaded')!.style.filter = 'none';
@@ -266,7 +259,7 @@ function createPointList(pointsFiltered: any, pointsList: any, last: boolean) {
 }
 
 async function searchToSDR(term: string) {
-    const service_url = `https://${apiUrl}/search/v4/?query=${term}`;
+    const service_url = `https://${apiUrl}/search/v5/?query=${term}`;
     const response = await fetch(service_url);
 
     if (response.status !== 200) {
@@ -278,18 +271,11 @@ async function searchToSDR(term: string) {
 
     const data = await response.json();
 
-    if (data.error !== 256) {
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('error')!.style.display = 'flex';
-        return;
-    }
-
-    if (data.parameters.services.length !== 0) {
-        const urls = data.parameters.service[0].urls as string[];
+    if (data.services.length !== 0) {
+        const urls = data.services[0].urls as string[];
         for (let i = 0; i < urls.length; i++) {
             if (urls[i] === term) {
-                return data.parameters.services[0].id;
+                return data.services[0].id;
             }
         }
     }

@@ -1,11 +1,42 @@
 var curatorMode = false;
+var renderDonationReminder = false;
 
 var apiUrl = 'api.tosdr.org';
+
+async function donationReminderLogic() {
+    console.log("hey")
+    chrome.storage.local.get('displayDonationReminder', function (result) {
+    console.log('displayDonationReminder:', result.displayDonationReminder);
+        if ( result.displayDonationReminder === true){
+            try {
+                const currentDate = new Date();
+                const currentMonth = currentDate.getMonth();
+                const currentYear = currentDate.getFullYear();
+                // Reset the badge text for all tabs
+                chrome.tabs.query({}, (tabs) => {
+                    for (let tab of tabs) {
+                        chrome.action.setBadgeText({ text: '', tabId: tab.id });
+                    }
+                });
+                chrome.storage.local.set(
+                    {
+                        lastDismissedReminder: { month: currentMonth, year: currentYear },
+                        displayDonationReminder: false,
+                    }
+                )
+                document.getElementById('donationReminder')!.style.display = "block";
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    });
+}
 
 async function handleUrlInURLIfExists(urlOriginal: string) {
     var url = urlOriginal.split('?url=')[1];
     if (!url) {
         // no service-id in url, show error
+        donationReminderLogic()
         document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
@@ -29,6 +60,7 @@ async function handleUrlInURLIfExists(urlOriginal: string) {
 
         getServiceDetails(result, true);
     } else {
+        donationReminderLogic()
         document.getElementById('id')!.innerText = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
@@ -50,6 +82,7 @@ function getServiceIDFromURL(url: string) {
     serviceID = serviceID.replace('#', '');
 
     if (serviceID === '-1') { // -1 is the default value for when the service is not found
+        donationReminderLogic()
         document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
@@ -115,7 +148,7 @@ function themeHeaderColorIfEnabled(rating: string) {
 }
 
 async function getServiceDetails(id: string, unverified = false) {
-    const service_url = `https://${apiUrl}/service/v2/?id=${id}`;
+    const service_url = `https://${apiUrl}/service/v3?id=${id}`;
     const response = await fetch(service_url);
 
     // check if we got a 200 response
@@ -128,16 +161,9 @@ async function getServiceDetails(id: string, unverified = false) {
 
     const data = await response.json();
 
-    if (data.error !== 256) {
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('error')!.style.display = 'flex';
-        return;
-    }
-
-    const name = data.parameters.name;
-    const rating = data.parameters.rating;
-    const points = data.parameters.points;
+    const name = data.name;
+    const rating = data.rating;
+    const points = data.points;
 
     const serviceNames = document.getElementsByClassName('serviceName');
 
@@ -155,7 +181,7 @@ async function getServiceDetails(id: string, unverified = false) {
     } else {
         document.getElementById('grade')!.innerText = 'N/A';
     }
-    document.getElementById('pointsCount')!.innerText = points.length;
+    document.getElementById('pointsCount')!.innerText = points.length.toString();
 
     document.getElementById('loading')!.style.opacity = '0';
     document.getElementById('loaded')!.style.filter = 'none';
@@ -233,7 +259,7 @@ function createPointList(pointsFiltered: any, pointsList: any, last: boolean) {
 }
 
 async function searchToSDR(term: string) {
-    const service_url = `https://${apiUrl}/search/v4/?query=${term}`;
+    const service_url = `https://${apiUrl}/search/v5/?query=${term}`;
     const response = await fetch(service_url);
 
     if (response.status !== 200) {
@@ -245,18 +271,11 @@ async function searchToSDR(term: string) {
 
     const data = await response.json();
 
-    if (data.error !== 256) {
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('error')!.style.display = 'flex';
-        return;
-    }
-
-    if (data.parameters.services.length !== 0) {
-        const urls = data.parameters.service[0].urls as string[];
+    if (data.services.length !== 0) {
+        const urls = data.services[0].urls as string[];
         for (let i = 0; i < urls.length; i++) {
             if (urls[i] === term) {
-                return data.parameters.services[0].id;
+                return data.services[0].id;
             }
         }
     }
@@ -303,7 +322,9 @@ document.getElementById('settingsButton')!.onclick = function () {
 document.getElementById('sourceButton')!.onclick = function () {
     window.open('https://github.com/tosdr/browser-extensions');
 };
-
+document.getElementById('donationButton')!.onclick = function () {
+    window.open('https://tosdr.org/en/sites/donate');
+};
 
 document.getElementById('source')!.onclick = function () {
     window.open('https://github.com/tosdr');

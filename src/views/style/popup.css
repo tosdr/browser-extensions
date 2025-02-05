@@ -24,6 +24,7 @@ body::-webkit-scrollbar {
 html {
     min-width: 350px;
     min-height: 600px;
+    overflow-x: hidden;
 }
 
 .header {
@@ -359,4 +360,17 @@ button {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+.donationBanner {
+    background-color: #f89406;
+    border-radius: 2rem;
+    padding: 1rem;
+    align-items: center;
+    margin: 1rem;
+}
+.donationBanner .title {
+    font-size: 1.8rem;
+    padding: .5rem;
+    margin-bottom: .5rem;
+    line-height: 1;
 }

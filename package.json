@@ -18,13 +18,13 @@
   },
   "scripts": {
     "build": "tsc && npm run copy-assets && npm run webpack && node minify.js",
+    "dev": "tsc && npm run copy-assets && npm run webpack",
     "copy-assets": "node copy.js",
     "clean": "node clean.js",
     "webpack": "webpack"
   },
   "dependencies": {
-    "@sentry/browser": "^7.80.1",
-    "jszip": "^3.10.1"
+    "@sentry/browser": "^7.80.1"
   },
   "repository": {
     "type": "git",

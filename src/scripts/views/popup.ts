@@ -4,10 +4,9 @@ var renderDonationReminder = false;
 var apiUrl = 'api.tosdr.org';
 
 async function donationReminderLogic() {
-    console.log("hey")
     chrome.storage.local.get('displayDonationReminder', function (result) {
     console.log('displayDonationReminder:', result.displayDonationReminder);
-        if ( result.displayDonationReminder === true){
+        if ( result.displayDonationReminder.active === true){
             try {
                 const currentDate = new Date();
                 const currentMonth = currentDate.getMonth();
@@ -21,7 +20,7 @@ async function donationReminderLogic() {
                 chrome.storage.local.set(
                     {
                         lastDismissedReminder: { month: currentMonth, year: currentYear },
-                        displayDonationReminder: false,
+                        displayDonationReminder: {active: false, allowedPlattform: result.displayDonationReminder.allowedPlattform},
                     }
                 )
                 document.getElementById('donationReminder')!.style.display = "block";

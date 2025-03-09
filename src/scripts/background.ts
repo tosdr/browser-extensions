@@ -271,7 +271,7 @@ chrome.runtime.onInstalled.addListener(function () {
             themeHeader: true,
             sentry: false,
             lastDismissedReminder: { month: null, year: 2023 },
-            displayDonationReminder: false,
+            displayDonationReminder: {active: false, allowedPlattform:},
         },
         function () {
             console.log('enabled theme header by default');

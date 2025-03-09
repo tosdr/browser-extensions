@@ -190,22 +190,28 @@ async function checkDonationReminder() {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
 
-        const result: any = await chrome.storage.local.get(
-            'lastDismissedReminder'
-        );
-        const lastDismissedReminder = result.lastDismissedReminder;
-        const lastDismissedYear = lastDismissedReminder?.year;
+        try {
+            const result: any = await chrome.storage.local.get(
+                'lastDismissedReminder'
+            );
+            const lastDismissedReminder = result.lastDismissedReminder;
+            const lastDismissedYear = lastDismissedReminder?.year;
+            console.log(lastDismissedYear);
 
-        if (currentYear > lastDismissedYear) {
-            chrome.action.setBadgeText({ text: '!' });
-            chrome.storage.local.set({
-                displayDonationReminder: {
-                    active: true,
-                    allowedPlattform:
-                        data.displayDonationReminder.allowedPlattform,
-                },
-            });
-        }
+            if (
+                currentYear > lastDismissedYear ||
+                lastDismissedYear === undefined
+            ) {
+                chrome.action.setBadgeText({ text: '!' });
+                chrome.storage.local.set({
+                    displayDonationReminder: {
+                        active: true,
+                        allowedPlattform:
+                            data.displayDonationReminder.allowedPlattform,
+                    },
+                });
+            }
+        } catch (error) {}
     } else {
         chrome.action.setBadgeText({ text: '!' });
     }
@@ -287,7 +293,6 @@ chrome.runtime.onInstalled.addListener(function () {
         {
             themeHeader: true,
             sentry: false,
-            lastDismissedReminder: { month: null, year: 2023 },
             displayDonationReminder: {
                 active: false,
                 allowedPlattform: donationReminderAllowed,

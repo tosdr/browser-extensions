@@ -5,8 +5,8 @@ var apiUrl = 'api.tosdr.org';
 
 async function donationReminderLogic() {
     chrome.storage.local.get('displayDonationReminder', function (result) {
-    console.log('displayDonationReminder:', result.displayDonationReminder);
-        if ( result.displayDonationReminder.active === true){
+        console.log('displayDonationReminder:', result.displayDonationReminder);
+        if (result.displayDonationReminder.active === true) {
             try {
                 const currentDate = new Date();
                 const currentMonth = currentDate.getMonth();
@@ -17,15 +17,21 @@ async function donationReminderLogic() {
                         chrome.action.setBadgeText({ text: '', tabId: tab.id });
                     }
                 });
-                chrome.storage.local.set(
-                    {
-                        lastDismissedReminder: { month: currentMonth, year: currentYear },
-                        displayDonationReminder: {active: false, allowedPlattform: result.displayDonationReminder.allowedPlattform},
-                    }
-                )
-                document.getElementById('donationReminder')!.style.display = "block";
+                chrome.storage.local.set({
+                    lastDismissedReminder: {
+                        month: currentMonth,
+                        year: currentYear,
+                    },
+                    displayDonationReminder: {
+                        active: false,
+                        allowedPlattform:
+                            result.displayDonationReminder.allowedPlattform,
+                    },
+                });
+                document.getElementById('donationReminder')!.style.display =
+                    'block';
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         }
     });
@@ -35,8 +41,9 @@ async function handleUrlInURLIfExists(urlOriginal: string) {
     var url = urlOriginal.split('?url=')[1];
     if (!url) {
         // no service-id in url, show error
-        donationReminderLogic()
-        document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
+        donationReminderLogic();
+        document.getElementById('id')!.innerHTML =
+            'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
         document.getElementById('nourl')!.style.display = 'block';
@@ -59,8 +66,9 @@ async function handleUrlInURLIfExists(urlOriginal: string) {
 
         getServiceDetails(result, true);
     } else {
-        donationReminderLogic()
-        document.getElementById('id')!.innerText = 'Error: no service-id in url';
+        donationReminderLogic();
+        document.getElementById('id')!.innerText =
+            'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
         document.getElementById('nourl')!.style.display = 'block';
@@ -80,9 +88,11 @@ function getServiceIDFromURL(url: string) {
     // when you click on things in the popup, it appends a # to the url, so we need to remove that
     serviceID = serviceID.replace('#', '');
 
-    if (serviceID === '-1') { // -1 is the default value for when the service is not found
-        donationReminderLogic()
-        document.getElementById('id')!.innerHTML = 'Error: no service-id in url';
+    if (serviceID === '-1') {
+        // -1 is the default value for when the service is not found
+        donationReminderLogic();
+        document.getElementById('id')!.innerHTML =
+            'Error: no service-id in url';
         document.getElementById('loading')!.style.display = 'none';
         document.getElementById('loaded')!.style.display = 'none';
         document.getElementById('nourl')!.style.display = 'block';
@@ -180,7 +190,8 @@ async function getServiceDetails(id: string, unverified = false) {
     } else {
         document.getElementById('grade')!.innerText = 'N/A';
     }
-    document.getElementById('pointsCount')!.innerText = points.length.toString();
+    document.getElementById('pointsCount')!.innerText =
+        points.length.toString();
 
     document.getElementById('loading')!.style.opacity = '0';
     document.getElementById('loaded')!.style.filter = 'none';
@@ -202,7 +213,8 @@ function populateList(points: any) {
         points = points.filter((point: any) => point.status === 'approved');
     } else {
         points = points.filter(
-            (point: any) => point.status === 'approved' || point.status === 'pending'
+            (point: any) =>
+                point.status === 'approved' || point.status === 'pending'
         );
     }
 

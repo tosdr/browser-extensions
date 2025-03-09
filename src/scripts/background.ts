@@ -166,30 +166,7 @@ async function downloadDatabase() {
 
     const data = await response.json();
 
-    chrome.action.setBadgeText({ text: '' });
-    //check if its time to show a donation reminder
-    async function checkDonationReminder() {
-        // Retrieve the value from storage and ensure it's a boolean
-        const data = await chrome.storage.local.get('displayDonationReminder');
-        let dDR: boolean = Boolean(data.displayDonationReminder);
-        if ( dDR !== true) {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-    
-            const data: any = await chrome.storage.local.get('lastDismissedReminder');
-            const lastDismissedReminder = data.lastDismissedReminder;
-            const lastDismissedYear = lastDismissedReminder?.year;
-    
-            if (currentYear > lastDismissedYear) {
-                chrome.action.setBadgeText({ text: '!' });
-                chrome.storage.local.set({ displayDonationReminder: true });
-            }
-        }
-        else {
-            chrome.action.setBadgeText({ text: '!' });
-        }
-    }
-    checkDonationReminder();
+
 
     chrome.storage.local.set(
         { 
@@ -198,10 +175,34 @@ async function downloadDatabase() {
         },
         function () {
             console.log('Database downloaded and saved to chrome.storage');
-            checkDonationReminder();
         }
     );
 }
+
+chrome.action.setBadgeText({ text: '' });
+//check if its time to show a donation reminder
+async function checkDonationReminder() {
+    // Retrieve the value from storage and ensure it's a boolean
+    const data = await chrome.storage.local.get('displayDonationReminder');
+    let dDR: boolean = Boolean(data.displayDonationReminder);
+    if ( dDR !== true) {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+
+        const data: any = await chrome.storage.local.get('lastDismissedReminder');
+        const lastDismissedReminder = data.lastDismissedReminder;
+        const lastDismissedYear = lastDismissedReminder?.year;
+
+        if (currentYear > lastDismissedYear) {
+            chrome.action.setBadgeText({ text: '!' });
+            chrome.storage.local.set({ displayDonationReminder: true });
+        }
+    }
+    else {
+        chrome.action.setBadgeText({ text: '!' });
+    }
+}
+checkDonationReminder();
 
 function checkIfUpdateNeeded(firstStart = false) {
     chrome.storage.local.get(
@@ -287,4 +288,5 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.runtime.onStartup.addListener(function () {
     checkIfUpdateNeeded();
+    checkDonationReminder();
 });

@@ -140,7 +140,7 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
 async function setTabBadgeNotification(on:boolean, tab: chrome.tabs.Tab ) {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    let dDR: boolean = Boolean(data.displayDonationReminder);
+    let dDR: boolean = Boolean(data.displayDonationReminder.active);
 
     if (on === true && dDR === true) {
         chrome.action.setBadgeText({text: '!', tabId: tab.id})
@@ -184,25 +184,24 @@ chrome.action.setBadgeText({ text: '' });
 async function checkDonationReminder() {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    let dDR: boolean = Boolean(data.displayDonationReminder);
-    if ( dDR !== true) {
+    let dDR: boolean = Boolean(data.displayDonationReminder.active);
+    if ( dDR !== true && data.displayDonationReminder.allowedPlattform === true) {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
 
-        const data: any = await chrome.storage.local.get('lastDismissedReminder');
-        const lastDismissedReminder = data.lastDismissedReminder;
+        const result: any = await chrome.storage.local.get('lastDismissedReminder');
+        const lastDismissedReminder = result.lastDismissedReminder;
         const lastDismissedYear = lastDismissedReminder?.year;
 
         if (currentYear > lastDismissedYear) {
             chrome.action.setBadgeText({ text: '!' });
-            chrome.storage.local.set({ displayDonationReminder: true });
+            chrome.storage.local.set({ displayDonationReminder: {active:true, allowedPlattform: data.displayDonationReminder.allowedPlattform} });
         }
     }
     else {
         chrome.action.setBadgeText({ text: '!' });
     }
 }
-checkDonationReminder();
 
 function checkIfUpdateNeeded(firstStart = false) {
     chrome.storage.local.get(
@@ -266,12 +265,22 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function () {
+    const userAgent = navigator.userAgent
+    let notSafari: boolean
+    if (userAgent.indexOf("Mac") != -1 && userAgent.indexOf("Safari") != -1) {
+        console.log("MacOS and Safari detected"+ userAgent)
+        notSafari = false
+    } else{
+        console.log("MacOS and Safari NOT detected"+ userAgent)
+        notSafari = true
+    }
+
     chrome.storage.local.set(
         {
             themeHeader: true,
             sentry: false,
             lastDismissedReminder: { month: null, year: 2023 },
-            displayDonationReminder: {active: false, allowedPlattform:},
+            displayDonationReminder: {active: false, allowedPlattform:notSafari},
         },
         function () {
             console.log('enabled theme header by default');
@@ -288,5 +297,6 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.runtime.onStartup.addListener(function () {
     checkIfUpdateNeeded();
-    checkDonationReminder();
 });
+checkDonationReminder();
+

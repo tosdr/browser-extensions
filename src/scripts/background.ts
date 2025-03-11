@@ -26,7 +26,7 @@ function serviceDetected(tab: chrome.tabs.Tab, service: any) {
     setTabIcon(tab, service.rating.toLowerCase());
 
     setPopup(tab?.id ?? null, `/views/popup.html?service-id=${service.id}`);
-    setTabBadgeNotification(false, tab)
+    setTabBadgeNotification(false, tab);
 }
 
 function initializePageAction(tab: chrome.tabs.Tab) {
@@ -34,7 +34,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
         console.log('tab is undefined');
         setPopup(null, '/views/popup.html');
         setTabIcon(tab, 'logo');
-        setTabBadgeNotification(true, tab)
+        setTabBadgeNotification(true, tab);
         return;
     }
     const url = new URL(tab.url);
@@ -42,20 +42,20 @@ function initializePageAction(tab: chrome.tabs.Tab) {
         // we only want to check http and https
         setPopup(tab?.id ?? null, '/views/popup.html');
         setTabIcon(tab, 'logo');
-        setTabBadgeNotification(true, tab)
+        setTabBadgeNotification(true, tab);
         return;
     }
 
     if (tab.url == '') {
         setPopup(tab?.id ?? null, '/views/popup.html');
         setTabIcon(tab, 'logo');
-        setTabBadgeNotification(true, tab)
+        setTabBadgeNotification(true, tab);
         return;
     }
 
     // change icon to icons/loading.png
     setTabIcon(tab, 'loading');
-    setTabBadgeNotification(false, tab)
+    setTabBadgeNotification(false, tab);
 
     // get database from chrome.storage
     chrome.storage.local.get(['db'], function (result) {
@@ -137,16 +137,16 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
     }
     chrome.action.setIcon(argumentsIcon);
 }
-async function setTabBadgeNotification(on:boolean, tab: chrome.tabs.Tab ) {
+async function setTabBadgeNotification(on: boolean, tab: chrome.tabs.Tab) {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    let dDR: boolean = Boolean(data.displayDonationReminder);
+    let dDR: boolean = Boolean(data.displayDonationReminder.active);
 
     if (on === true && dDR === true) {
-        chrome.action.setBadgeText({text: '!', tabId: tab.id})
-        chrome.action.setBadgeBackgroundColor({color: 'red'})
+        chrome.action.setBadgeText({ text: '!', tabId: tab.id });
+        chrome.action.setBadgeBackgroundColor({ color: 'red' });
     } else {
-    chrome.action.setBadgeText({text: '', tabId: tab.id})
+        chrome.action.setBadgeText({ text: '', tabId: tab.id });
     }
 }
 
@@ -155,8 +155,8 @@ async function downloadDatabase() {
     const db_url = `https://${apiUrl}/appdb/version/v2`;
     const response = await fetch(db_url, {
         headers: {
-            'apikey': atob('Y29uZ3JhdHMgb24gZ2V0dGluZyB0aGUga2V5IDpQ')
-        }
+            apikey: atob('Y29uZ3JhdHMgb24gZ2V0dGluZyB0aGUga2V5IDpQ'),
+        },
     });
 
     if (response.status >= 300) {
@@ -166,41 +166,55 @@ async function downloadDatabase() {
 
     const data = await response.json();
 
-    chrome.action.setBadgeText({ text: '' });
-    //check if its time to show a donation reminder
-    async function checkDonationReminder() {
-        // Retrieve the value from storage and ensure it's a boolean
-        const data = await chrome.storage.local.get('displayDonationReminder');
-        let dDR: boolean = Boolean(data.displayDonationReminder);
-        if ( dDR !== true) {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-    
-            const data: any = await chrome.storage.local.get('lastDismissedReminder');
-            const lastDismissedReminder = data.lastDismissedReminder;
-            const lastDismissedYear = lastDismissedReminder?.year;
-    
-            if (currentYear > lastDismissedYear) {
-                chrome.action.setBadgeText({ text: '!' });
-                chrome.storage.local.set({ displayDonationReminder: true });
-            }
-        }
-        else {
-            chrome.action.setBadgeText({ text: '!' });
-        }
-    }
-    checkDonationReminder();
-
     chrome.storage.local.set(
-        { 
+        {
             db: data,
-            lastModified: new Date().toISOString()
+            lastModified: new Date().toISOString(),
         },
         function () {
             console.log('Database downloaded and saved to chrome.storage');
-            checkDonationReminder();
         }
     );
+}
+
+chrome.action.setBadgeText({ text: '' });
+//check if its time to show a donation reminder
+async function checkDonationReminder() {
+    // Retrieve the value from storage and ensure it's a boolean
+    const data = await chrome.storage.local.get('displayDonationReminder');
+    let dDR: boolean = Boolean(data.displayDonationReminder.active);
+    if (
+        dDR !== true &&
+        data.displayDonationReminder.allowedPlattform === true
+    ) {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+
+        try {
+            const result: any = await chrome.storage.local.get(
+                'lastDismissedReminder'
+            );
+            const lastDismissedReminder = result.lastDismissedReminder;
+            const lastDismissedYear = lastDismissedReminder?.year;
+            console.log(lastDismissedYear);
+
+            if (
+                currentYear > lastDismissedYear ||
+                lastDismissedYear === undefined
+            ) {
+                chrome.action.setBadgeText({ text: '!' });
+                chrome.storage.local.set({
+                    displayDonationReminder: {
+                        active: true,
+                        allowedPlattform:
+                            data.displayDonationReminder.allowedPlattform,
+                    },
+                });
+            }
+        } catch (error) {}
+    } else {
+        chrome.action.setBadgeText({ text: '!' });
+    }
 }
 
 function checkIfUpdateNeeded(firstStart = false) {
@@ -265,12 +279,24 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function () {
+    const userAgent = navigator.userAgent;
+    let donationReminderAllowed: boolean;
+    if (userAgent.indexOf('Mac') != -1 && userAgent.indexOf('Safari') != -1) {
+        console.log('MacOS and Safari detected' + userAgent);
+        donationReminderAllowed = false;
+    } else {
+        console.log('MacOS and Safari NOT detected' + userAgent);
+        donationReminderAllowed = true;
+    }
+
     chrome.storage.local.set(
         {
             themeHeader: true,
             sentry: false,
-            lastDismissedReminder: { month: null, year: 2023 },
-            displayDonationReminder: false,
+            displayDonationReminder: {
+                active: false,
+                allowedPlattform: donationReminderAllowed,
+            },
         },
         function () {
             console.log('enabled theme header by default');
@@ -288,3 +314,4 @@ chrome.runtime.onInstalled.addListener(function () {
 chrome.runtime.onStartup.addListener(function () {
     checkIfUpdateNeeded();
 });
+checkDonationReminder();

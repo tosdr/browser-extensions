@@ -1,10 +1,10 @@
-import * as Sentry from '@sentry/browser';
+// import * as Sentry from '@sentry/browser';
 
 const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
 var apiUrl = 'api.tosdr.org';
 
-var sentry = false;
+// let sentry = false;
 
 function getBrowserEnviroment() {
     return `User Agent: ${navigator.userAgent}\nPlatform: ${navigator.platform}\nLanguage: ${navigator.language}`;
@@ -13,7 +13,7 @@ function getBrowserEnviroment() {
 function setPopup(tabId: number | null, popup: string) {
     if (tabId === null) {
         console.log('tabid is undefined, goodbye');
-        Sentry.captureException(`tabid is undefined! - ${popup}`);
+        // Sentry.captureException(`tabid is undefined! - ${popup}`);
         return;
     }
     chrome.action.setPopup({
@@ -119,7 +119,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
 const handleRuntimeError = () => {
     const error = chrome.runtime.lastError?.message;
     if (error) {
-        if (sentry) Sentry.captureException(error);
+        // if (sentry) Sentry.captureException(error);
         throw new Error(error);
     }
 };
@@ -221,12 +221,12 @@ function checkIfUpdateNeeded(firstStart = false) {
     chrome.storage.local.get(
         ['db', 'lastModified', 'interval', 'api', 'sentry'],
         function (result) {
-            if (result.sentry) {
-                sentry = result.sentry;
-                Sentry.init({
-                    dsn: 'https://07c0ebcab5894cff990fd0d3871590f0@sentry.internal.jrbit.de/38',
-                });
-            }
+            // if (result.sentry) {
+            //     sentry = result.sentry;
+            //     Sentry.init({
+            //         dsn: 'https://07c0ebcab5894cff990fd0d3871590f0@sentry.internal.jrbit.de/38',
+            //     });
+            // }
             if (result.api) {
                 if (result.api.length !== 0) apiUrl = result.api;
             }

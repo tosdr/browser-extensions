@@ -2,7 +2,7 @@ const updateInput = document.getElementById('update') as HTMLInputElement;
 const themeInput = document.getElementById('theme') as HTMLInputElement;
 const themeRatingInput = document.getElementById('themeRating') as HTMLInputElement;
 const curatorModeInput = document.getElementById('curatorMode') as HTMLInputElement;
-const telemetryInput = document.getElementById('telemetry') as HTMLInputElement;
+// const telemetryInput = document.getElementById('telemetry') as HTMLInputElement;
 const apiInput = document.getElementById('api') as HTMLInputElement;
 
 
@@ -53,9 +53,9 @@ chrome.storage.local.get(
             if (result.api.length !== 0) apiInput.value = result.api;
         }
 
-        if (result.sentry) {
-            telemetryInput.checked = result.sentry;
-        }
+        // if (result.sentry) {
+        //     telemetryInput.checked = result.sentry;
+        // }
     }
 );
 
@@ -103,11 +103,11 @@ apiInput.addEventListener('change', function () {
     );
 });
 
-telemetryInput.addEventListener('change', function () {
-    chrome.storage.local.set(
-        { sentry: telemetryInput.checked },
-        function () {
-            console.log('telemetry has been toggled.');
-        }
-    );
-});
+// telemetryInput.addEventListener('change', function () {
+//     chrome.storage.local.set(
+//         { sentry: telemetryInput.checked },
+//         function () {
+//             console.log('telemetry has been toggled.');
+//         }
+//     );
+// });

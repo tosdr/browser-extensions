@@ -23,9 +23,6 @@
     "clean": "node clean.js",
     "webpack": "webpack"
   },
-  "dependencies": {
-    "@sentry/browser": "^7.80.1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tosdr/browser-extensions.git"

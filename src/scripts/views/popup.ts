@@ -1,126 +1,189 @@
-var curatorMode = false;
-var renderDonationReminder = false;
-
-var apiUrl = 'api.tosdr.org';
-
-async function donationReminderLogic() {
-    chrome.storage.local.get('displayDonationReminder', function (result) {
-        console.log('displayDonationReminder:', result.displayDonationReminder);
-        if (result.displayDonationReminder.active === true) {
-            try {
-                const currentDate = new Date();
-                const currentMonth = currentDate.getMonth();
-                const currentYear = currentDate.getFullYear();
-                // Reset the badge text for all tabs
-                chrome.tabs.query({}, (tabs) => {
-                    for (let tab of tabs) {
-                        chrome.action.setBadgeText({ text: '', tabId: tab.id });
-                    }
-                });
-                chrome.storage.local.set({
-                    lastDismissedReminder: {
-                        month: currentMonth,
-                        year: currentYear,
-                    },
-                    displayDonationReminder: {
-                        active: false,
-                        allowedPlattform:
-                            result.displayDonationReminder.allowedPlattform,
-                    },
-                });
-                document.getElementById('donationReminder')!.style.display =
-                    'block';
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    });
+interface ServiceDetails {
+    id: string;
+    name: string;
+    rating: string;
+    points: Array<{
+        id: string;
+        title: string;
+        status: string;
+        text: string;
+    }>;
 }
 
-async function handleUrlInURLIfExists(urlOriginal: string) {
-    var url = urlOriginal.split('?url=')[1];
+interface DonationReminder {
+    active: boolean;
+    allowedPlattform: boolean;
+}
+
+let curatorMode = false;
+let renderDonationReminder = false;
+var apiUrl = 'api.tosdr.org';
+
+chrome.storage.local.get(['api'], function (result) {
+    if (result.api && result.api.length !== 0) {
+        apiUrl = result.api;
+    }
+});
+
+async function donationReminderLogic(): Promise<void> {
+    const result = await chrome.storage.local.get('displayDonationReminder');
+    console.log('displayDonationReminder:', result.displayDonationReminder);
+    
+    if (result.displayDonationReminder?.active) {
+        try {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+            
+            // Reset the badge text for all tabs
+            const tabs = await chrome.tabs.query({});
+            for (const tab of tabs) {
+                if (tab.id) {
+                    await chrome.action.setBadgeText({ text: '', tabId: tab.id });
+                }
+            }
+
+            await chrome.storage.local.set({
+                lastDismissedReminder: {
+                    month: currentMonth,
+                    year: currentYear,
+                },
+                displayDonationReminder: {
+                    active: false,
+                    allowedPlattform: result.displayDonationReminder.allowedPlattform,
+                },
+            });
+
+            const donationReminder = document.getElementById('donationReminder');
+            if (donationReminder) {
+                donationReminder.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error in donationReminderLogic:', error);
+        }
+    }
+}
+
+async function handleUrlInURLIfExists(urlOriginal: string): Promise<void> {
+    const url = urlOriginal.split('?url=')[1];
     if (!url) {
-        // no service-id in url, show error
-        donationReminderLogic();
-        document.getElementById('id')!.innerHTML =
-            'Error: no service-id in url';
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('nourl')!.style.display = 'block';
-        document.getElementById('pointList')!.style.display = 'none';
+        await donationReminderLogic();
+        const idElement = document.getElementById('id');
+        const loadingElement = document.getElementById('loading');
+        const loadedElement = document.getElementById('loaded');
+        const nourlElement = document.getElementById('nourl');
+        const pointListElement = document.getElementById('pointList');
+
+        if (idElement) idElement.innerHTML = 'Error: no service-id in url';
+        if (loadingElement) loadingElement.style.display = 'none';
+        if (loadedElement) loadedElement.style.display = 'none';
+        if (nourlElement) nourlElement.style.display = 'block';
+        if (pointListElement) pointListElement.style.display = 'none';
         return;
     }
 
-    var result = await searchToSDR(url);
+    const result = await searchToSDR(url);
 
     if (result) {
-        document.getElementById('phoenixButton')!.onclick = function () {
-            window.open(`https://edit.tosdr.org/services/${result}`);
-        };
+        const phoenixButton = document.getElementById('phoenixButton');
+        if (phoenixButton) {
+            phoenixButton.onclick = () => {
+                window.open(`https://edit.tosdr.org/services/${result}`);
+            };
+        }
 
         themeHeaderIfEnabled(result);
 
         const logo = document.getElementById('logo') as HTMLImageElement;
-        logo.src = `https://s3.tosdr.org/logos/${result}.png`;
-        document.getElementById('id')!.innerText = result;
+        if (logo) {
+            logo.src = `https://s3.tosdr.org/logos/${result}.png`;
+        }
 
-        getServiceDetails(result, true);
+        const idElement = document.getElementById('id');
+        if (idElement) {
+            idElement.innerText = result;
+        }
+
+        await getServiceDetails(result, true);
     } else {
-        donationReminderLogic();
-        document.getElementById('id')!.innerText =
-            'Error: no service-id in url';
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('nourl')!.style.display = 'block';
-        document.getElementById('pointList')!.style.display = 'none';
+        await donationReminderLogic();
+        const idElement = document.getElementById('id');
+        const loadingElement = document.getElementById('loading');
+        const loadedElement = document.getElementById('loaded');
+        const nourlElement = document.getElementById('nourl');
+        const pointListElement = document.getElementById('pointList');
+
+        if (idElement) idElement.innerText = 'Error: no service-id in url';
+        if (loadingElement) loadingElement.style.display = 'none';
+        if (loadedElement) loadedElement.style.display = 'none';
+        if (nourlElement) nourlElement.style.display = 'block';
+        if (pointListElement) pointListElement.style.display = 'none';
     }
 }
 
-function getServiceIDFromURL(url: string) {
-    // get parameters from url
-    var serviceID = url.split('?service-id=')[1];
-    // whoops, no service-id in url, check if there's a url= parameter, maybe we just do not have it yet
+function getServiceIDFromURL(url: string): void {
+    const serviceID = url.split('?service-id=')[1]?.replace('#', '');
+    
     if (!serviceID) {
         handleUrlInURLIfExists(url);
         return;
     }
 
-    // when you click on things in the popup, it appends a # to the url, so we need to remove that
-    serviceID = serviceID.replace('#', '');
-
     if (serviceID === '-1') {
-        // -1 is the default value for when the service is not found
         donationReminderLogic();
-        document.getElementById('id')!.innerHTML =
-            'Error: no service-id in url';
-        document.getElementById('loading')!.style.display = 'none';
-        document.getElementById('loaded')!.style.display = 'none';
-        document.getElementById('nourl')!.style.display = 'block';
-        document.getElementById('notreviewed')!.style.display = 'block';
-        document.getElementById('pointList')!.style.display = 'none';
-        document.getElementById('edittext')!.onclick = function () {
-            window.open('https://edit.tosdr.org');
-        };
+        const idElement = document.getElementById('id');
+        const loadingElement = document.getElementById('loading');
+        const loadedElement = document.getElementById('loaded');
+        const nourlElement = document.getElementById('nourl');
+        const notreviewedElement = document.getElementById('notreviewed');
+        const pointListElement = document.getElementById('pointList');
+        const edittextElement = document.getElementById('edittext');
+
+        if (idElement) idElement.innerHTML = 'Error: no service-id in url';
+        if (loadingElement) loadingElement.style.display = 'none';
+        if (loadedElement) loadedElement.style.display = 'none';
+        if (nourlElement) nourlElement.style.display = 'block';
+        if (notreviewedElement) notreviewedElement.style.display = 'block';
+        if (pointListElement) pointListElement.style.display = 'none';
+        if (edittextElement) {
+            edittextElement.onclick = () => {
+                window.open('https://edit.tosdr.org');
+            };
+        }
         return;
     }
 
-    document.getElementById('phoenixButton')!.onclick = function () {
-        window.open(`https://edit.tosdr.org/services/${serviceID}`);
-    };
-    document.getElementById('webbutton')!.onclick = function () {
-        window.open(`https://tosdr.org/en/service/${serviceID}`);
-    };
+    const phoenixButton = document.getElementById('phoenixButton');
+    const webbutton = document.getElementById('webbutton');
+    const logo = document.getElementById('logo') as HTMLImageElement;
+    const idElement = document.getElementById('id');
+
+    if (phoenixButton) {
+        phoenixButton.onclick = () => {
+            window.open(`https://edit.tosdr.org/services/${serviceID}`);
+        };
+    }
+
+    if (webbutton) {
+        webbutton.onclick = () => {
+            window.open(`https://tosdr.org/en/service/${serviceID}`);
+        };
+    }
 
     themeHeaderIfEnabled(serviceID);
 
-    const logo = document.getElementById('logo') as HTMLImageElement;
-    logo.src = `https://s3.tosdr.org/logos/${serviceID}.png`;
-    document.getElementById('id')!.innerHTML = serviceID;
+    if (logo) {
+        logo.src = `https://s3.tosdr.org/logos/${serviceID}.png`;
+    }
+
+    if (idElement) {
+        idElement.innerHTML = serviceID;
+    }
 
     getServiceDetails(serviceID);
 }
 
-function themeHeaderIfEnabled(serviceID: string) {
+function themeHeaderIfEnabled(serviceID: string): void {
     chrome.storage.local.get(['themeHeader'], function (result) {
         if (result.themeHeader) {
             const blurredTemplate = `.header::before {
@@ -138,20 +201,20 @@ function themeHeaderIfEnabled(serviceID: string) {
                 z-index: -2;
             }`;
 
-            var styleElement = document.createElement('style');
-
+            const styleElement = document.createElement('style');
             document.head.appendChild(styleElement);
-
-            styleElement.sheet!.insertRule(blurredTemplate);
+            styleElement.sheet?.insertRule(blurredTemplate);
         }
     });
 }
 
-function themeHeaderColorIfEnabled(rating: string) {
+function themeHeaderColorIfEnabled(rating: string): void {
     chrome.storage.local.get(['themeHeaderRating'], function (result) {
         if (result.themeHeaderRating) {
             const header = document.getElementById('headerPopup');
-            header!.classList.add(rating);
+            if (header) {
+                header.classList.add(rating);
+            }
         }
     });
 }
@@ -298,7 +361,6 @@ getServiceIDFromURL(window.location.href);
 chrome.storage.local.get(['darkmode', 'curatorMode', 'api'], function (result) {
     if (result.darkmode) {
         const body = document.querySelector('body')!;
-
         body.classList.toggle('dark-mode');
     }
 
@@ -308,52 +370,64 @@ chrome.storage.local.get(['darkmode', 'curatorMode', 'api'], function (result) {
     } else {
         document.getElementById('curator')!.style.display = 'none';
     }
-
-    if (result.api) {
-        if (result.api.length !== 0) apiUrl = result.api;
-    }
 });
 
 // Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggleButton');
+    const settingsButton = document.getElementById('settingsButton');
+    const sourceButton = document.getElementById('sourceButton');
+    const donationButton = document.getElementById('donationButton');
+    const source = document.getElementById('source');
+    const opentosdr = document.getElementById('opentosdr');
 
-document.getElementById('toggleButton')!.onclick = function () {
-    const body = document.querySelector('body')!;
+    if (toggleButton) {
+        toggleButton.onclick = () => {
+            const body = document.querySelector('body');
+            if (body) {
+                body.classList.toggle('dark-mode');
+                const darkmode = body.classList.contains('dark-mode');
+                chrome.storage.local.set({ darkmode });
+            }
+        };
+    }
 
-    body.classList.toggle('dark-mode');
+    if (settingsButton) {
+        settingsButton.onclick = () => {
+            chrome.runtime.openOptionsPage();
+        };
+    }
 
-    const darkmode = body.classList.contains('dark-mode');
+    if (sourceButton) {
+        sourceButton.onclick = () => {
+            window.open('https://github.com/tosdr/browser-extensions');
+        };
+    }
 
-    chrome.storage.local.set({ darkmode: darkmode });
-};
+    if (donationButton) {
+        donationButton.onclick = () => {
+            window.open('https://tosdr.org/en/sites/donate');
+        };
+    }
 
-document.getElementById('settingsButton')!.onclick = function () {
-    chrome.runtime.openOptionsPage();
-};
+    if (source) {
+        source.onclick = () => {
+            window.open('https://github.com/tosdr');
+        };
+    }
 
-document.getElementById('sourceButton')!.onclick = function () {
-    window.open('https://github.com/tosdr/browser-extensions');
-};
-document.getElementById('donationButton')!.onclick = function () {
-    window.open('https://tosdr.org/en/sites/donate');
-};
+    if (opentosdr) {
+        opentosdr.onclick = () => {
+            window.open('https://tosdr.org/');
+        };
+    }
+});
 
-document.getElementById('source')!.onclick = function () {
-    window.open('https://github.com/tosdr');
-};
-
-document.getElementById('opentosdr')!.onclick = function () {
-    window.open('https://tosdr.org/');
-};
-
-// This is a hacky workaround for Firefox on desktop as it likes to resize the popup
-// to the maximum width of the content, which is not what we want. Thanks, Mozilla.
-function ifFirefoxDesktopResize() {
-    // check useragent if firefox on desktop
+function ifFirefoxDesktopResize(): void {
     if (
         navigator.userAgent.includes('Firefox') &&
         !navigator.userAgent.includes('Mobile')
     ) {
-        // resize window to stay at 350px
         document.body.style.width = '350px';
     }
 }

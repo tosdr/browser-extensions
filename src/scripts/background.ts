@@ -1,5 +1,16 @@
 // import * as Sentry from '@sentry/browser';
 
+interface DatabaseEntry {
+    id: string;
+    url: string;
+    rating: string;
+}
+
+interface Service {
+    id: string;
+    rating: string;
+}
+
 const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
 var apiUrl = 'api.tosdr.org';
@@ -10,26 +21,26 @@ function getBrowserEnviroment() {
     return `User Agent: ${navigator.userAgent}\nPlatform: ${navigator.platform}\nLanguage: ${navigator.language}`;
 }
 
-function setPopup(tabId: number | null, popup: string) {
-    if (tabId === null) {
+function setPopup(tabId: number | null, popup: string): void {
+    if (!tabId) {
         console.log('tabid is undefined, goodbye');
         // Sentry.captureException(`tabid is undefined! - ${popup}`);
         return;
     }
     chrome.action.setPopup({
-        tabId: tabId,
-        popup: popup,
+        tabId,
+        popup,
     });
 }
 
-function serviceDetected(tab: chrome.tabs.Tab, service: any) {
+function serviceDetected(tab: chrome.tabs.Tab, service: Service): void {
     setTabIcon(tab, service.rating.toLowerCase());
 
     setPopup(tab?.id ?? null, `/views/popup.html?service-id=${service.id}`);
     setTabBadgeNotification(false, tab);
 }
 
-function initializePageAction(tab: chrome.tabs.Tab) {
+function initializePageAction(tab: chrome.tabs.Tab): void {
     if (!tab || !tab.url) {
         console.log('tab is undefined');
         setPopup(null, '/views/popup.html');
@@ -61,7 +72,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
     chrome.storage.local.get(['db'], function (result) {
         if (result.db) {
             // parse the database
-            const db = result.db;
+            const db = result.db as DatabaseEntry[];
 
             var domain = url.hostname;
 
@@ -71,7 +82,7 @@ function initializePageAction(tab: chrome.tabs.Tab) {
 
             console.log(domain);
 
-            var domainEntry = db.filter((entry: any) =>
+            var domainEntry = db.filter((entry) =>
                 entry.url.split(',').includes(domain)
             );
             if (domainEntry.length === 1) {
@@ -86,8 +97,8 @@ function initializePageAction(tab: chrome.tabs.Tab) {
                     const domainParts = domain.split('.');
                     if (domainParts.length > 2) {
                         domain = domainParts.slice(1).join('.');
-                        console.log('try ' + current + ': ' + domain);
-                        domainEntry = db.filter((entry: any) =>
+                        console.log(`try ${current}: ${domain}`);
+                        domainEntry = db.filter((entry) =>
                             entry.url.split(',').includes(domain)
                         );
                         if (domainEntry.length === 1) {
@@ -124,25 +135,28 @@ const handleRuntimeError = () => {
     }
 };
 
-function setTabIcon(tab: chrome.tabs.Tab | null, icon: string) {
-    let argumentsIcon = {
+function setTabIcon(tab: chrome.tabs.Tab | null, icon: string): void {
+    const iconDetails: chrome.action.TabIconDetails = {
         path: {
-            32: '/icons/' + icon + '/' + icon + '32.png',
-            48: '/icons/' + icon + '/' + icon + '48.png',
-            128: '/icons/' + icon + '/' + icon + '128.png',
+            32: `/icons/${icon}/${icon}32.png`,
+            48: `/icons/${icon}/${icon}48.png`,
+            128: `/icons/${icon}/${icon}128.png`,
         },
-    } as chrome.action.TabIconDetails;
+    };
+
     if (tab) {
-        argumentsIcon.tabId = tab.id;
+        iconDetails.tabId = tab.id;
     }
-    chrome.action.setIcon(argumentsIcon);
+
+    chrome.action.setIcon(iconDetails);
 }
-async function setTabBadgeNotification(on: boolean, tab: chrome.tabs.Tab) {
+
+async function setTabBadgeNotification(on: boolean, tab: chrome.tabs.Tab): Promise<void> {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    let dDR: boolean = Boolean(data.displayDonationReminder.active);
+    const dDR = Boolean(data.displayDonationReminder?.active);
 
-    if (on === true && dDR === true) {
+    if (on && dDR) {
         chrome.action.setBadgeText({ text: '!', tabId: tab.id });
         chrome.action.setBadgeBackgroundColor({ color: 'red' });
     } else {
@@ -182,7 +196,7 @@ chrome.action.setBadgeText({ text: '' });
 async function checkDonationReminder() {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    let dDR: boolean = Boolean(data.displayDonationReminder.active);
+    const dDR = Boolean(data.displayDonationReminder?.active);
     if (
         dDR !== true &&
         data.displayDonationReminder.allowedPlattform === true

@@ -15,7 +15,8 @@ chrome.storage.local.get(
         'themeHeaderRating',
         'curatorMode',
         'sentry',
-        'api'
+        'api',
+        'openai',
     ],
     function (result) {
         if (result.db) {

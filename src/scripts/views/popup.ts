@@ -425,6 +425,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (aiButton) {
+        const result = await chrome.storage.local.get(['openai']);
+        if(result.openai && result.openai !== ""){
+            //display AI button only if OpenAI API key is set
+            aiButton.style.display = 'flex';
+        }
         aiButton.onclick = async () => {
             console.log('AI Button clicked');
             const result = await chrome.storage.local.get(['openai']);

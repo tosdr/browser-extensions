@@ -196,7 +196,11 @@ html {
 .label.other {
     background: #3684fd;
 }
-
+#aibutton img { 
+    width:20px;
+    height:20px;
+    object-fit:contain;
+}
 .label.web {
     cursor: pointer;
 }

@@ -373,29 +373,6 @@ chrome.storage.local.get(['darkmode', 'curatorMode', 'api'], function (result) {
 });
 
 // AI Button Integration
-let aiApiKey = '';
-setAiApiKey();
-function setAiApiKey(callback?: () => void) {
-    chrome.storage.local.get('apiKey', (data) => {
-        if (data.apiKey) {
-            aiApiKey = data.apiKey.trim();
-            if (callback) {
-                callback();
-            }
-        }
-    });
-}
-let aiLastResponse = '';
-let aiModel = "gpt-4.1";
-
-function aiError(message = 'An error occurred. Please try again later.', title = 'Error') {
-    chrome.notifications.create({
-        type: 'basic',
-        iconUrl: chrome.runtime.getURL('icons/chip-ai-svgrepo-com.svg'),
-        title,
-        message
-    });
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
     const toggleButton = document.getElementById('toggleButton');
@@ -405,7 +382,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const source = document.getElementById('source');
     const opentosdr = document.getElementById('opentosdr');
     const aiButton = document.getElementById('aibutton');
-
+    console.log('aiButton:', aiButton);
     if (toggleButton) {
         toggleButton.onclick = () => {
             const body = document.querySelector('body');
@@ -448,84 +425,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (aiButton) {
-        aiButton.onclick = async () => {
-            setAiApiKey(async () => {
-                if (!aiApiKey) {
-                    aiError('No API key found. Please set your OpenAI API key in the extension settings.');
-                    return;
-                }
-                // Get selected text if any
-                // Get page text
-                let pageText = document.body ? document.body.innerText : '';
-                chrome.tabs.query(
-                    { active: true, currentWindow: true },
-                    async function (tabs) {
-                            // Get the active tab
-                            const activeTab = tabs[0];
-                            //get the URL of the active tab
-                            const url = activeTab.url || '';
-                            // Get the root domain of the URL
-                            const urlObj = new URL(url);
-                            const rootDomain = urlObj.hostname.replace(/^www\./, '');
-                          try {
-                            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer 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`
-                                },
-                                body: JSON.stringify({
-                                    model: aiModel,
-                                    messages: [
-                                        { role: "system", content: `
-                                                Scans and flags problematic terms and conditions from provided URLs
-                                                This GPT is a Terms and Conditions analyser that scans through the terms of service and all relevant linked pages from a provided URL. 
-                                                Its primary role is to identify any unusual, unclear, or potentially harmful clauses or policies that could negatively impact the user.
-                                                 It highlights legal language that may reduce user rights, enable data exploitation, include mandatory arbitration, hidden fees, auto-renewals, waiver of class actions, or unexpected permissions. 
-                                                 The GPT assumes the point of view of a user advocate and prioritizes clarity, fairness, and transparency.
-                                                It should carefully read all text and follow links to associated privacy policies, data usage terms, user agreements, and similar documents found within the main URL. 
-                                                It flags anything that seems excessive, unusual, or not in the user’s best interest, even if it is legally common. 
-                                                The GPT avoids offering legal advice but gives practical, plain-language summaries and warnings about any problematic clauses it finds. 
-                                                It emphasizes readability and user awareness, using layperson’s terms. It should also surface anything that seems overly vague, overly broad, or deliberately confusing.
-                                                If a document is missing or difficult to access, it should note this clearly.
-                                                It works with the assumption that the user wants an exhaustive scan of the T&Cs and related documents.
-                                                It maintains a professional, user-first tone with a focus on transparency and advocacy.
-                                                                                
-                                        `},
-                                        { role: "user", content: `The URL is ${rootDomain}` }
-                                                    ],
-                                                temperature: 0.5,
-                                            })
-                                        });
-                                        const data = await response.json();
-                                        if (data.error) {
-                                            aiError(data.error.message);
-                                            return;
-                                        }
-                                        aiLastResponse = data.choices[0].message.content;
-                                        /*chrome.storage.local.set({ responseData: aiLastResponse }, function () {
-                                            // Optionally show a popup or update UI
-                                            aiError('AI response received! Check the popup for details.', 'AI Success');
-                                        });*/
-                                        const aiOverview = document.getElementById('aiOverview');
-                                        if (aiOverview) {
-                                            aiOverview.style.display = 'block';
-                                            aiOverview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>${aiLastResponse}</p>`;
-                                        } else {
-                                            aiError('AI Overview element not found.');
-                                        }
-                                    } catch (error) {
-                                        let errorMsg = 'Unknown error';
-                                        if (typeof error === 'string') errorMsg = error;
-                                        else if (error && typeof error === 'object' && 'message' in error) errorMsg = (error as any).message;
-                                        aiError('Error: ' + errorMsg);
-                                    }
+        aiButton.onclick =() => {
+            console.log('AI Button clicked');
+            chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
+                const activeTab = tabs[0];
+                if (activeTab && activeTab.url) {
+                    const url = activeTab.url;
+                    const urlObj = new URL(url);
+                    const rootDomain = urlObj.hostname.replace(/^www\./, '');
+                    chrome.runtime.sendMessage({
+                        type: 'summarize_terms',
+                        domain: rootDomain
+                    });
+                    const aiOverview = document.getElementById('aiOverview');
+                    if (aiOverview) {
+                        aiOverview.style.display = 'block';
+                        aiOverview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>The AI is thinking...</p>`;
                     }
-                );
-              
+                }
             });
         };
     }
+
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+            if (key.startsWith('ai_summary_')) {
+                const rootDomain = key.substring('ai_summary_'.length);
+                const aiOverview = document.getElementById('aiOverview');
+                if (aiOverview) {
+                    aiOverview.style.display = 'block';
+                    aiOverview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>${newValue}</p>`;
+                }
+            }
+        }
+    });
 });
 
 function ifFirefoxDesktopResize(): void {

@@ -3,3 +3,4 @@ build/
 dist/
 package-lock.json
 tsc/
+src/scripts/api.ts

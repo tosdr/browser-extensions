@@ -206,6 +206,9 @@ html {
 .label.web {
     cursor: pointer;
 }
+#aiOverview {
+    padding:20px;
+}
 
 .labeltext {
     font-size: 1rem;

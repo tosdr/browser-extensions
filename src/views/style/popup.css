@@ -119,6 +119,8 @@ html {
     align-items: center;
     z-index: 1;
     pointer-events: auto;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
 .header > .labels.scrollable {

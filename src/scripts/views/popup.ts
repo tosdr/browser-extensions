@@ -425,8 +425,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (aiButton) {
-        aiButton.onclick =() => {
+        aiButton.onclick = async () => {
             console.log('AI Button clicked');
+            const result = await chrome.storage.local.get(['openai']);
+            const apiKey = result.openai;
+            
+            if (!apiKey) {
+                console.error('No OpenAI API key found in storage');
+                return;
+            }
+            
             chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
                 const activeTab = tabs[0];
                 if (activeTab && activeTab.url) {
@@ -435,7 +443,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const rootDomain = urlObj.hostname.replace(/^www\./, '');
                     chrome.runtime.sendMessage({
                         type: 'summarize_terms',
-                        domain: rootDomain
+                        domain: rootDomain,
+                        aiApiKey:apiKey
                     });
                     const aiOverview = document.getElementById('aiOverview');
                     if (aiOverview) {

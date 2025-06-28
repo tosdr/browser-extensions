@@ -335,6 +335,7 @@ checkDonationReminder();
 
 let aiModel = "gpt-4.1";
 
+/*
 function aiError(message = 'An error occurred. Please try again later.', title = 'Error') {
     chrome.notifications.create({
         type: 'basic',
@@ -343,11 +344,12 @@ function aiError(message = 'An error occurred. Please try again later.', title =
         message
     });
 }
-
+*/
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.type === 'summarize_terms') {
-            if (!aiApiKey) {
-                aiError('No API key found. Please set your OpenAI API key in the extension settings.');
+            if (!request.aiApiKey) {
+                //aiError('No API key found. Please set your OpenAI API key in the extension settings.');
+                console.error('No API key found in request');
                 return;
             }
             try {
@@ -355,7 +357,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${aiApiKey}`
+                        'Authorization': `Bearer ${request.aiApiKey}`
                     },
                     body: JSON.stringify({
                         model: aiModel,
@@ -382,7 +384,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 });
                 const data = await response.json();
                 if (data.error) {
-                    aiError(data.error.message);
+                    chrome.storage.local.set({ [`ai_summary_${request.domain}`]: data.error.message });;
                     return;
                 }
                 const aiLastResponse = data.choices[0].message.content;
@@ -391,7 +393,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                 let errorMsg = 'Unknown error';
                 if (typeof error === 'string') errorMsg = error;
                 else if (error && typeof error === 'object' && 'message' in error) errorMsg = (error as any).message;
-                aiError('Error: ' + errorMsg);
+                console.error('Error: ' + errorMsg);
             }
     }
 });

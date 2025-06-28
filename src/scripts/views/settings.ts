@@ -4,6 +4,7 @@ const themeRatingInput = document.getElementById('themeRating') as HTMLInputElem
 const curatorModeInput = document.getElementById('curatorMode') as HTMLInputElement;
 // const telemetryInput = document.getElementById('telemetry') as HTMLInputElement;
 const apiInput = document.getElementById('api') as HTMLInputElement;
+const openAIInput = document.getElementById('openai') as HTMLInputElement;
 
 
 chrome.storage.local.get(
@@ -53,6 +54,9 @@ chrome.storage.local.get(
         if (result.api) {
             if (result.api.length !== 0) apiInput.value = result.api;
         }
+        if (result.openai) {
+            if (result.openai.length !== 0) openAIInput.value = result.openai;
+        }
 
         // if (result.sentry) {
         //     telemetryInput.checked = result.sentry;
@@ -100,6 +104,15 @@ apiInput.addEventListener('change', function () {
         { api: apiInput.value },
         function () {
             console.log('api url has been changed.');
+        }
+    );
+});
+
+openAIInput.addEventListener('change', function () {
+    chrome.storage.local.set(
+        { openai: openAIInput.value.trim() },
+        function () {
+            console.log('openAI API key has been changed.');
         }
     );
 });

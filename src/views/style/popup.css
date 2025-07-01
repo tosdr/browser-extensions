@@ -198,7 +198,10 @@ html {
 .label.other {
     background: #3684fd;
 }
-#aibutton img { 
+.loadingIconBlack, .loadingIconBlack *{
+    filter: invert(1);
+}
+#aibutton img , #aibutton-2 img , .loadingIconBlack { 
     width:20px;
     height:20px;
     object-fit:contain;
@@ -206,7 +209,12 @@ html {
 .label.web {
     cursor: pointer;
 }
-#aiOverview {
+.ai-loading-wrapper{
+    display: flex;
+    gap:5px;
+    align-items:center
+}
+.aiOverview {
     padding:20px;
 }
 
@@ -249,6 +257,9 @@ html {
 #loading > div > img {
     width: 100%;
     height: 100px;
+    animation: rotation 2s infinite linear;
+}
+#loading > div > img , .loadingIconBlack{
     animation: rotation 2s infinite linear;
 }
 

@@ -381,8 +381,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const donationButton = document.getElementById('donationButton');
     const source = document.getElementById('source');
     const opentosdr = document.getElementById('opentosdr');
-    const aiButton = document.getElementById('aibutton');
-    console.log('aiButton:', aiButton);
+    const aiButtons = document.querySelectorAll('.aibutton');
+    //console.log('aiButtons:', aiButtons);
     if (toggleButton) {
         toggleButton.onclick = () => {
             const body = document.querySelector('body');
@@ -424,52 +424,67 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    if (aiButton) {
+    if (aiButtons.length > 0) {
         const result = await chrome.storage.local.get(['openai']);
         if(result.openai && result.openai !== ""){
-            //display AI button only if OpenAI API key is set
-            aiButton.style.display = 'flex';
-        }
-        aiButton.onclick = async () => {
-            console.log('AI Button clicked');
-            const result = await chrome.storage.local.get(['openai']);
-            const apiKey = result.openai;
-            
-            if (!apiKey) {
-                console.error('No OpenAI API key found in storage');
-                return;
-            }
-            
-            chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
-                const activeTab = tabs[0];
-                if (activeTab && activeTab.url) {
-                    const url = activeTab.url;
-                    const urlObj = new URL(url);
-                    const rootDomain = urlObj.hostname.replace(/^www\./, '');
-                    chrome.runtime.sendMessage({
-                        type: 'summarize_terms',
-                        domain: rootDomain,
-                        aiApiKey:apiKey
-                    });
-                    const aiOverview = document.getElementById('aiOverview');
-                    if (aiOverview) {
-                        aiOverview.style.display = 'block';
-                        aiOverview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>The AI is thinking...</p>`;
-                    }
-                }
+            //display AI buttons only if OpenAI API key is set
+            aiButtons.forEach((button) => {
+                (button as HTMLElement).style.display = 'flex';
             });
-        };
+        }
+        
+        aiButtons.forEach((button) => {
+            button.addEventListener('click', async () => {
+                //console.log('AI Button clicked');
+                const result = await chrome.storage.local.get(['openai']);
+                const apiKey = result.openai;
+                
+                if (!apiKey) {
+                    console.error('No OpenAI API key found in storage');
+                    return;
+                }
+                
+                chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
+                    const activeTab = tabs[0];
+                    if (activeTab && activeTab.url) {
+                        const url = activeTab.url;
+                        const urlObj = new URL(url);
+                        const rootDomain = urlObj.hostname.replace(/^www\./, '');
+                        chrome.runtime.sendMessage({
+                            type: 'summarize_terms',
+                            domain: rootDomain,
+                            aiApiKey:apiKey
+                        });
+                        const aiOverviews = document.querySelectorAll('.aiOverview');
+                        aiOverviews.forEach((overview) => {
+                            (overview as HTMLElement).style.display = 'block';
+                            overview.innerHTML = 
+                            `<h3>AI Overview for ${rootDomain}:</h3>
+                            <div class="ai-loading-wrapper">                                           
+                             <img
+                                class="loadingIcon loadingIconBlack"
+                                alt="Loading..."
+                                src="icons/loading.svg"
+                                />  <span> The AI is thinking... <span>
+                            </div>
+
+                            `;
+                        });
+                    }
+                });
+            });
+        });
     }
 
     chrome.storage.onChanged.addListener((changes, namespace) => {
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
             if (key.startsWith('ai_summary_')) {
                 const rootDomain = key.substring('ai_summary_'.length);
-                const aiOverview = document.getElementById('aiOverview');
-                if (aiOverview) {
-                    aiOverview.style.display = 'block';
-                    aiOverview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>${newValue}</p>`;
-                }
+                const aiOverviews = document.querySelectorAll('.aiOverview');
+                aiOverviews.forEach((overview) => {
+                    (overview as HTMLElement).style.display = 'block';
+                    overview.innerHTML = `<h3>AI Overview for ${rootDomain}:</h3><p>${newValue}</p>`;
+                });
             }
         }
     });

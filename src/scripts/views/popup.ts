@@ -437,6 +437,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.addEventListener('click', async () => {
                 //console.log('AI Button clicked');
                 const result = await chrome.storage.local.get(['openai']);
+                const prompt = await chrome.storage.local.get(['aiPrompt']);
                 const apiKey = result.openai;
                 
                 if (!apiKey) {
@@ -453,7 +454,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         chrome.runtime.sendMessage({
                             type: 'summarize_terms',
                             domain: rootDomain,
-                            aiApiKey:apiKey
+                            aiApiKey:apiKey,
+                            prompt
                         });
                         const aiOverviews = document.querySelectorAll('.aiOverview');
                         aiOverviews.forEach((overview) => {

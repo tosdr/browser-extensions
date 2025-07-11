@@ -5,6 +5,7 @@ const curatorModeInput = document.getElementById('curatorMode') as HTMLInputElem
 // const telemetryInput = document.getElementById('telemetry') as HTMLInputElement;
 const apiInput = document.getElementById('api') as HTMLInputElement;
 const openAIInput = document.getElementById('openai') as HTMLInputElement;
+const aiPromptInput = document.getElementById('aiPrompt') as HTMLInputElement;
 
 
 chrome.storage.local.get(
@@ -18,6 +19,7 @@ chrome.storage.local.get(
         'sentry',
         'api',
         'openai',
+        'aiPrompt'
     ],
     function (result) {
         if (result.db) {
@@ -56,6 +58,11 @@ chrome.storage.local.get(
         }
         if (result.openai) {
             if (result.openai.length !== 0) openAIInput.value = result.openai;
+        }
+        if( result.aiPrompt) {
+            if (result.aiPrompt.length !== 0) {
+                aiPromptInput.value = result.aiPrompt;
+            }
         }
 
         // if (result.sentry) {
@@ -113,6 +120,14 @@ openAIInput.addEventListener('change', function () {
         { openai: openAIInput.value.trim() },
         function () {
             console.log('openAI API key has been changed.');
+        }
+    );
+});
+aiPromptInput.addEventListener('change', function () {
+    chrome.storage.local.set(
+        { aiPrompt: aiPromptInput.value.trim() },
+        function () {
+            console.log('AI prompt has been changed.');
         }
     );
 });

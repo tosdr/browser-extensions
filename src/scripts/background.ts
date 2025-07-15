@@ -17,10 +17,6 @@ var apiUrl = 'api.tosdr.org';
 
 // let sentry = false;
 
-function getBrowserEnviroment() {
-    return `User Agent: ${navigator.userAgent}\nPlatform: ${navigator.platform}\nLanguage: ${navigator.language}`;
-}
-
 function setPopup(tabId: number | null, popup: string): void {
     if (!tabId) {
         console.log('tabid is undefined, goodbye');
@@ -70,9 +66,9 @@ function initializePageAction(tab: chrome.tabs.Tab): void {
 
     // get database from chrome.storage
     chrome.storage.local.get(['db'], function (result) {
-        if (result.db) {
+        if (result["db"]) {
             // parse the database
-            const db = result.db as DatabaseEntry[];
+            const db = result["db"] as DatabaseEntry[];
 
             var domain = url.hostname;
 
@@ -85,9 +81,9 @@ function initializePageAction(tab: chrome.tabs.Tab): void {
             var domainEntry = db.filter((entry) =>
                 entry.url.split(',').includes(domain)
             );
-            if (domainEntry.length === 1) {
+            if (domainEntry.length === 1 && domainEntry[0]) {
                 console.log('exact match!');
-                serviceDetected(tab, domainEntry[0]);
+                serviceDetected(tab, domainEntry[0] as Service);
                 return;
             } else {
                 const maxTries = 4;
@@ -101,10 +97,10 @@ function initializePageAction(tab: chrome.tabs.Tab): void {
                         domainEntry = db.filter((entry) =>
                             entry.url.split(',').includes(domain)
                         );
-                        if (domainEntry.length === 1) {
+                        if (domainEntry.length === 1 && domainEntry[0]) {
                             console.log('exact match!');
                             current = maxTries + 1;
-                            serviceDetected(tab, domainEntry[0]);
+                            serviceDetected(tab, domainEntry[0] as Service);
                             return;
                         }
                     } else {
@@ -127,13 +123,7 @@ function initializePageAction(tab: chrome.tabs.Tab): void {
     });
 }
 
-const handleRuntimeError = () => {
-    const error = chrome.runtime.lastError?.message;
-    if (error) {
-        // if (sentry) Sentry.captureException(error);
-        throw new Error(error);
-    }
-};
+// Removed unused function handleRuntimeError
 
 function setTabIcon(tab: chrome.tabs.Tab | null, icon: string): void {
     const iconDetails: chrome.action.TabIconDetails = {
@@ -154,7 +144,7 @@ function setTabIcon(tab: chrome.tabs.Tab | null, icon: string): void {
 async function setTabBadgeNotification(on: boolean, tab: chrome.tabs.Tab): Promise<void> {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    const dDR = Boolean(data.displayDonationReminder?.active);
+    const dDR = Boolean(data["displayDonationReminder"]?.active);
 
     if (on && dDR) {
         chrome.action.setBadgeText({ text: '!', tabId: tab.id });
@@ -196,10 +186,10 @@ chrome.action.setBadgeText({ text: '' });
 async function checkDonationReminder() {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    const dDR = Boolean(data.displayDonationReminder?.active);
+    const dDR = Boolean(data["displayDonationReminder"]?.active);
     if (
         dDR !== true &&
-        data.displayDonationReminder.allowedPlattform === true
+        data["displayDonationReminder"].allowedPlattform === true
     ) {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
@@ -221,11 +211,13 @@ async function checkDonationReminder() {
                     displayDonationReminder: {
                         active: true,
                         allowedPlattform:
-                            data.displayDonationReminder.allowedPlattform,
+                            data["displayDonationReminder"].allowedPlattform,
                     },
                 });
             }
-        } catch (error) {}
+        } catch (error) {
+            console.error('Error in checkDonationReminder:', error);
+        }
     } else {
         chrome.action.setBadgeText({ text: '!' });
     }
@@ -241,18 +233,18 @@ function checkIfUpdateNeeded(firstStart = false) {
             //         dsn: 'https://07c0ebcab5894cff990fd0d3871590f0@sentry.internal.jrbit.de/38',
             //     });
             // }
-            if (result.api) {
-                if (result.api.length !== 0) apiUrl = result.api;
+            if (result["api"]) {
+                if (result["api"].length !== 0) apiUrl = result["api"];
             }
 
-            if (result.db && result.lastModified) {
+            if (result["db"] && result["lastModified"]) {
                 var interval = 8;
-                if (result.interval) {
-                    interval = result.interval;
+                if (result["interval"]) {
+                    interval = result["interval"];
                     interval++;
                 }
                 // check if the database is less than 7 days old
-                const lastModified = new Date(result.lastModified);
+                const lastModified = new Date(result["lastModified"]);
                 const today = new Date();
                 const diffTime = Math.abs(
                     today.getTime() - lastModified.getTime()
@@ -260,8 +252,7 @@ function checkIfUpdateNeeded(firstStart = false) {
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 if (diffDays < interval) {
                     console.log(
-                        `Database is less than ${
-                            interval - 1
+                        `Database is less than ${interval - 1
                         } days old, skipping download`
                     );
                     return;
@@ -276,7 +267,7 @@ function checkIfUpdateNeeded(firstStart = false) {
     );
 }
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (_tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
         initializePageAction(tab);
     }
@@ -318,7 +309,9 @@ chrome.runtime.onInstalled.addListener(function () {
             chrome.tabs.query(
                 { active: true, currentWindow: true },
                 function (tabs) {
-                    initializePageAction(tabs[0]);
+                    if (tabs[0]) {
+                        initializePageAction(tabs[0]);
+                    }
                 }
             );
         }

@@ -3,8 +3,17 @@ env:
     es2021: true
     webextensions: true
     node: true
-extends: eslint:recommended
+extends: 
+    - eslint:recommended
+parser: '@typescript-eslint/parser'
+plugins:
+    - '@typescript-eslint'
 parserOptions:
     ecmaVersion: latest
+    sourceType: module
+overrides:
+  - files: ['*.ts']
+    parserOptions:
+      project: './tsconfig.json'
 rules: {}
 ignorePatterns: ['dist/*', 'build/*', 'src/scripts/dist/*', 'tsc/*']

@@ -18,9 +18,9 @@ chrome.storage.local.get(
         'api'
     ],
     function (result) {
-        if (result.db) {
-            const db = result.db;
-            const lastModified = new Date(result.lastModified);
+        if (result["db"]) {
+            const db = result["db"];
+            const lastModified = new Date(result["lastModified"]);
 
             document.getElementById('date')!.innerText =
                 lastModified.toLocaleDateString('en-US');
@@ -28,29 +28,29 @@ chrome.storage.local.get(
         } else {
             const elements = document.getElementsByClassName('dbavailable');
             for (let i = 0; i < elements.length; i++) {
-                elements[i].remove();
+                elements[i]?.remove();
             }
         }
 
-        if (result.interval) {
-            document.getElementById('days')!.innerText = result.interval;
-            updateInput.value = result.interval;
+        if (result["interval"]) {
+            document.getElementById('days')!.innerText = result["interval"];
+            updateInput.value = result["interval"];
         }
 
-        if (result.themeHeader) {
-            themeInput.checked = result.themeHeader;
+        if (result["themeHeader"]) {
+            themeInput.checked = result["themeHeader"];
         }
 
-        if (result.themeHeaderRating) {
-            themeRatingInput.checked = result.themeHeaderRating;
+        if (result["themeHeaderRating"]) {
+            themeRatingInput.checked = result["themeHeaderRating"];
         }
 
-        if (result.curatorMode) {
-            curatorModeInput.checked = result.curatorMode;
+        if (result["curatorMode"]) {
+            curatorModeInput.checked = result["curatorMode"];
         }
 
-        if (result.api) {
-            if (result.api.length !== 0) apiInput.value = result.api;
+        if (result["api"]) {
+            if (result["api"].length !== 0) apiInput.value = result["api"];
         }
 
         // if (result.sentry) {

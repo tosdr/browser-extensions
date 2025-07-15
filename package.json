@@ -1,27 +1,31 @@
 {
   "name": "tosdr_browser_extension",
   "version": "5.0.0",
-  "description": "“I have read and agree to the Terms” is the biggest lie on the web. We aim to fix that. “Terms of Service; Didn't Read” is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
+  "description": "\"I have read and agree to the Terms\" is the biggest lie on the web. We aim to fix that. \"Terms of Service; Didn't Read\" is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
   "author": "ToS;DR Team",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@types/chrome": "^0.0.251",
-    "clean-css": "^5.3.2",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
     "eslint": "^8.53.0",
-    "html-minifier": "^4.0.0",
     "prettier": "3.0.3",
-    "terser": "^5.24.0",
-    "ts-loader": "^9.5.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "vite": "^5.0.0",
+    "vite-plugin-web-extension": "^4.1.0"
   },
   "scripts": {
-    "build": "tsc && npm run copy-assets && npm run webpack && node minify.js",
-    "dev": "tsc && npm run copy-assets && npm run webpack",
-    "copy-assets": "node copy.js",
-    "clean": "node clean.js",
-    "webpack": "webpack"
+    "dev": "vite build --watch --mode development --config vite.chrome.config.ts",
+    "dev:firefox": "vite build --watch --mode development --config vite.firefox.config.ts",
+    "build": "node scripts/build.js",
+    "build:chrome": "vite build --mode production --config vite.chrome.config.ts",
+    "build:firefox": "vite build --mode production --config vite.firefox.config.ts",
+    "clean": "powershell -Command \"Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist, build, tsc\"",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src scripts --ext .js,.ts",
+    "lint:fix": "eslint src scripts --ext .js,.ts --fix"
   },
   "repository": {
     "type": "git",

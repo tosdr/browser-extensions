@@ -1,23 +1,67 @@
 {
-    "compilerOptions": {
-        "module": "ES6",
-        "target": "ES2016",
-        "moduleResolution": "bundler",
-        "noImplicitAny": true,
-        "removeComments": true,
-        "skipLibCheck": true,
-        "preserveConstEnums": true,
-        "esModuleInterop": true,
-        "outDir": "tsc/",
-        "rootDir": "src/",
-        "sourceMap": false,
-        "strict": true
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    
+    /* Strict Type-Checking Options */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    
+    /* Module Resolution Options */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/shared/*": ["src/shared/*"],
+      "@/background/*": ["src/background/*"],
+      "@/popup/*": ["src/popup/*"],
+      "@/content/*": ["src/content/*"],
+      "@/options/*": ["src/options/*"]
     },
-    "include": [
-        "src/scripts/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
-    ]
+    
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "declaration": false,
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*",
+    "vite.config.ts",
+    "vite.*.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "tsc",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }

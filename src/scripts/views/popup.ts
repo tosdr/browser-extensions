@@ -1,35 +1,17 @@
-interface ServiceDetails {
-    id: string;
-    name: string;
-    rating: string;
-    points: Array<{
-        id: string;
-        title: string;
-        status: string;
-        text: string;
-    }>;
-}
-
-interface DonationReminder {
-    active: boolean;
-    allowedPlattform: boolean;
-}
-
 let curatorMode = false;
-let renderDonationReminder = false;
 var apiUrl = 'api.tosdr.org';
 
 chrome.storage.local.get(['api'], function (result) {
-    if (result.api && result.api.length !== 0) {
-        apiUrl = result.api;
+    if (result["api"] && result["api"].length !== 0) {
+        apiUrl = result["api"];
     }
 });
 
 async function donationReminderLogic(): Promise<void> {
     const result = await chrome.storage.local.get('displayDonationReminder');
-    console.log('displayDonationReminder:', result.displayDonationReminder);
+    console.log('displayDonationReminder:', result["displayDonationReminder"]);
     
-    if (result.displayDonationReminder?.active) {
+    if (result["displayDonationReminder"]?.active) {
         try {
             const currentDate = new Date();
             const currentMonth = currentDate.getMonth();
@@ -50,7 +32,7 @@ async function donationReminderLogic(): Promise<void> {
                 },
                 displayDonationReminder: {
                     active: false,
-                    allowedPlattform: result.displayDonationReminder.allowedPlattform,
+                    allowedPlattform: result["displayDonationReminder"].allowedPlattform,
                 },
             });
 
@@ -185,7 +167,7 @@ function getServiceIDFromURL(url: string): void {
 
 function themeHeaderIfEnabled(serviceID: string): void {
     chrome.storage.local.get(['themeHeader'], function (result) {
-        if (result.themeHeader) {
+        if (result["themeHeader"]) {
             const blurredTemplate = `.header::before {
                 content: '';
                 position: absolute;
@@ -210,7 +192,7 @@ function themeHeaderIfEnabled(serviceID: string): void {
 
 function themeHeaderColorIfEnabled(rating: string): void {
     chrome.storage.local.get(['themeHeaderRating'], function (result) {
-        if (result.themeHeaderRating) {
+        if (result["themeHeaderRating"]) {
             const header = document.getElementById('headerPopup');
             if (header) {
                 header.classList.add(rating);
@@ -359,12 +341,12 @@ getServiceIDFromURL(window.location.href);
 
 // Get settings
 chrome.storage.local.get(['darkmode', 'curatorMode', 'api'], function (result) {
-    if (result.darkmode) {
+    if (result["darkmode"]) {
         const body = document.querySelector('body')!;
         body.classList.toggle('dark-mode');
     }
 
-    if (result.curatorMode) {
+    if (result["curatorMode"]) {
         document.getElementById('curator')!.style.display = 'block';
         curatorMode = true;
     } else {

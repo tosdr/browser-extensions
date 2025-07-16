@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
-const { existsSync, rmSync } = require('fs');
+import { execSync } from 'child_process';
+import { existsSync, rmSync } from 'fs';
 
 console.log('🚀 Building browser extensions...\n');
 

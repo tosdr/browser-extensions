@@ -1,20 +1,21 @@
 {
   "name": "tosdr_browser_extension",
   "version": "5.0.0",
+  "type": "module",
   "description": "\"I have read and agree to the Terms\" is the biggest lie on the web. We aim to fix that. \"Terms of Service; Didn't Read\" is a user rights initiative to rate and label website terms & privacy policies, from very good (class A) to very bad (class E).",
   "author": "ToS;DR Team",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
-    "@types/chrome": "^0.0.251",
-    "@types/node": "^20.10.0",
+    "@types/chrome": "^0.1.0",
+    "@types/node": "^24.0.14",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
-    "eslint": "^8.53.0",
-    "prettier": "3.0.3",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.0",
-    "vite-plugin-web-extension": "^4.1.0"
+    "eslint": "^9.31.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vite-plugin-web-extension": "^4.4.4"
   },
   "scripts": {
     "dev": "vite build --watch --mode development --config vite.chrome.config.ts",
@@ -22,7 +23,7 @@
     "build": "node scripts/build.js",
     "build:chrome": "vite build --mode production --config vite.chrome.config.ts",
     "build:firefox": "vite build --mode production --config vite.firefox.config.ts",
-    "clean": "powershell -Command \"Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist, build, tsc\"",
+    "clean": "rimraf dist build tsc",
     "type-check": "tsc --noEmit",
     "lint": "eslint src scripts --ext .js,.ts",
     "lint:fix": "eslint src scripts --ext .js,.ts --fix"

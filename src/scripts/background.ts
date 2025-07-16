@@ -186,10 +186,12 @@ chrome.action.setBadgeText({ text: '' });
 async function checkDonationReminder() {
     // Retrieve the value from storage and ensure it's a boolean
     const data = await chrome.storage.local.get('displayDonationReminder');
-    const dDR = Boolean(data["displayDonationReminder"]?.active);
+    const displayDonationReminder = data["displayDonationReminder"];
+    const dDR = Boolean(displayDonationReminder?.active);
+    
     if (
         dDR !== true &&
-        data["displayDonationReminder"].allowedPlattform === true
+        displayDonationReminder?.allowedPlattform === true
     ) {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
@@ -211,7 +213,7 @@ async function checkDonationReminder() {
                     displayDonationReminder: {
                         active: true,
                         allowedPlattform:
-                            data["displayDonationReminder"].allowedPlattform,
+                            displayDonationReminder?.allowedPlattform,
                     },
                 });
             }

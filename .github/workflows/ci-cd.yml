@@ -1,0 +1,155 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master ]
+  release:
+    types: [ published ]
+
+jobs:
+  # Job for linting and type checking
+  lint:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run type check
+      run: npm run type-check
+      
+    - name: Run linting
+      run: npm run lint
+
+
+
+  # Job for creating nightly builds
+  nightly:
+    name: Create Nightly Build
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build extensions
+      run: npm run build
+        
+    - name: Create Chrome extension zip
+      run: |
+        cd dist/chrome
+        zip -r ../../tosdr-chrome-nightly.zip .
+        
+    - name: Create Firefox extension zip
+      run: |
+        cd dist/firefox
+        zip -r ../../tosdr-firefox-nightly.zip .
+        
+    - name: Upload nightly builds
+      uses: actions/upload-artifact@v4
+      with:
+        name: nightly-builds
+        path: |
+          tosdr-chrome-nightly.zip
+          tosdr-firefox-nightly.zip
+        retention-days: 7
+
+  # Job for creating release builds
+  release:
+    name: Create Release Build
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'release'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build extensions
+      run: npm run build
+        
+    - name: Create Chrome extension zip
+      run: |
+        cd dist/chrome
+        zip -r ../../tosdr-chrome-v${{ github.event.release.tag_name }}.zip .
+        
+    - name: Create Firefox extension zip
+      run: |
+        cd dist/firefox
+        zip -r ../../tosdr-firefox-v${{ github.event.release.tag_name }}.zip .
+        
+    - name: Upload release builds
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-builds
+        path: |
+          tosdr-chrome-v${{ github.event.release.tag_name }}.zip
+          tosdr-firefox-v${{ github.event.release.tag_name }}.zip
+        retention-days: 90
+
+  # Job for publishing release assets
+  publish-release:
+    name: Publish Release Assets
+    runs-on: ubuntu-latest
+    needs: release
+    if: github.event_name == 'release'
+    permissions:
+      contents: write
+      
+    steps:
+    - name: Download release artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: release-builds
+        
+    - name: Upload Chrome extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./tosdr-chrome-v${{ github.event.release.tag_name }}.zip
+        asset_name: tosdr-chrome-v${{ github.event.release.tag_name }}.zip
+        asset_content_type: application/zip
+        
+    - name: Upload Firefox extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./tosdr-firefox-v${{ github.event.release.tag_name }}.zip
+        asset_name: tosdr-firefox-v${{ github.event.release.tag_name }}.zip
+        asset_content_type: application/zip 

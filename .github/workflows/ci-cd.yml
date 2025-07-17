@@ -33,36 +33,7 @@ jobs:
     - name: Run linting
       run: npm run lint
 
-  # Job for building extensions
-  build:
-    name: Build Extensions
-    runs-on: ubuntu-latest
-    needs: lint
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build extensions
-      run: npm run build
-      
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: browser-extensions
-        path: |
-          dist/chrome/
-          dist/firefox/
-        retention-days: 30
+
 
   # Job for creating nightly builds
   nightly:

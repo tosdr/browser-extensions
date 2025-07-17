@@ -36,13 +36,13 @@ Just open ```about:debugging``` (Firefox) or ``chrome:extensions`` (Chrome) and 
 Building instructions
 ---------------------
 
-Make sure you have `node` installed, and from the repository root run the following:
+Make sure you have `node` or `bun` installed, and from the repository root run the following:
 
 1. Install dependencies
-`npm install`
+`npm install` / `bun install`
 
 2. Build
-`npm run build`
+`npm run build` / `bun run build`
 
 3. Package up the contents of `./dist/chrome` and `./dist/firefox`
 
@@ -70,7 +70,7 @@ Publishing the Edge extension
 Artifacts
 ======
 
-Artifacts of each build and release can be viewed on S3: https://tosdr-artifacts.s3.eu-west-2.jbcdn.net/minio/tosdr-artifacts/browser-extensions/
+Artifacts of each build and release can be viewed on GitHub [here](https://github.com/tosdr/browser-extensions/actions).
 
 
 License

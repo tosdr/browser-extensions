@@ -6,7 +6,7 @@
     "homepage_url": "https://tosdr.org",
     "permissions": ["tabs", "storage"],
     "background": {
-        "scripts": ["scripts/background.js"]
+        "page": "views/background.html"
     },
     "browser_specific_settings": {
         "gecko": {

@@ -53,12 +53,19 @@ function copyFirefoxAssetsPlugin() {
         }
         copyFileSync(`${outDir}/src/views/popup.html`, `${outDir}/views/popup.html`);
       }
-      
+
       if (existsSync(`${outDir}/src/views/settings/settings.html`)) {
         if (!existsSync(`${outDir}/views/settings`)) {
           mkdirSync(`${outDir}/views/settings`, { recursive: true });
         }
         copyFileSync(`${outDir}/src/views/settings/settings.html`, `${outDir}/views/settings/settings.html`);
+      }
+
+      if (existsSync(`${outDir}/src/views/background.html`)) {
+        if (!existsSync(`${outDir}/views`)) {
+          mkdirSync(`${outDir}/views`, { recursive: true });
+        }
+        copyFileSync(`${outDir}/src/views/background.html`, `${outDir}/views/background.html`);
       }
       
       console.log('Firefox assets copied successfully');

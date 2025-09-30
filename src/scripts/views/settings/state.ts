@@ -1,4 +1,5 @@
 import { getLocal } from '../../lib/chromeStorage';
+import { resolveLanguage } from '../../lib/language';
 
 export async function populateSettingsForm(): Promise<void> {
     const elements = collectElements();
@@ -11,6 +12,7 @@ export async function populateSettingsForm(): Promise<void> {
         'curatorMode',
         'sentry',
         'api',
+        'language',
     ]);
 
     if (Array.isArray(result['db'])) {
@@ -49,6 +51,11 @@ export async function populateSettingsForm(): Promise<void> {
     if (elements.apiInput && typeof result['api'] === 'string') {
         elements.apiInput.value = result['api'];
     }
+
+    if (elements.languageSelect) {
+        const language = resolveLanguage(result['language']);
+        elements.languageSelect.value = language;
+    }
 }
 
 function collectElements() {
@@ -58,6 +65,7 @@ function collectElements() {
         themeRatingInput: document.getElementById('themeRating') as HTMLInputElement | null,
         curatorModeInput: document.getElementById('curatorMode') as HTMLInputElement | null,
         apiInput: document.getElementById('api') as HTMLInputElement | null,
+        languageSelect: document.getElementById('language') as HTMLSelectElement | null,
         date: document.getElementById('date') as HTMLElement | null,
         indexed: document.getElementById('indexed') as HTMLElement | null,
         days: document.getElementById('days') as HTMLElement | null,

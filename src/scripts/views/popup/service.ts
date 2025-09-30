@@ -1,4 +1,4 @@
-import { getApiUrl, isCuratorMode } from './state';
+import { getApiUrl, getLanguage, isCuratorMode } from './state';
 import { applyHeaderColor } from './theme';
 
 interface ServicePoint {
@@ -6,6 +6,7 @@ interface ServicePoint {
     title: string;
     case?: {
         classification?: string;
+        localized_title?: string | null;
     };
 }
 
@@ -27,8 +28,9 @@ export async function displayServiceDetails(
     options: { unverified?: boolean } = {}
 ): Promise<void> {
     try {
+        const language = getLanguage();
         const response = await fetch(
-            `https://${getApiUrl()}/service/v3?id=${encodeURIComponent(id)}`
+            `https://${getApiUrl()}/service/v3?id=${encodeURIComponent(id)}&lang=${encodeURIComponent(language)}`
         );
 
         if (!response.ok) {
@@ -218,10 +220,11 @@ function appendPointGroup(
     points.forEach((point, index) => {
         const wrapper = document.createElement('div');
         const classification = point.case?.classification ?? 'neutral';
+        const pointTitle = point.case?.localized_title ?? point.title;
         wrapper.innerHTML = `
             <div class="point ${classification}">
                 <img src="icons/${classification}.svg">
-                <p>${point.title}</p>
+                <p>${pointTitle}</p>
                 ${renderCuratorTag(point.status)}
             </div>
         `.trim();

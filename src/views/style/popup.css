@@ -201,6 +201,13 @@ html {
     cursor: pointer;
 }
 
+.translationWarning {
+    margin: 0.5rem 1rem 1.5rem;
+    font-size: 0.8rem;
+    color: #555;
+    text-align: center;
+}
+
 .labeltext {
     font-size: 1rem;
     font-weight: normal;

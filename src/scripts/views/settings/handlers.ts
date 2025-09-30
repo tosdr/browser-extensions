@@ -1,4 +1,5 @@
 import { setLocal } from '../../lib/chromeStorage';
+import { normalizeLanguage } from '../../lib/language';
 
 export function registerSettingsHandlers(): void {
     const updateInput = document.getElementById('update') as HTMLInputElement | null;
@@ -6,6 +7,7 @@ export function registerSettingsHandlers(): void {
     const themeRatingInput = document.getElementById('themeRating') as HTMLInputElement | null;
     const curatorModeInput = document.getElementById('curatorMode') as HTMLInputElement | null;
     const apiInput = document.getElementById('api') as HTMLInputElement | null;
+    const languageSelect = document.getElementById('language') as HTMLSelectElement | null;
 
     if (updateInput) {
         updateInput.addEventListener('change', () => {
@@ -38,6 +40,16 @@ export function registerSettingsHandlers(): void {
     if (apiInput) {
         apiInput.addEventListener('change', () => {
             void setLocal({ api: apiInput.value });
+        });
+    }
+
+    if (languageSelect) {
+        languageSelect.addEventListener('change', () => {
+            const normalized = normalizeLanguage(languageSelect.value) ?? 'en';
+            if (languageSelect.value !== normalized) {
+                languageSelect.value = normalized;
+            }
+            void setLocal({ language: normalized });
         });
     }
 }

@@ -1,4 +1,4 @@
-import { hydrateState } from './popup/state';
+import { hydrateState, PopupPreferences } from './popup/state';
 import { registerUiEventHandlers } from './popup/events';
 import { initializePopupFromLocation } from './popup/navigation';
 import { adjustLayoutForFirefoxDesktop } from './popup/layout';
@@ -14,20 +14,25 @@ void (async function initPopup(): Promise<void> {
     adjustLayoutForFirefoxDesktop();
 })();
 
-function applyPreferences(preferences: {
-    darkmode: boolean;
-    curatorMode: boolean;
-}): void {
+function applyPreferences(preferences: PopupPreferences): void {
     if (preferences.darkmode) {
         document.body.classList.add('dark-mode');
     }
 
     const curatorElement = document.getElementById('curator');
-    if (!curatorElement) {
-        return;
+    if (curatorElement) {
+        curatorElement.style.display = preferences.curatorMode
+            ? 'block'
+            : 'none';
     }
 
-    curatorElement.style.display = preferences.curatorMode ? 'block' : 'none';
+    const translationWarningElement = document.getElementById(
+        'translationWarning'
+    );
+    if (translationWarningElement) {
+        translationWarningElement.style.display =
+            preferences.language === 'en' ? 'none' : 'block';
+    }
 }
 
 async function waitForDomReady(): Promise<void> {

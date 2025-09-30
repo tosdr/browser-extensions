@@ -26,55 +26,80 @@ export async function displayServiceDetails(
     id: string,
     options: { unverified?: boolean } = {}
 ): Promise<void> {
-    const response = await fetch(
-        `https://${getApiUrl()}/service/v3?id=${encodeURIComponent(id)}`
-    );
+    try {
+        const response = await fetch(
+            `https://${getApiUrl()}/service/v3?id=${encodeURIComponent(id)}`
+        );
 
-    if (response.status >= 300) {
+        if (!response.ok) {
+            hideLoadingState();
+            const errorDescription = await formatHttpError(response);
+            showErrorOverlay(
+                'Unable to load service details.',
+                errorDescription
+            );
+            return;
+        }
+
+        const data = (await response.json()) as ServiceResponse;
+        const rating = data.rating;
+
+        updateServiceName(data.name);
+        updateTitle(data.name);
+        updateGrade(rating);
+        updatePointsCount(data.points.length);
+        revealLoadedState(options.unverified === true);
+
+        populateList(data.points);
+    } catch (error) {
         hideLoadingState();
-        showElement('error');
-        return;
+        showErrorOverlay(
+            'Unable to load service details.',
+            formatUnknownError(error)
+        );
     }
-
-    const data = (await response.json()) as ServiceResponse;
-    const rating = data.rating;
-
-    updateServiceName(data.name);
-    updateTitle(data.name);
-    updateGrade(rating);
-    updatePointsCount(data.points.length);
-    revealLoadedState(options.unverified === true);
-
-    populateList(data.points);
 }
 
 export async function searchService(term: string): Promise<string | undefined> {
-    const response = await fetch(
-        `https://${getApiUrl()}/search/v5/?query=${encodeURIComponent(term)}`
-    );
+    try {
+        const response = await fetch(
+            `https://${getApiUrl()}/search/v5/?query=${encodeURIComponent(term)}`
+        );
 
-    if (response.status !== 200) {
-        hideLoadingState();
-        showElement('error');
-        return undefined;
-    }
+        if (response.status !== 200) {
+            hideLoadingState();
+            const errorDescription = await formatHttpError(response);
+            showErrorOverlay(
+                'Unable to search for matching services.',
+                errorDescription
+            );
+            return undefined;
+        }
 
-    const data = (await response.json()) as SearchResponse;
+        const data = (await response.json()) as SearchResponse;
 
-    if (data.services.length === 0) {
-        return undefined;
-    }
+        if (data.services.length === 0) {
+            return undefined;
+        }
 
-    const [firstService] = data.services;
-    if (firstService) {
-        for (const url of firstService.urls) {
-            if (url === term) {
-                return firstService.id;
+        const [firstService] = data.services;
+        if (firstService) {
+            for (const url of firstService.urls) {
+                if (url === term) {
+                    return firstService.id;
+                }
             }
         }
-    }
 
-    return undefined;
+        return undefined;
+    } catch (error) {
+        hideLoadingState();
+        showErrorOverlay(
+            'Unable to search for matching services.',
+            formatUnknownError(error)
+        );
+        return undefined;
+    }
 }
 
 function updateServiceName(name: string): void {
@@ -241,5 +266,87 @@ function showElement(elementId: string): void {
     const element = document.getElementById(elementId);
     if (element) {
         element.style.display = 'block';
+    }
+}
+
+async function formatHttpError(response: Response): Promise<string> {
+    const statusSummary = `${response.status} ${response.statusText}`.trim();
+
+    try {
+        const contentType = response.headers.get('content-type') ?? '';
+        const bodyText = await response.text();
+
+        if (!bodyText) {
+            return statusSummary || 'Request failed.';
+        }
+
+        if (contentType.includes('application/json')) {
+            try {
+                const parsed = JSON.parse(bodyText) as {
+                    error?: string;
+                    message?: string;
+                } | null;
+
+                const jsonMessage =
+                    typeof parsed?.message === 'string'
+                        ? parsed.message
+                        : typeof parsed?.error === 'string'
+                          ? parsed.error
+                          : undefined;
+
+                if (jsonMessage) {
+                    return statusSummary
+                        ? `${statusSummary} – ${jsonMessage}`
+                        : jsonMessage;
+                }
+            } catch {
+                // Fall back to using the raw body text below.
+            }
+        }
+
+        const trimmedBody = bodyText.trim();
+        if (!trimmedBody) {
+            return statusSummary || 'Request failed.';
+        }
+
+        return statusSummary
+            ? `${statusSummary} – ${trimmedBody}`
+            : trimmedBody;
+    } catch {
+        return statusSummary || 'Request failed.';
+    }
+}
+
+function showErrorOverlay(title: string, description: string): void {
+    const errorContainer = document.getElementById('error');
+    const titleElement = document.getElementById('errorTitle');
+    const descriptionElement = document.getElementById('errorDescription');
+
+    if (titleElement) {
+        titleElement.innerText = title;
+    }
+
+    if (descriptionElement) {
+        descriptionElement.innerText = description;
+    }
+
+    if (errorContainer) {
+        errorContainer.style.display = 'flex';
+    }
+}
+
+function formatUnknownError(error: unknown): string {
+    if (error instanceof Error) {
+        return error.message || error.name;
+    }
+
+    if (typeof error === 'string') {
+        return error;
+    }
+
+    try {
+        return JSON.stringify(error);
+    } catch {
+        return 'An unexpected error occurred.';
     }
 }

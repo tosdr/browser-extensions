@@ -221,6 +221,22 @@ html {
     align-items: center;
     position: absolute;
     color: white;
+    flex-direction: row;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    text-align: left;
+}
+
+.errorText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 260px;
+}
+
+.errorText > h2,
+.errorText > p {
+    margin: 0;
 }
 
 #loading {

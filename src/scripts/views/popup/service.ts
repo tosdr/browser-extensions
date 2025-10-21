@@ -200,7 +200,9 @@ function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     
             createSortetPoints(sortedPoints,pointsList)
         } else { //documents without points
+            const docsWithoutPointsWraper = document.getElementById('docsWithoutPointsWraper')
             const docsWithoutPoints = document.getElementById('docsWithoutPoints')
+            
             if (docsWithoutPoints?.style.display === "none") {
                 docsWithoutPoints.style.display = "block"
             }
@@ -211,12 +213,12 @@ function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
                     <a href="${element.url}" target="_blank">Read Original></a>
                 </div>`;
             doc.innerHTML = temp.trim();
-            docsWithoutPoints!.appendChild(doc.firstChild!);
+            docsWithoutPointsWraper!.appendChild(doc.firstChild!);
         }
     }
     //display points not liked to a document
     const noDocPoints = allPoints.filter((point: ServicePoint) => point.document_id === null)
-    if (noDocPoints !== null) {
+    if (noDocPoints.length > 0) {
         const doc = document.createElement('div');
         const temp = `
         <div class="">

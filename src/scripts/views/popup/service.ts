@@ -70,7 +70,7 @@ export async function displayServiceDetails(
     }
 }
 
-export async function searchService(term: string): Promise<number | undefined> {
+export async function searchService(term: string): Promise<string | undefined> {
     try {
         const response = await fetch(
             `https://${getApiUrl()}/search/v5/?query=${encodeURIComponent(term)}`

@@ -26,7 +26,7 @@ interface ServiceResponse {
 
 interface SearchResponse {
     services: Array<{
-        id: number;
+        id: string;
         urls: string[];
     }>;
 }

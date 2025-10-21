@@ -171,87 +171,125 @@ function revealLoadedState(unverified: boolean): void {
     }
 }
 
-function populateList(points: ServicePoint[], documents: ServiceDocuments[]): void {
+function populateList(allPoints: any, documents: any) {
     const documentList = document.getElementById('documentList');
-    if (!documentList) {
-        return;
+    // Split points by Document and display them seperatly
+    for (let i = 0; i < documents.length; i++) {
+        let added = 0;
+        const element = documents[i];
+        console.log(element)
+        const doc = document.createElement('div');
+        const temp = `
+        <div class="">
+            <div class="documentHeader">
+                <h3 class="documentTitle">${element.name}</h3>
+                <a href="${element.url}" target="_blank">Read Original></a>
+            </div>
+                <div id="pointList_${element.id}" class="pointList">
+                    <a style="display: none">...</a>
+                </div>
+        </div>`;
+        doc.innerHTML = temp.trim();
+        documentList!.appendChild(doc.firstChild!);
+        added++;
+
+        const docPoints = allPoints.filter((point:any) => point.document_id === element.id)
+
+        const sortedPoints = filterPoints(docPoints)
+
+        const pointsList = document.getElementById(`pointList_${element.id}`)
+
+        createSortetPoints(sortedPoints,pointsList)
+
+    }
+    //display points not liked to a document
+    const noDocPoints = allPoints.filter((point:any) => point.document_id === null)
+    if (noDocPoints !== null) {
+        const doc = document.createElement('div');
+        const temp = `
+        <div class="">
+            <div class="documentHeader">
+                <h3 class="documentTitle">Points not linked to a Document</h3>
+            </div>
+                <div id="pointList_unlinkedPoints" class="pointList">
+                    <a style="display: none">...</a>
+                </div>
+        </div>`;
+        doc.innerHTML = temp.trim();
+        documentList!.appendChild(doc.firstChild!);
+        const sortedPoints = filterPoints(noDocPoints)
+        const pointsList = document.getElementById(`pointList_unlinkedPoints`)
+        createSortetPoints(sortedPoints,pointsList)
+
+    }
+}
+    function filterPoints(points:any) {
+        if (!isCuratorMode) {
+            points = points.filter((point: any) => point.status === 'approved');
+        } else {
+            points = points.filter(
+                (point: any) =>
+                    point.status === 'approved' || point.status === 'pending'
+            );
+        }
+        let filteredPoints: any = {}
+        filteredPoints.blocker = points.filter(
+            (point: any) => point.case.classification === 'blocker'
+        );
+        filteredPoints.bad = points.filter(
+            (point: any) => point.case.classification === 'bad'
+        );
+        filteredPoints.good = points.filter(
+            (point: any) => point.case.classification === 'good'
+        );
+        filteredPoints.neutral = points.filter(
+            (point: any) => point.case.classification === 'neutral'
+        );
+        return filteredPoints
     }
 
-    documentList.style.display = 'block';
-    documentList.innerHTML = '';
-
-    const filteredPoints = filterPoints(points);
-
-    appendPointGroup(filteredPoints.blocker, pointsList, false);
-    appendPointGroup(filteredPoints.bad, pointsList, false);
-    appendPointGroup(filteredPoints.good, pointsList, false);
-    appendPointGroup(filteredPoints.neutral, pointsList, true);
+function createSortetPoints(sortedPoints:any,pointsList:any) {
+            if (sortedPoints.blocker) {
+                createPointList(sortedPoints.blocker, pointsList, false);
+            }    
+            if (sortedPoints.bad) {
+                createPointList(sortedPoints.bad, pointsList, false);
+            }
+            if (sortedPoints.good) {
+                createPointList(sortedPoints.good, pointsList, false);
+            }
+            if (sortedPoints.neutral) {
+                createPointList(sortedPoints.neutral, pointsList, true);
+            }
 }
 
-function filterPoints(points: ServicePoint[]): {
-    blocker: ServicePoint[];
-    bad: ServicePoint[];
-    good: ServicePoint[];
-    neutral: ServicePoint[];
-} {
-    const curatedPoints = points.filter((point) => {
-        if (!isCuratorMode()) {
-            return point.status === 'approved';
-        }
-        return point.status === 'approved' || point.status === 'pending';
-    });
+function createPointList(pointsFiltered: any, pointsList: any, last: boolean) {
+    var added = 0;
+    for (let i = 0; i < pointsFiltered.length; i++) {
+        const point = document.createElement('div');
+        const pointTitle = pointsFiltered[i].case?.localized_title ?? point.title;
 
-    return {
-        blocker: curatedPoints.filter(
-            (point) => point.case?.classification === 'blocker'
-        ),
-        bad: curatedPoints.filter(
-            (point) => point.case?.classification === 'bad'
-        ),
-        good: curatedPoints.filter(
-            (point) => point.case?.classification === 'good'
-        ),
-        neutral: curatedPoints.filter(
-            (point) => point.case?.classification === 'neutral'
-        ),
-    };
-}
-
-function appendPointGroup(
-    points: ServicePoint[],
-    container: HTMLElement,
-    isLastGroup: boolean
-): void {
-    let added = 0;
-
-    points.forEach((point, index) => {
-        const wrapper = document.createElement('div');
-        const classification = point.case?.classification ?? 'neutral';
-        const pointTitle = point.case?.localized_title ?? point.title;
-        wrapper.innerHTML = `
-            <div class="point ${classification}">
-                <img src="icons/${classification}.svg">
-                <p>${pointTitle}</p>
-                ${renderCuratorTag(point.status)}
-            </div>
-        `.trim();
-        if (wrapper.firstChild) {
-            container.appendChild(wrapper.firstChild as HTMLElement);
-        }
-        added += 1;
-
-        if (index !== points.length - 1) {
+        var temp = `
+        <div class="point ${pointsFiltered[i].case.classification}">
+            <img src="icons/${pointsFiltered[i].case.classification}.svg">
+            <p>${pointTitle}</p>
+            ${renderCuratorTag(pointsFiltered[i].status)}
+        </div>`;
+        point.innerHTML = temp.trim();
+        pointsList.appendChild(point.firstChild);
+        added++;
+        if (i !== pointsFiltered.length - 1) {
             const divider = document.createElement('hr');
-            container.appendChild(divider);
+            pointsList.appendChild(divider);
         }
-    });
-
-    if (added > 0 && !isLastGroup) {
+    }
+    if (added !== 0 && !last) {
         const divider = document.createElement('hr');
         divider.classList.add('group');
-        container.appendChild(divider);
+        pointsList.appendChild(divider);
     }
 }
+
 
 function renderCuratorTag(status: string): string {
     if (!isCuratorMode() || status === 'approved') {

@@ -10,10 +10,17 @@ interface ServicePoint {
     };
 }
 
+interface ServiceDocument {
+    id: string
+    name: string
+    url: string
+}
+
 interface ServiceResponse {
     name: string;
     rating?: string;
     points: ServicePoint[];
+    documents: ServiceDocument[]
 }
 
 interface SearchResponse {

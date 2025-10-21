@@ -177,28 +177,42 @@ function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     // Split points by Document and display them seperatly
     for (let i = 0; i < documents.length; i++) {
         const element = documents[i]!;
-        const doc = document.createElement('div');
-        const temp = `
-        <div class="">
-            <div class="documentHeader">
-                <h3 class="documentTitle">${element.name}</h3>
-                <a href="${element.url}" target="_blank">Read Original></a>
-            </div>
-                <div id="pointList_${element.id}" class="pointList">
-                    <a style="display: none">...</a>
-                </div>
-        </div>`;
-        doc.innerHTML = temp.trim();
-        documentList!.appendChild(doc.firstChild!);
 
         const docPoints = allPoints.filter((point:ServicePoint) => point.document_id === element.id)
-
         const sortedPoints = filterPoints(docPoints)
 
-        const pointsList = document.getElementById(`pointList_${element.id}`)!
-
-        createSortetPoints(sortedPoints,pointsList)
-
+        if (sortedPoints.blocker.length + sortedPoints.bad.length + sortedPoints.neutral.length + sortedPoints.good.length > 0) {
+            const doc = document.createElement('div');
+            const temp = `
+            <div class="">
+                <div class="documentHeader">
+                    <h3 class="documentTitle">${element.name}</h3>
+                    <a href="${element.url}" target="_blank">Read Original></a>
+                </div>
+                    <div id="pointList_${element.id}" class="pointList">
+                        <a style="display: none">...</a>
+                    </div>
+            </div>`;
+            doc.innerHTML = temp.trim();
+            documentList!.appendChild(doc.firstChild!);
+    
+            const pointsList = document.getElementById(`pointList_${element.id}`)!
+    
+            createSortetPoints(sortedPoints,pointsList)
+        } else { //documents without points
+            const docsWithoutPoints = document.getElementById('docsWithoutPoints')
+            if (docsWithoutPoints?.style.display === "none") {
+                docsWithoutPoints.style.display = "block"
+            }
+            const doc = document.createElement('div');
+            const temp = `
+                <div class="documentHeader">
+                    <h3 class="documentTitle">${element.name}</h3>
+                    <a href="${element.url}" target="_blank">Read Original></a>
+                </div>`;
+            doc.innerHTML = temp.trim();
+            docsWithoutPoints!.appendChild(doc.firstChild!);
+        }
     }
     //display points not liked to a document
     const noDocPoints = allPoints.filter((point: ServicePoint) => point.document_id === null)

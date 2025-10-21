@@ -59,7 +59,7 @@ export async function displayServiceDetails(
         updatePointsCount(data.points.length);
         revealLoadedState(options.unverified === true);
 
-        populateList(data.points);
+    populateList(data.points, data.documents);
     } catch (error) {
         hideLoadingState();
         showErrorOverlay(
@@ -171,14 +171,14 @@ function revealLoadedState(unverified: boolean): void {
     }
 }
 
-function populateList(points: ServicePoint[]): void {
-    const pointsList = document.getElementById('pointList');
-    if (!pointsList) {
+function populateList(points: ServicePoint[], documents: ServiceDocuments[]): void {
+    const documentList = document.getElementById('documentList');
+    if (!documentList) {
         return;
     }
 
-    pointsList.style.display = 'block';
-    pointsList.innerHTML = '';
+    documentList.style.display = 'block';
+    documentList.innerHTML = '';
 
     const filteredPoints = filterPoints(points);
 

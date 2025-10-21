@@ -8,10 +8,11 @@ interface ServicePoint {
         classification?: string;
         localized_title?: string | null;
     };
+    document_id?: number
 }
 
 interface ServiceDocument {
-    id: string
+    id: number
     name: string
     url: string
 }
@@ -25,7 +26,7 @@ interface ServiceResponse {
 
 interface SearchResponse {
     services: Array<{
-        id: string;
+        id: number;
         urls: string[];
     }>;
 }
@@ -171,12 +172,12 @@ function revealLoadedState(unverified: boolean): void {
     }
 }
 
-function populateList(allPoints: any, documents: any) {
+function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     const documentList = document.getElementById('documentList');
     // Split points by Document and display them seperatly
     for (let i = 0; i < documents.length; i++) {
         let added = 0;
-        const element = documents[i];
+        const element = documents[i]!;
         console.log(element)
         const doc = document.createElement('div');
         const temp = `
@@ -193,7 +194,7 @@ function populateList(allPoints: any, documents: any) {
         documentList!.appendChild(doc.firstChild!);
         added++;
 
-        const docPoints = allPoints.filter((point:any) => point.document_id === element.id)
+        const docPoints = allPoints.filter((point:ServicePoint) => point.document_id === element.id)
 
         const sortedPoints = filterPoints(docPoints)
 

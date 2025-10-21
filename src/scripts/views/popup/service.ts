@@ -176,9 +176,7 @@ function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     const documentList = document.getElementById('documentList');
     // Split points by Document and display them seperatly
     for (let i = 0; i < documents.length; i++) {
-        let added = 0;
         const element = documents[i]!;
-        console.log(element)
         const doc = document.createElement('div');
         const temp = `
         <div class="">
@@ -192,7 +190,6 @@ function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
         </div>`;
         doc.innerHTML = temp.trim();
         documentList!.appendChild(doc.firstChild!);
-        added++;
 
         const docPoints = allPoints.filter((point:ServicePoint) => point.document_id === element.id)
 

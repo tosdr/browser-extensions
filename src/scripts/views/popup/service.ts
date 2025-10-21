@@ -281,7 +281,7 @@ function createPointList(pointsFiltered: ServicePoint[], pointsList: HTMLElement
     var added = 0;
     for (let i = 0; i < pointsFiltered.length; i++) {
         const point = document.createElement('div');
-        const pointTitle = pointsFiltered[i]!.case?.localized_title ?? point.title;
+        const pointTitle = pointsFiltered[i]!.case?.localized_title ?? pointsFiltered[i]!.title;
 
         var temp = `
         <div class="point ${pointsFiltered[i]!.case.classification}">

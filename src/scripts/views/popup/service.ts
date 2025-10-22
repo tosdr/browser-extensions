@@ -213,8 +213,8 @@ function populateListUnified(allPoints: ServicePoint[]) {
 function populateListDocCategories(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     const documentList = document.getElementById('documentList');
     // Split points by Document and display them seperatly
-    for (let i = 0; i < documents.length; i++) {
-        const element = documents[i]!;
+    for (let i of documents) {
+        const element = i!;
 
         const docPoints = allPoints.filter((point:ServicePoint) => point.document_id === element.id)
         const sortedPoints = filterPoints(docPoints)

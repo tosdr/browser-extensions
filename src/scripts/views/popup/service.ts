@@ -1,4 +1,4 @@
-import { getApiUrl, getLanguage, isCuratorMode } from './state';
+import { getApiUrl, getLanguage, isCuratorMode, getpointListStyle } from './state';
 import { applyHeaderColor } from './theme';
 
 interface ServicePoint {
@@ -276,13 +276,13 @@ function populateListDocCategories(allPoints: ServicePoint[], documents: Service
     }
 }
     function filterPoints(points:ServicePoint[]) {
-        if (!isCuratorMode) {
-            points = points.filter((point) => point.status === 'approved');
-        } else {
+        if (isCuratorMode()) {
             points = points.filter(
                 (point) =>
                     point.status === 'approved' || point.status === 'pending'
             );
+        } else {
+            points = points.filter((point) => point.status === 'approved');
         }
         let filteredPoints:any = {}
         filteredPoints.blocker = points.filter(

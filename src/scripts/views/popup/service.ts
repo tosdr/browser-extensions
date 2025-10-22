@@ -1,5 +1,6 @@
 import { getApiUrl, getLanguage, isCuratorMode } from './state';
 import { applyHeaderColor } from './theme';
+import { getpointListStyle } from './state'
 
 interface ServicePoint {
     status: string;
@@ -60,7 +61,15 @@ export async function displayServiceDetails(
         updatePointsCount(data.points.length);
         revealLoadedState(options.unverified === true);
 
-    populateList(data.points, data.documents);
+        if (getpointListStyle() === "docCategories") {
+            populateListDocCategories(data.points, data.documents);
+        } else if (getpointListStyle() === "unified") {
+            populateListUnified(data.points)
+        } else {
+            console.error("Unsupported pointListStyle", getpointListStyle()); 
+        }
+
+
     } catch (error) {
         hideLoadingState();
         showErrorOverlay(
@@ -172,7 +181,12 @@ function revealLoadedState(unverified: boolean): void {
     }
 }
 
-function populateList(allPoints: ServicePoint[], documents: ServiceDocument[]) {
+function populateListUnified(allPoints: ServicePoint[]) {
+    
+}
+
+
+function populateListDocCategories(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     const documentList = document.getElementById('documentList');
     // Split points by Document and display them seperatly
     for (let i = 0; i < documents.length; i++) {
@@ -278,12 +292,12 @@ function createSortetPoints(sortedPoints:any,pointsList:HTMLElement) {
 }
 
 function createPointList(pointsFiltered: ServicePoint[], pointsList: HTMLElement, last: boolean) {
-    var added = 0;
+    let added = 0;
     for (let i = 0; i < pointsFiltered.length; i++) {
         const point = document.createElement('div');
         const pointTitle = pointsFiltered[i]!.case?.localized_title ?? pointsFiltered[i]!.title;
 
-        var temp = `
+        let temp = `
         <div class="point ${pointsFiltered[i]!.case.classification}">
             <img src="icons/${pointsFiltered[i]!.case.classification}.svg">
             <p>${pointTitle}</p>

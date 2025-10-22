@@ -1,6 +1,5 @@
 import { getApiUrl, getLanguage, isCuratorMode } from './state';
 import { applyHeaderColor } from './theme';
-import { getpointListStyle } from './state'
 
 interface ServicePoint {
     status: string;

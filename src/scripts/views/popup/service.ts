@@ -182,7 +182,32 @@ function revealLoadedState(unverified: boolean): void {
 }
 
 function populateListUnified(allPoints: ServicePoint[]) {
-    
+    const documentList = document.getElementById('documentList');
+    const doc = document.createElement('div');
+    const temp = `
+        <div class="">
+            <div id="pointList" class="pointList">
+                <a style="display: none">...</a>
+            /div>
+        </div>`
+    ;
+    doc.innerHTML = temp.trim();
+    documentList!.appendChild(doc.firstChild!);
+
+    const pointsList = document.getElementById('pointList');
+    if (!pointsList) {
+        return;
+    }
+
+    pointsList.style.display = 'block';
+    pointsList.innerHTML = '';
+
+    const filteredPoints = filterPoints(allPoints);
+
+    createPointList(filteredPoints.blocker, pointsList, false);
+    createPointList(filteredPoints.bad, pointsList, false);
+    createPointList(filteredPoints.good, pointsList, false);
+    createPointList(filteredPoints.neutral, pointsList, true);
 }
 
 

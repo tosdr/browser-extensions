@@ -1,4 +1,5 @@
-export const SUPPORTED_LANGUAGES = ['en', 'de', 'nl', 'fr', 'es'] as const;
+import { SUPPORTED_LANGUAGES } from "../constants";
+
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 export function normalizeLanguage(

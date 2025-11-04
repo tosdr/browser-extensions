@@ -13,6 +13,7 @@ export async function handleExtensionInstalled(): Promise<void> {
             active: false,
             allowedPlattform: donationAllowed,
         },
+        pointListStyle: "docCategories"
     });
 
     await checkIfUpdateNeeded(true);

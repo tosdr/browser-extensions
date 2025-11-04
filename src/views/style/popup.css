@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'Open Sans';
     src:
-        url('fonts/OpenSans-Regular.woff2') format('woff2'),
-        url('fonts/OpenSans-Regular.woff') format('woff');
+        url('../fonts/OpenSans-Regular.woff2') format('woff2'),
+        url('../fonts/OpenSans-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -270,25 +270,45 @@ h3 {
     margin: 0;
 }
 
-#pointList > hr {
+.pointList > hr {
     border: none;
     height: 1px;
     width: 90%;
     background-color: #e7e7e7;
 }
 
-#pointList > hr.group {
+.pointList > hr.group {
     border: none;
     height: 1px;
     width: 90%;
     background-color: #cccbcb;
 }
 
-#pointList {
+.pointList {
     margin: 0.5rem;
     padding: 0.4rem;
     background-color: #fefefe;
     border-radius: 1rem;
+}
+
+.documentHeader {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: -1.1rem;
+}
+.documentHeader > a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #04040461;
+    font-size: small;
+}
+.documentHeader > a:hover{
+        text-decoration: underline;
+
+}
+.documentHeader > h3 {
+    all:revert
 }
 
 button {
@@ -324,16 +344,20 @@ button {
     );
 }
 
-.dark-mode #pointList {
+.dark-mode .pointList {
     background-color: #1c1c1e;
 }
 
-.dark-mode #pointList > hr.group {
+.dark-mode .pointList > hr.group {
     background-color: #232323;
 }
 
-.dark-mode #pointList > hr {
+.dark-mode .pointList > hr {
     background-color: #1b1b1d;
+}
+
+.dark-mode .documentHeader  a {
+    color: #cccbcb;
 }
 
 #toggleButton,

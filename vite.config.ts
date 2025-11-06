@@ -23,7 +23,8 @@ export default defineConfig({
         popup: resolve(__dirname, 'src/scripts/views/popup.ts'),
         settings: resolve(__dirname, 'src/scripts/views/settings.ts'),
         'popup-html': resolve(__dirname, 'src/views/popup.html'),
-        'settings-html': resolve(__dirname, 'src/views/settings/settings.html')
+        'settings-html': resolve(__dirname, 'src/views/settings/settings.html'),
+        'background-html': resolve(__dirname, 'src/views/background.html')
       },
       output: {
         entryFileNames: (chunkInfo) => {

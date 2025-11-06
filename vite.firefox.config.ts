@@ -1,6 +1,6 @@
 import { defineConfig, mergeConfig } from 'vite';
 import baseConfig from './vite.config';
-import { copyFileSync, mkdirSync, existsSync, cpSync } from 'fs';
+import { copyFileSync, mkdirSync, existsSync, cpSync, rmSync } from 'fs';
 
 // Custom plugin to copy Firefox-specific assets
 function copyFirefoxAssetsPlugin() {
@@ -53,14 +53,25 @@ function copyFirefoxAssetsPlugin() {
         }
         copyFileSync(`${outDir}/src/views/popup.html`, `${outDir}/views/popup.html`);
       }
-      
+
       if (existsSync(`${outDir}/src/views/settings/settings.html`)) {
         if (!existsSync(`${outDir}/views/settings`)) {
           mkdirSync(`${outDir}/views/settings`, { recursive: true });
         }
         copyFileSync(`${outDir}/src/views/settings/settings.html`, `${outDir}/views/settings/settings.html`);
       }
-      
+
+      if (existsSync(`${outDir}/src/views/background.html`)) {
+        if (!existsSync(`${outDir}/views`)) {
+          mkdirSync(`${outDir}/views`, { recursive: true });
+        }
+        copyFileSync(`${outDir}/src/views/background.html`, `${outDir}/views/background.html`);
+      }
+
+      if (existsSync(`${outDir}/src`)) {
+        rmSync(`${outDir}/src`, { recursive: true, force: true });
+      }
+
       console.log('Firefox assets copied successfully');
     }
   };

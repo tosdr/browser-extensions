@@ -13,6 +13,7 @@ export async function populateSettingsForm(): Promise<void> {
         'sentry',
         'api',
         'language',
+        'pointListStyle'
     ]);
 
     if (Array.isArray(result['db'])) {
@@ -56,6 +57,9 @@ export async function populateSettingsForm(): Promise<void> {
         const language = resolveLanguage(result['language']);
         elements.languageSelect.value = language;
     }
+    if (elements.pointListStyle) {
+        elements.pointListStyle.value = String(result['pointListStyle']);
+    }
 }
 
 function collectElements() {
@@ -69,6 +73,7 @@ function collectElements() {
         date: document.getElementById('date') as HTMLElement | null,
         indexed: document.getElementById('indexed') as HTMLElement | null,
         days: document.getElementById('days') as HTMLElement | null,
+        pointListStyle: document.getElementById('pointListStyle') as HTMLSelectElement | null
     };
 }
 

@@ -212,6 +212,15 @@ function populateListUnified(allPoints: ServicePoint[]) {
 
 function populateListDocCategories(allPoints: ServicePoint[], documents: ServiceDocument[]) {
     const documentList = document.getElementById('documentList');
+    //sort docuements alphabetically
+    try {
+        documents.sort((a, b) => 
+            a.name.localeCompare(b.name)
+        )
+    } catch (error) {
+        console.warn(error)
+    }
+    console.log(documents)
     // Split points by Document and display them seperatly
     for (let i of documents) {
         const element = i;

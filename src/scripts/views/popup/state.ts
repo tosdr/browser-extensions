@@ -1,4 +1,4 @@
-import { DEFAULT_API_URL } from '../../constants';
+import { DEFAULT_API_URL} from '../../constants';
 import { getLocal } from '../../lib/chromeStorage';
 import {
     SupportedLanguage,
@@ -8,7 +8,7 @@ import {
 let curatorMode = false;
 let apiUrl = DEFAULT_API_URL;
 let language: SupportedLanguage = 'en';
-let pointListStyle:"docCategories" | "unified"
+let pointListStyle:"docCategories" | "unified" = "unified"
 
 export interface PopupPreferences {
     darkmode: boolean;
@@ -33,7 +33,7 @@ export function setApiUrl(url: string): void {
     apiUrl = url;
 }
 
-export function getpointListStyle() {
+export function getPointListStyle() {
     return pointListStyle
 }
 

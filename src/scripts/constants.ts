@@ -13,3 +13,5 @@ export const API_HEADERS = {
 };
 
 export const SUPPORTED_LANGUAGES = ['en', 'de', 'nl', 'fr', 'es'] as const;
+
+export const DEFAULT_LIST_STYLE :"docCategories" | "unified" = "docCategories" as const;

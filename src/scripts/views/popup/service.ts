@@ -1,4 +1,4 @@
-import { getApiUrl, getLanguage, isCuratorMode, getpointListStyle } from './state';
+import { getApiUrl, getLanguage, isCuratorMode, getPointListStyle } from './state';
 import { applyHeaderColor } from './theme';
 
 interface ServicePoint {
@@ -31,6 +31,13 @@ interface SearchResponse {
     }>;
 }
 
+interface FilteredPoints {
+    blocker: ServicePoint[];
+    bad: ServicePoint[];
+    good: ServicePoint[];
+    neutral: ServicePoint[];
+}
+
 export async function displayServiceDetails(
     id: string,
     options: { unverified?: boolean } = {}
@@ -60,12 +67,14 @@ export async function displayServiceDetails(
         updatePointsCount(data.points.length);
         revealLoadedState(options.unverified === true);
 
-        if (getpointListStyle() === "docCategories") {
+        const pointListStyle = getPointListStyle()
+
+        if (pointListStyle === "docCategories") {
             populateListDocCategories(data.points, data.documents);
-        } else if (getpointListStyle() === "unified") {
+        } else if (pointListStyle === "unified") {
             populateListUnified(data.points)
         } else {
-            console.error("Unsupported pointListStyle", getpointListStyle()); 
+            console.error("Unsupported pointListStyle", pointListStyle); 
         }
 
 
@@ -187,7 +196,7 @@ function populateListUnified(allPoints: ServicePoint[]) {
         <div class="">
             <div id="pointList" class="pointList">
                 <a style="display: none">...</a>
-            /div>
+            </div>
         </div>`
     ;
     doc.innerHTML = temp.trim();
@@ -284,7 +293,7 @@ function populateListDocCategories(allPoints: ServicePoint[], documents: Service
 
     }
 }
-    function filterPoints(points:ServicePoint[]) {
+function filterPoints(points:ServicePoint[]) {
         if (isCuratorMode()) {
             points = points.filter(
                 (point) =>
@@ -293,7 +302,12 @@ function populateListDocCategories(allPoints: ServicePoint[], documents: Service
         } else {
             points = points.filter((point) => point.status === 'approved');
         }
-        let filteredPoints:any = {}
+        let filteredPoints:FilteredPoints = {
+            blocker: [],
+            bad: [],
+            good: [],
+            neutral: []
+        }
         filteredPoints.blocker = points.filter(
             (point) => point.case.classification === 'blocker'
         );
@@ -307,9 +321,9 @@ function populateListDocCategories(allPoints: ServicePoint[], documents: Service
             (point) => point.case.classification === 'neutral'
         );
         return filteredPoints
-    }
+}
 
-function createSortetPoints(sortedPoints:any,pointsList:HTMLElement) {
+function createSortetPoints(sortedPoints:FilteredPoints,pointsList:HTMLElement) {
             if (sortedPoints.blocker) {
                 createPointList(sortedPoints.blocker, pointsList, false);
             }    

@@ -2,6 +2,7 @@ import { setLocal } from '../lib/chromeStorage';
 import { checkIfUpdateNeeded } from './database';
 import { donationReminderAllowed } from './donation';
 import { initializePageAction } from './pageAction';
+import { DEFAULT_LIST_STYLE } from "../constants";
 
 export async function handleExtensionInstalled(): Promise<void> {
     const donationAllowed = donationReminderAllowed(navigator.userAgent);
@@ -13,7 +14,7 @@ export async function handleExtensionInstalled(): Promise<void> {
             active: false,
             allowedPlattform: donationAllowed,
         },
-        pointListStyle: "docCategories"
+        pointListStyle: DEFAULT_LIST_STYLE
     });
 
     await checkIfUpdateNeeded(true);

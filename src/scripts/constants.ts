@@ -11,3 +11,5 @@ export const DEFAULT_POPUP_PATH = '/views/popup.html';
 export const API_HEADERS = {
     apikey: atob('Y29uZ3JhdHMgb24gZ2V0dGluZyB0aGUga2V5IDpQ'),
 };
+
+export const SUPPORTED_LANGUAGES = ['en', 'de', 'nl', 'fr', 'es'] as const;

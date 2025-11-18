@@ -128,7 +128,7 @@ function updateServiceName(name: string): void {
 }
 
 function updateTitle(name: string): void {
-    const titleElement = document.getElementById('title');
+    const titleElement = document.getElementById('serviceTitle');
     if (titleElement) {
         titleElement.innerText = name;
     }

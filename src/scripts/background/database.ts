@@ -62,7 +62,7 @@ export async function checkIfUpdateNeeded(firstStart = false, addonInstallReason
 
     await downloadDatabase(api);
 
-    if (firstStart && ["update", "install"].includes(addonInstallReason?.reason!)) {
+    if (firstStart && addonInstallReason && ["update", "install"].includes(addonInstallReason?.reason)) {
         chrome.runtime.openOptionsPage();
     }
 }

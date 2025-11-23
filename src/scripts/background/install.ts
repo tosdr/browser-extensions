@@ -3,7 +3,7 @@ import { checkIfUpdateNeeded } from './database';
 import { donationReminderAllowed } from './donation';
 import { initializePageAction } from './pageAction';
 
-export async function handleExtensionInstalled(): Promise<void> {
+export async function handleExtensionInstalled(reason:chrome.runtime.InstalledDetails): Promise<void> {
     const donationAllowed = donationReminderAllowed(navigator.userAgent);
 
     await setLocal({
@@ -15,7 +15,7 @@ export async function handleExtensionInstalled(): Promise<void> {
         },
     });
 
-    await checkIfUpdateNeeded(true);
+    await checkIfUpdateNeeded(true, reason);
 
     const [activeTab] = await queryActiveTab();
     if (activeTab) {

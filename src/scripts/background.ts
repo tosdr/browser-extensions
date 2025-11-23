@@ -21,8 +21,8 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
     });
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-    void handleExtensionInstalled();
+chrome.runtime.onInstalled.addListener((reason) => {
+    void handleExtensionInstalled(reason);
 });
 
 chrome.runtime.onStartup.addListener(() => {

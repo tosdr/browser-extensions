@@ -35,7 +35,7 @@ export async function downloadDatabase(apiUrl?: string): Promise<void> {
     }
 }
 
-export async function checkIfUpdateNeeded(firstStart = false): Promise<void> {
+export async function checkIfUpdateNeeded(firstStart = false, addonInstallReason?:chrome.runtime.InstalledDetails): Promise<void> {
     const data = await getLocal([
         'db',
         'lastModified',
@@ -62,7 +62,7 @@ export async function checkIfUpdateNeeded(firstStart = false): Promise<void> {
 
     await downloadDatabase(api);
 
-    if (firstStart) {
+    if (firstStart && addonInstallReason && ["update", "install"].includes(addonInstallReason?.reason)) {
         chrome.runtime.openOptionsPage();
     }
 }

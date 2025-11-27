@@ -14,6 +14,7 @@ export async function handleExtensionInstalled(reason:chrome.runtime.InstalledDe
             active: false,
             allowedPlattform: donationAllowed,
         },
+        pointListStyle: DEFAULT_LIST_STYLE
     });
 
     await checkIfUpdateNeeded(true, reason);

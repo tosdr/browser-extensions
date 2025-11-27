@@ -99,8 +99,14 @@
             Points for <a class="serviceName">...</a>:
         </h3>
 
-        <div id="pointList">
+        <div id="documentList">
             <a style="display: none">...</a>
+        </div>
+        <div style="display: none;" id="docsWithoutPoints">
+            <div class="documentHeader">
+                <h3 class="documentTitle">Documents without Points</h3>
+            </div>
+            <div id="docsWithoutPointsWraper" class="pointList"></div>
         </div>
         <a>
             <button id="toggleButton">Toggle Darkmode</button> -
@@ -111,5 +117,5 @@
             Translations are machine translated. You can turn them off in Settings by choosing English.
         </p>
     </body>
-    <script type="module" src="../scripts/views/popup.js"></script>
+    <script type="module" src="../scripts/views/popup.js" defer></script>
 </html>

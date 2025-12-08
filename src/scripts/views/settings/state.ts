@@ -18,7 +18,7 @@ export async function populateSettingsForm(): Promise<void> {
     if (Array.isArray(result['db'])) {
         const lastModified = new Date(String(result['lastModified']));
         if (!Number.isNaN(lastModified.getTime()) && elements.date) {
-            elements.date.textContent = lastModified.toLocaleDateString('en-US');
+            elements.date.textContent = lastModified.toLocaleDateString();
         }
         if (elements.indexed) {
             elements.indexed.textContent = String(result['db'].length);

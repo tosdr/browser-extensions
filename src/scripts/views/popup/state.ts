@@ -1,4 +1,4 @@
-import { DEFAULT_API_URL } from '../../constants';
+import { DEFAULT_API_URL} from '../../constants';
 import { getLocal } from '../../lib/chromeStorage';
 import {
     SupportedLanguage,
@@ -8,11 +8,13 @@ import {
 let curatorMode = false;
 let apiUrl = DEFAULT_API_URL;
 let language: SupportedLanguage = 'en';
+let pointListStyle:"docCategories" | "unified" = "unified"
 
 export interface PopupPreferences {
     darkmode: boolean;
     curatorMode: boolean;
     language: SupportedLanguage;
+    pointListStyle:"docCategories" | "unified"
 }
 
 export function isCuratorMode(): boolean {
@@ -31,11 +33,16 @@ export function setApiUrl(url: string): void {
     apiUrl = url;
 }
 
+export function getPointListStyle() {
+    return pointListStyle
+}
+
 export async function hydrateState(): Promise<PopupPreferences> {
-    const result = await getLocal(['darkmode', 'curatorMode', 'api', 'language']);
+    const result = await getLocal(['darkmode', 'curatorMode', 'api', 'language', 'pointListStyle']);
 
     const darkmode = Boolean(result['darkmode']);
     const storedCuratorMode = Boolean(result['curatorMode']);
+    pointListStyle = result['pointListStyle'] as "docCategories" | "unified"
     setCuratorMode(storedCuratorMode);
 
     const api = result['api'];
@@ -52,6 +59,7 @@ export async function hydrateState(): Promise<PopupPreferences> {
         darkmode,
         curatorMode: storedCuratorMode,
         language: resolvedLanguage,
+        pointListStyle,
     };
 }
 

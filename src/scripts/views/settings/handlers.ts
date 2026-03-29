@@ -8,6 +8,8 @@ export function registerSettingsHandlers(): void {
     const curatorModeInput = document.getElementById('curatorMode') as HTMLInputElement | null;
     const apiInput = document.getElementById('api') as HTMLInputElement | null;
     const languageSelect = document.getElementById('language') as HTMLSelectElement | null;
+    const pointListStyleSelect = document.getElementById('pointListStyle') as HTMLSelectElement | null;
+
 
     if (updateInput) {
         updateInput.addEventListener('change', () => {
@@ -50,6 +52,16 @@ export function registerSettingsHandlers(): void {
                 languageSelect.value = normalized;
             }
             void setLocal({ language: normalized });
+        });
+    }
+
+    if (pointListStyleSelect) {
+        pointListStyleSelect.addEventListener('change', () => {
+            const normalized = pointListStyleSelect.value ?? 'docCategories';
+            if (pointListStyleSelect.value !== normalized) {
+                pointListStyleSelect.value = normalized;
+            }
+            void setLocal({ pointListStyle: normalized });
         });
     }
 }

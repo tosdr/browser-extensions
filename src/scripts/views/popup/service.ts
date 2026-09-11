@@ -171,7 +171,6 @@ function populateList(points: ServicePoint[]): void {
     }
 
     pointsList.style.display = 'block';
-    pointsList.innerHTML = '';
 
     const filteredPoints = filterPoints(points);
 
@@ -218,19 +217,27 @@ function appendPointGroup(
     let added = 0;
 
     points.forEach((point, index) => {
-        const wrapper = document.createElement('div');
         const classification = point.case?.classification ?? 'neutral';
         const pointTitle = point.case?.localized_title ?? point.title;
-        wrapper.innerHTML = `
-            <div class="point ${classification}">
-                <img src="icons/${classification}.svg">
-                <p>${pointTitle}</p>
-                ${renderCuratorTag(point.status)}
-            </div>
-        `.trim();
-        if (wrapper.firstChild) {
-            container.appendChild(wrapper.firstChild as HTMLElement);
+
+        const pointDiv = document.createElement('div');
+        pointDiv.classList.add('point', classification);
+
+        //add icon based on classification
+        const icon = document.createElement('img');
+        icon.src = `icons/${classification}.svg`;
+        pointDiv.appendChild(icon);
+
+        //add title
+        const titleElement = document.createElement('p');
+        titleElement.textContent = pointTitle;
+        pointDiv.appendChild(titleElement);
+
+        if (isCuratorMode() && point.status === 'pending') {
+            pointDiv.appendChild(renderCuratorTag());
         }
+
+        container.appendChild(pointDiv);
         added += 1;
 
         if (index !== points.length - 1) {
@@ -246,11 +253,12 @@ function appendPointGroup(
     }
 }
 
-function renderCuratorTag(status: string): string {
-    if (!isCuratorMode() || status === 'approved') {
-        return '';
-    }
-    return "<img src='icons/pending.svg'></img>";
+function renderCuratorTag(): HTMLImageElement {
+    const img = document.createElement('img');
+    img.src = 'icons/pending.svg';
+    img.alt = 'Pending review';
+    img.title = 'Pending review';
+    return img;
 }
 
 function hideLoadingState(): void {

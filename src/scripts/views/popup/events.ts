@@ -37,25 +37,25 @@ function setupHandlers(): void {
 
     if (sourceButton) {
         sourceButton.addEventListener('click', () => {
-            window.open('https://github.com/tosdr/browser-extensions');
+            window.open('https://github.com/tosdr/browser-extensions', "WindowName", "noopener");
         });
     }
 
     if (donationButton) {
         donationButton.addEventListener('click', () => {
-            window.open('https://tosdr.org/en/sites/donate');
+            window.open('https://tosdr.org/en/sites/donate', "WindowName", "noopener");
         });
     }
 
     if (source) {
         source.addEventListener('click', () => {
-            window.open('https://github.com/tosdr');
+            window.open('https://github.com/tosdr', "WindowName", "noopener");
         });
     }
 
     if (opentosdr) {
         opentosdr.addEventListener('click', () => {
-            window.open('https://tosdr.org/');
+            window.open('https://tosdr.org/', "WindowName", "noopener");
         });
     }
 }

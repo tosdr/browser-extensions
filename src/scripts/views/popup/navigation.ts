@@ -56,7 +56,7 @@ async function handleMissingServiceId(): Promise<void> {
     const editTextElement = document.getElementById('edittext');
     if (editTextElement) {
         editTextElement.onclick = () => {
-            window.open('https://edit.tosdr.org');
+            window.open('https://edit.tosdr.org', "WindowName", "noopener");
         };
     }
 }
@@ -75,14 +75,14 @@ function configureServiceButtons(serviceId: string): void {
     const phoenixButton = document.getElementById('phoenixButton');
     if (phoenixButton) {
         phoenixButton.onclick = () => {
-            window.open(`https://edit.tosdr.org/services/${serviceId}`);
+            window.open(`https://edit.tosdr.org/services/${serviceId}`, "WindowName", "noopener");
         };
     }
 
     const webbutton = document.getElementById('webbutton');
     if (webbutton) {
         webbutton.onclick = () => {
-            window.open(`https://tosdr.org/en/service/${serviceId}`);
+            window.open(`https://tosdr.org/en/service/${serviceId}`, "WindowName", "noopener");
         };
     }
 }

@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check
+        run: npm run compile
+
+      - name: Build (Chrome)
+        run: npm run build
+
+      - name: Build (Firefox)
+        run: npm run build:firefox

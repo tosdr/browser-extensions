@@ -1,0 +1,33 @@
+name: Release build
+
+on:
+  push:
+    tags: ['*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check
+        run: npm run compile
+
+      - name: Package (Chrome)
+        run: npm run zip
+
+      - name: Package (Firefox)
+        run: npm run zip:firefox
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tosdr-extension-${{ github.ref_name }}
+          path: .output/*.zip
+          if-no-files-found: error

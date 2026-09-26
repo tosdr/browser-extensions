@@ -1,0 +1,78 @@
+@font-face {
+    font-family: 'Open Sans';
+    src:
+        url('./fonts/OpenSans-Regular.woff2') format('woff2'),
+        url('./fonts/OpenSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bg: #f2f1f7;
+    --surface: #fefefe;
+    --text: #1c1c1e;
+    --text-muted: #6b6b70;
+    --divider: #e7e7e7;
+    --divider-strong: #cccbcb;
+    --header: rgba(241, 241, 241, 0.7);
+    --accent: #007aff;
+    --pink: #ff2d55;
+    --chip: #222529;
+
+    --grade-a: #408558;
+    --grade-b: #87b55f;
+    --grade-c: #f5c344;
+    --grade-d: #c9753d;
+    --grade-e: #cb444b;
+
+    color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --text: #fbfbfd;
+    --text-muted: #a1a1a6;
+    --divider: #2c2c2e;
+    --divider-strong: #3a3a3c;
+    --header: rgba(28, 28, 30, 0.7);
+    --chip: #3a3a3c;
+    --accent: #0a84ff;
+    --pink: #ff375f;
+
+    color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--bg);
+}
+
+body {
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    color: var(--accent);
+}
+
+button {
+    font: inherit;
+}
+
+/* SVG icons are dark glyphs – lighten them on dark backgrounds. */
+:root[data-theme='dark'] img.glyph {
+    filter: invert(1);
+}

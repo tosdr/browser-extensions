@@ -84,7 +84,7 @@ export function ServiceView({
                     )}
                     <div className="header-text">
                         <h1 className="title">{details.name}</h1>
-                        {(details.updated_at || prefs.curatorMode) && (
+                        {(prefs.curatorMode) && (
                             <p className="subtitle">
                                 {[
                                     details.updated_at &&
@@ -100,7 +100,6 @@ export function ServiceView({
                         className={`grade-badge ${grade ? `grade-${grade.toLowerCase()}` : 'grade-none'}`}
                         title={grade ? `Grade ${grade}` : 'Not graded yet'}
                     >
-                        <span className="grade-badge-label">Grade</span>
                         <span className="grade-badge-letter">{grade ?? '–'}</span>
                     </div>
                 </div>
